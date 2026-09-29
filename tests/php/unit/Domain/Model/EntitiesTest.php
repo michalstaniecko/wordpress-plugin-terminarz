@@ -69,6 +69,7 @@ final class EntitiesTest extends TestCase {
 	public static function invalid_entities(): iterable {
 		yield 'resource: empty name' => array( static fn () => new BookableResource( null, '  ' ) );
 		yield 'resource: zero id' => array( static fn () => new BookableResource( 0, 'A' ) );
+		yield 'resource: unknown type' => array( static fn () => new BookableResource( null, 'A', true, 'car' ) );
 		yield 'service: zero duration' => array( static fn () => new Service( null, 'A', 0 ) );
 		yield 'service: too long' => array( static fn () => new Service( null, 'A', 1441 ) );
 		yield 'service: negative price' => array( static fn () => new Service( null, 'A', 30, -1 ) );

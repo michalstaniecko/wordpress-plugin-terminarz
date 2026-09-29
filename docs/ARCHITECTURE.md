@@ -486,3 +486,32 @@ przechowywane w minutach (spójnie z ADR-018), choć issue mówiło o godzinach.
 
 **Konsekwencje.** Skrót tokenu anulowania i ID zamówienia WooCommerce nie są danymi osobowymi i pozostają. Dane klienta
 w zamówieniu WooCommerce obsługuje eraser WooCommerce (M6).
+
+## ADR-026: Ekrany panelu admina (klasyczne, PRG) i zasoby
+
+**Kontekst.** M4 potrzebuje kilku ekranów CRUD (zasoby, usługi, harmonogramy, rezerwacje). Do wyboru: klasyczne ekrany PHP
+(`WP_List_Table` + formularze) albo aplikacja React na REST API.
+
+**Decyzja.**
+- **Klasyczne ekrany PHP** w `src/Admin/` — bez builda JS, zgodne z wyglądem WP, łatwe do testowania integracyjnie i
+  dostępne bez JavaScriptu. REST (`terminarz/v1`) pozostaje dla bloku i integracji.
+- `Admin\Screen` (abstrakcyjna, implementuje `AdminPage` z ADR-024): widoki wybierane parametrem `view`
+  (`admin.php?page=<slug>&view=edit&id=…`); akcje zapisu wyłącznie przez `admin-post.php?action=trmz_<nazwa>`
+  (`actions()` → metoda handlera). `Screen::handle()` sprawdza `current_user_can('trmz_manage_bookings')` i nonce
+  `trmz_<nazwa>` (`check_admin_referer`), przekazuje handlerowi odsłonięty (`wp_unslash`) request, a handler — po
+  sanitizacji każdego pola (`Admin\Input`) — zwraca URL przekierowania (Post/Redirect/Get). Wyjątki domeny/bazy
+  nieobsłużone przez handler → ogólny komunikat. `render()` ponownie sprawdza capability.
+- Komunikaty i wartości formularza z błędami przechodzą przez przekierowanie w `Admin\Notices` (transient per użytkownik,
+  5 min); tekst jest tłumaczony w handlerze i escapowany przy wyświetlaniu.
+- Linki akcji (usuń, aktywuj) to `wp_nonce_url()` do `admin-post.php` (GET + nonce, jak w core), formularze — POST.
+- Handlery korzystają wyłącznie z repozytoriów/serwisów z `Services::instance()`, nigdy z `$wpdb`.
+- **Zasoby** (`Admin\ResourcesPage`, `admin.php?page=trmz-resources`, pozycja 20): lista (`ResourcesListTable`),
+  formularz (nazwa, typ, opis, kolejność, aktywny), aktywacja/dezaktywacja, usuwanie. Usunięcie zasobu z **jakimikolwiek**
+  rezerwacjami jest blokowane przez repozytorium (ADR-013 — surowsze niż „przyszłe rezerwacje” z #22, zachowuje historię);
+  komunikat kieruje do dezaktywacji. Dezaktywacja nie anuluje przyszłych rezerwacji — ekran ostrzega o ich liczbie.
+- **Schemat v2**: kolumna `trmz_resources.type` (`person`|`room`|`device`, domyślnie `person`). `BookableResource` rozszerzony
+  zachowawczo (opcjonalne argumenty na końcu konstruktora): `type`, `description`, `sort_order`; `with_active()`.
+  Typ jest informacyjny — nie zmienia reguł dostępności.
+
+**Konsekwencje.** Test migracji: `ALTER TABLE` (także na tabelach tymczasowych) niejawnie zatwierdza transakcję testu WP,
+więc test aktualizacji schematu woła `Schema::install()` bez opcji wersji/blokady (inaczej wyciekłyby do kolejnych testów).

@@ -25,7 +25,7 @@ final class Schema {
 	/**
 	 * Current schema version. Bump it whenever a CREATE TABLE statement below changes.
 	 */
-	public const VERSION = '1';
+	public const VERSION = '2';
 
 	/**
 	 * Option that stores the installed schema version.
@@ -162,6 +162,7 @@ final class Schema {
 			"CREATE TABLE {$t[self::RESOURCES]} (
   id bigint(20) unsigned NOT NULL AUTO_INCREMENT,
   name varchar(191) NOT NULL,
+  type varchar(20) NOT NULL DEFAULT 'person',
   description text NULL,
   user_id bigint(20) unsigned NULL,
   sort_order int(11) NOT NULL DEFAULT 0,

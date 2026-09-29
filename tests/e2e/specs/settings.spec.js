@@ -13,6 +13,8 @@ test.describe( 'Settings screen', () => {
 		await menu
 			.getByRole( 'link', { name: 'Terminarz', exact: true } )
 			.click();
+		// The top-level item opens the first screen; Settings is a submenu entry.
+		await menu.locator( 'a[href="admin.php?page=trmz-settings"]' ).click();
 
 		await expect(
 			page.getByRole( 'heading', { name: 'Terminarz settings' } )

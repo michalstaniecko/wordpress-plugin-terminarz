@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-29T17:03:51+00:00\n"
+"POT-Creation-Date: 2026-09-29T17:15:00+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: terminarz\n"
@@ -31,34 +31,49 @@ msgstr ""
 msgid "Michał Staniećko"
 msgstr ""
 
-#: src/Admin/Labels.php:27
+#: src/Admin/Labels.php:28
 msgctxt "booking status"
 msgid "Pending"
 msgstr ""
 
-#: src/Admin/Labels.php:28
+#: src/Admin/Labels.php:29
 msgctxt "booking status"
 msgid "Awaiting payment"
 msgstr ""
 
-#: src/Admin/Labels.php:29
+#: src/Admin/Labels.php:30
 msgctxt "booking status"
 msgid "Confirmed"
 msgstr ""
 
-#: src/Admin/Labels.php:30
+#: src/Admin/Labels.php:31
 msgctxt "booking status"
 msgid "Cancelled"
 msgstr ""
 
-#: src/Admin/Labels.php:31
+#: src/Admin/Labels.php:32
 msgctxt "booking status"
 msgid "Expired"
 msgstr ""
 
-#: src/Admin/Labels.php:32
+#: src/Admin/Labels.php:33
 msgctxt "booking status"
 msgid "Completed"
+msgstr ""
+
+#: src/Admin/Labels.php:57
+msgctxt "resource type"
+msgid "Person"
+msgstr ""
+
+#: src/Admin/Labels.php:58
+msgctxt "resource type"
+msgid "Room"
+msgstr ""
+
+#: src/Admin/Labels.php:59
+msgctxt "resource type"
+msgid "Device"
 msgstr ""
 
 #: src/Admin/Privacy.php:55
@@ -123,10 +138,14 @@ msgid "End"
 msgstr ""
 
 #: src/Admin/Privacy.php:207
+#: src/Admin/ResourcesListTable.php:47
+#: src/Admin/ResourcesPage.php:295
 msgid "Status"
 msgstr ""
 
 #: src/Admin/Privacy.php:208
+#: src/Admin/ResourcesListTable.php:44
+#: src/Admin/ResourcesPage.php:276
 msgid "Name"
 msgstr ""
 
@@ -144,6 +163,163 @@ msgstr ""
 
 #: src/Admin/Privacy.php:212
 msgid "Booked on"
+msgstr ""
+
+#: src/Admin/ResourcesListTable.php:45
+#: src/Admin/ResourcesPage.php:280
+msgid "Type"
+msgstr ""
+
+#: src/Admin/ResourcesListTable.php:46
+msgid "Services"
+msgstr ""
+
+#: src/Admin/ResourcesListTable.php:63
+msgid "No resources yet. Add the first person, room or device that can be booked."
+msgstr ""
+
+#: src/Admin/ResourcesListTable.php:80
+msgid "Edit"
+msgstr ""
+
+#: src/Admin/ResourcesListTable.php:92
+msgid "Deactivate"
+msgstr ""
+
+#: src/Admin/ResourcesListTable.php:101
+msgid "Activate"
+msgstr ""
+
+#: src/Admin/ResourcesListTable.php:106
+msgid "Delete this resource permanently?"
+msgstr ""
+
+#: src/Admin/ResourcesListTable.php:107
+msgid "Delete"
+msgstr ""
+
+#: src/Admin/ResourcesListTable.php:150
+msgid "Active"
+msgstr ""
+
+#: src/Admin/ResourcesListTable.php:151
+msgid "Inactive"
+msgstr ""
+
+#: src/Admin/ResourcesPage.php:46
+#: src/Admin/ResourcesPage.php:53
+#: src/Admin/ResourcesPage.php:239
+msgid "Resources"
+msgstr ""
+
+#: src/Admin/ResourcesPage.php:93
+msgid "Enter a name."
+msgstr ""
+
+#: src/Admin/ResourcesPage.php:95
+msgid "The name is too long."
+msgstr ""
+
+#: src/Admin/ResourcesPage.php:98
+msgid "Choose a valid resource type."
+msgstr ""
+
+#: src/Admin/ResourcesPage.php:118
+#: src/Admin/ResourcesPage.php:148
+#: src/Admin/ResourcesPage.php:168
+#: src/Admin/ResourcesPage.php:256
+msgid "The resource does not exist."
+msgstr ""
+
+#: src/Admin/ResourcesPage.php:121
+msgid "The resource data is not valid."
+msgstr ""
+
+#: src/Admin/ResourcesPage.php:126
+msgid "Resource updated."
+msgstr ""
+
+#: src/Admin/ResourcesPage.php:126
+msgid "Resource added."
+msgstr ""
+
+#: src/Admin/ResourcesPage.php:153
+msgid "Resource activated."
+msgstr ""
+
+#: src/Admin/ResourcesPage.php:153
+msgid "Resource deactivated. It is no longer offered to customers."
+msgstr ""
+
+#: src/Admin/ResourcesPage.php:175
+msgid "This resource has bookings and cannot be deleted. Deactivate it instead."
+msgstr ""
+
+#: src/Admin/ResourcesPage.php:179
+msgid "Resource deleted."
+msgstr ""
+
+#. translators: %d: number of bookings.
+#: src/Admin/ResourcesPage.php:223
+#, php-format
+msgid "The resource still has %d upcoming booking. It stays valid until you cancel or move it."
+msgid_plural "The resource still has %d upcoming bookings. They stay valid until you cancel or move them."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Admin/ResourcesPage.php:239
+#: src/Admin/ResourcesPage.php:269
+#: src/Admin/ResourcesPage.php:300
+msgid "Add resource"
+msgstr ""
+
+#: src/Admin/ResourcesPage.php:240
+msgid "Resources are the people, rooms or devices that can be booked. Each one has its own working hours."
+msgstr ""
+
+#: src/Admin/ResourcesPage.php:255
+#: src/Admin/ResourcesPage.php:269
+msgid "Edit resource"
+msgstr ""
+
+#: src/Admin/ResourcesPage.php:270
+msgid "&larr; Back to resources"
+msgstr ""
+
+#: src/Admin/ResourcesPage.php:286
+msgid "Description"
+msgstr ""
+
+#: src/Admin/ResourcesPage.php:290
+msgid "Order"
+msgstr ""
+
+#: src/Admin/ResourcesPage.php:292
+msgid "Lower numbers are listed first."
+msgstr ""
+
+#: src/Admin/ResourcesPage.php:297
+msgid "Active (offered to customers)"
+msgstr ""
+
+#: src/Admin/ResourcesPage.php:300
+msgid "Save changes"
+msgstr ""
+
+#: src/Admin/Screen.php:56
+msgid "Sorry, you are not allowed to access this page."
+msgstr ""
+
+#: src/Admin/Screen.php:81
+msgid "Sorry, you are not allowed to do this."
+msgstr ""
+
+#: src/Admin/Screen.php:87
+msgid "Unknown action."
+msgstr ""
+
+#: src/Admin/Screen.php:98
+msgid "The change could not be saved. Please check the data and try again."
 msgstr ""
 
 #: src/Admin/SettingsPage.php:43
