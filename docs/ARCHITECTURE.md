@@ -100,7 +100,7 @@ integration, e2e) i pakowanie wydania (M8). Własny `webpack.config.js` rozszerz
 - PHPStan 2.x, **poziom 6, bez baseline'u**, z `szepeviktor/phpstan-wordpress` (przez `phpstan/extension-installer`)
   i `php-stubs/woocommerce-stubs` (dla integracji w M6). Analizowane: `terminarz.php`, `src/`, `tests/php/unit`
   (testy integracyjne zależą od klas biblioteki testów WP, których stubów nie ma). Stałe `TRMZ_*` dla PHPStana
-  w `tests/phpstan/bootstrap.php`. `composer phpstan` podnosi limit pamięci do 1G (stuby WP/WC są duże).
+  w `tests/phpstan/bootstrap.php`. `composer phpstan` podnosi limit pamięci do 2G (stuby WP/WC są duże; 1G przestał wystarczać w CI w M6).
 - JS/CSS: ESLint 9 (flat config `eslint.config.cjs` rozszerzający domyślny z `@wordpress/scripts`, reguła
   `@wordpress/i18n-text-domain` = `terminarz`, reguły Playwright dla `tests/e2e`) i stylelint
   (`@wordpress/stylelint-config/scss-stylistic`, klasy CSS muszą zaczynać się od `trmz-` lub `wp-block-terminarz-`).
