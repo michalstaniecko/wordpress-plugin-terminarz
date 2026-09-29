@@ -219,7 +219,28 @@ final class ReminderSchedulerTest extends RestTestCase {
 		$reminders = self::reminders();
 		$this->assertCount( 1, $reminders );
 		$this->assertSame( 'jan@example.org', $reminders[0]['to'] );
+		// Sent exactly at the 24 h cancellation deadline: no online cancellation any more (#102).
+		$this->assertStringNotContainsString( 'trmz_cancel=', $reminders[0]['body'] );
+		$this->assertStringContainsString( 'please contact us', $reminders[0]['body'] );
+	}
+
+	public function test_reminder_before_the_cancellation_deadline_has_the_link(): void {
+		$this->settings(
+			array(
+				'auto_confirm'                => true,
+				'customer_cancel_limit_hours' => 2,
+			)
+		);
+		$booking = $this->book();
+		reset_phpmailer_instance();
+		$this->clock->set( self::REMINDER_AT );
+
+		do_action( 'trmz_send_reminder', $booking->id );
+
+		$reminders = self::reminders();
+		$this->assertCount( 1, $reminders );
 		$this->assertStringContainsString( 'trmz_cancel=' . $booking->public_id, $reminders[0]['body'] );
+		$this->assertStringNotContainsString( 'please contact us', $reminders[0]['body'] );
 	}
 
 	public function test_moved_booking_gets_a_new_reminder(): void {
