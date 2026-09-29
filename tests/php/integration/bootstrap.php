@@ -29,4 +29,8 @@ tests_add_filter(
 	}
 );
 
+// Every test runs inside a transaction opened by the WordPress test suite: plugin transactions must use savepoints
+// (a nested START TRANSACTION would commit the test's data). See Terminarz\Infrastructure\Database\Transaction.
+tests_add_filter( 'trmz_db_inside_external_transaction', '__return_true' );
+
 require $trmz_tests_dir . '/includes/bootstrap.php';

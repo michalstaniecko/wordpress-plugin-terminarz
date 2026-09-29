@@ -103,3 +103,14 @@ Jeden wpis na zamknięte issue: data, numer issue, co zrobione, decyzje, znane r
 - **Decyzje:** bez zmian w silniku — reguły z ADR-016 przeszły wszystkie przypadki (PHP 8.1 i 8.3 w CI).
 - **Ryzyka:** wyniki zależą od bazy stref czasowych (tzdata) w PHP; zmiana przepisów dla testowanych stref w przyszłych
   wersjach tzdata mogłaby wymagać aktualizacji oczekiwań (daty testowe to 2026).
+
+## 2026-09-29 — #10 repozytoria zasobów, usług, harmonogramów i wyjątków
+
+- **Zrobione:** interfejsy `Domain\Repository\{Resource,Service,Schedule,ScheduleException}Repository`, wyjątki domeny
+  `EntityNotFound`, `EntityInUse`; implementacje `Infrastructure\Persistence\Wpdb*Repository`, helper
+  `Infrastructure\Database\Transaction` (savepointy, retry deadlocków), `DatabaseError`. Testy integracyjne CRUD,
+  kolejności przypisań, harmonogramu z przerwami (round-trip, 1 zapytanie dla wielu zasobów), wyjątków w zakresie dat
+  (globalne + zasobu, rozwijanie zakresów), transakcji/savepointów.
+- **Decyzje:** ADR-013. Usuwanie zasobu/usługi z rezerwacjami zablokowane (`EntityInUse`).
+- **Ryzyka:** kolumny spoza modelu domeny (opis, kolejność, waluta) jeszcze nieedytowalne — M4. Tryb savepointów
+  w testach oznacza, że prawdziwe `START TRANSACTION` jest testowane dopiero testem współbieżności (#14).

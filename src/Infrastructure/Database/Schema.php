@@ -18,7 +18,7 @@ use wpdb;
  * exception: they describe recurring wall-clock hours, so they are stored as local TIME/DATE values
  * of the site time zone (see docs/ARCHITECTURE.md, ADR-012).
  *
- * All tables use InnoDB (transactions and row locks are required for atomic slot booking, ADR-013).
+ * All tables use InnoDB (transactions and row locks are required for atomic slot booking, ADR-014).
  */
 final class Schema {
 

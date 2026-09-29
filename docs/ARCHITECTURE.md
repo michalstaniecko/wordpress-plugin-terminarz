@@ -223,3 +223,25 @@ minimalne wyprzedzenie, horyzont i zmianę czasu — deterministycznie i bez Wor
 **Konsekwencje.** Harmonogramy i wyjątki są w czasie lokalnym (ADR-012), więc zmiana strefy witryny przesuwa godziny
 w UTC, ale nie istniejące rezerwacje (te są w UTC). Wyjątki z zakresem dat (`start_date`–`end_date` w bazie) repozytorium
 rozwija do obiektów `ScheduleException` per dzień.
+
+## ADR-013: Repozytoria i transakcje
+
+**Decyzja.**
+- Interfejsy repozytoriów w `Terminarz\Domain\Repository` (bez WordPressa), implementacje na `$wpdb` w
+  `Terminarz\Infrastructure\Persistence` (`Wpdb*Repository`, wspólna baza `WpdbRepository`). Zapytania wyłącznie przez
+  `$wpdb->prepare()` lub helpery `insert/update/delete`. Błąd bazy → `Infrastructure\Database\DatabaseError`
+  (RuntimeException); naruszenie reguł domeny → wyjątki domeny (`EntityNotFound`, `EntityInUse`).
+- `ResourceRepository`/`ServiceRepository`: CRUD; `save()` bez ID = INSERT, z ID = UPDATE (brak wiersza → `EntityNotFound`).
+  Usunięcie zasobu/usługi, do których odwołują się rezerwacje (dowolny status), jest blokowane (`EntityInUse`) —
+  zachowawczo, żeby nie gubić historii; usunięcie zasobu kasuje jego harmonogram, wyjątki i przypisania do usług.
+  Kolumny spoza modelu domeny (`description`, `sort_order`, `user_id`, `currency`) mają wartości domyślne — do obsłużenia
+  w panelu admina (M4).
+- `ServiceRepository::assign_resources()` zapisuje kolejność preferencji (`sort_order` w pivocie) — wykorzystywaną
+  przy wyborze „dowolnego” zasobu.
+- `ScheduleRepository::for_resources()` i `ScheduleExceptionRepository::in_range()` ładują dane dla wielu zasobów jednym
+  zapytaniem (brak N+1 w dostępności). Wiersze wyjątków obejmujące zakres dat są rozwijane do jednego
+  `ScheduleException` na dzień (współdzielą ID wiersza).
+- `Infrastructure\Database\Transaction::run()` — transakcja InnoDB (COMMIT / ROLLBACK + ponowne rzucenie wyjątku,
+  do 3 prób przy deadlocku / lock wait timeout). Zagnieżdżenie → `SAVEPOINT`. Filtr `trmz_db_inside_external_transaction`
+  (w bootstrapie testów integracyjnych = `true`) wymusza savepointy także na najwyższym poziomie, bo suita WP otwiera
+  transakcję na każdy test, a drugi `START TRANSACTION` zatwierdziłby dane testu.

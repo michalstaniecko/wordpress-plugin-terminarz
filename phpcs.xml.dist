@@ -83,7 +83,7 @@
 	</rule>
 
 	<!--
-		Custom tables (docs/ARCHITECTURE.md, ADR-012/ADR-014): repositories and the schema talk to $wpdb directly by design
+		Custom tables (docs/ARCHITECTURE.md, ADR-012/ADR-013): repositories and the schema talk to $wpdb directly by design
 		and do not use the object cache (booking data must never be stale). Prepared-SQL rules stay active.
 	-->
 	<rule ref="WordPress.DB.DirectDatabaseQuery.DirectQuery">
@@ -95,6 +95,11 @@
 		<exclude-pattern>/src/Infrastructure/Database/*</exclude-pattern>
 		<exclude-pattern>/src/Infrastructure/Persistence/*</exclude-pattern>
 		<exclude-pattern>/tests/php/*</exclude-pattern>
+	</rule>
+	<!-- Exception messages of the persistence layer are developer-facing and never printed; adapters escape what they output. -->
+	<rule ref="WordPress.Security.EscapeOutput.ExceptionNotEscaped">
+		<exclude-pattern>/src/Infrastructure/Database/*</exclude-pattern>
+		<exclude-pattern>/src/Infrastructure/Persistence/*</exclude-pattern>
 	</rule>
 	<rule ref="WordPress.DB.DirectDatabaseQuery.SchemaChange">
 		<exclude-pattern>/src/Infrastructure/Database/*</exclude-pattern>
