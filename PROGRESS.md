@@ -171,15 +171,26 @@ Jeden wpis na zamknięte issue: data, numer issue, co zrobione, decyzje, znane r
 - **Decyzje:** ADR-020. `from`/`to` wymagane (bez domyślnego „dziś”); dla `any` pole `resource` slotu = `null`.
 - **Ryzyka:** przy włączonym cache (filtr) klient może zobaczyć zajęty już slot — rezerwacja zwróci wtedy 409.
 
+## 2026-09-29 — #18 endpoint tworzenia rezerwacji
+
+- **Zrobione:** `Rest\BookingsController` — `POST /terminarz/v1/bookings`: schemat i sanitizacja danych klienta, zgoda
+  wymagana, honeypot `website`, nonce `wp_rest` dla zalogowanych, ponowna weryfikacja slotu i atomowa rezerwacja
+  (konkretny zasób lub `any`), 201 z `public_id`, 400/404/409 z przetłumaczonymi komunikatami. `Customer` + `note`, `user_id`
+  (zapisywane w istniejących kolumnach). Testy integracyjne (27): sukces + hook `trmz_booking_created`, `any`, 409, sloty spoza
+  harmonogramu, walidacja, sanitizacja XSS, nonce, auto-potwierdzanie.
+- **Decyzje:** ADR-021. Status początkowy przez filtr `trmz_auto_confirm_bookings` (domyślnie `pending`) — #21 (ustawienia)
+  jeszcze niezmergowane. Start tylko z jawnym offsetem. Token anulowania nie jest zwracany.
+- **Ryzyka:** limit zapytań dochodzi w #19. Token anulowania dostępny tylko w chwili rezerwacji (M7 musi to uwzględnić).
+
 ## 2026-09-29 — #21 menu admina i strona ustawień
 
 - **Zrobione:** `Infrastructure\Settings` (opcja `trmz_settings`: domyślne, zakresy, sanitizacja, typowane gettery),
   `Services::settings()` i budowanie `AvailabilitySettings` z ustawień; `Admin\AdminPage`, `Admin\Menu` (rejestr podstron,
   top-level „Terminarz”, capability `trmz_manage_bookings`), `Admin\SettingsPage` (Settings API, filtr
-  `option_page_capability_trmz_settings`, ostrzeżenie o braku WooCommerce). Testy: jednostkowe `MenuTest`, integracyjne
+  `option_page_capability_trmz_settings`, ostrzeżenie o braku WooCommerce); REST `POST /bookings` bierze domyślne auto-potwierdzanie z ustawień. Testy: jednostkowe `MenuTest`, integracyjne
   `SettingsTest` (domyślne, sanitizacja, granice, kses, zapis częściowy, uszkodzone wartości, spięcie z dostępnością)
   i `SettingsPageTest` (menu, capability, rejestracja, render z escapingiem); E2E `settings.spec.js`; `.pot`.
-- **Decyzje:** ADR-021. Założenia (etykieta `assumption`): wyprzedzenie w minutach (domyślnie 60), horyzont 90 dni,
+- **Decyzje:** ADR-023. Założenia (etykieta `assumption`): wyprzedzenie w minutach (domyślnie 60), horyzont 90 dni,
   nieprawidłowa wartość z formularza zachowuje poprzednią.
 - **Ryzyka:** zmiana domyślnych wyprzedzenia/horyzontu wpływa na testy używające `Services` bez jawnych ustawień dostępności
   (np. przyszłe testy REST z datami > 90 dni od „teraz”). `consent_text` i `customer_cancel_limit_hours` nie są jeszcze
