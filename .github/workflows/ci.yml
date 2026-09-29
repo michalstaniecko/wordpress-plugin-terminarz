@@ -92,6 +92,8 @@ jobs:
       - run: npm ci
       - name: Build blocks
         run: npm run build
+      - name: JavaScript unit tests
+        run: npm run test:js
       - name: Generate .pot
         run: npm run i18n
 
@@ -112,6 +114,8 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: npm
       - run: npm ci
+      - name: Build blocks (the booking block is registered from build/)
+        run: npm run build
       - name: Start wp-env (tests environment)
         run: npm run env:start:tests
       - name: Run integration tests

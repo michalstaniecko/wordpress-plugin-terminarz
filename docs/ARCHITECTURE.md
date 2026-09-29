@@ -67,8 +67,10 @@ Dzięki temu `.pot` generuje się lokalnie i w CI bez uruchamiania wp-env. Plik 
 
 ## ADR-007: Build bloków
 
-**Decyzja.** `@wordpress/scripts` z `--webpack-src-dir=blocks --output-path=build`. Do czasu powstania pierwszego bloku (M5)
-`blocks/index.js` jest pustym punktem wejścia, żeby `npm run build` przechodził; wynik nie jest nigdzie ładowany.
+**Decyzja.** `@wordpress/scripts` z `--webpack-src-dir=blocks --output-path=build`; punkty wejścia są wykrywane z plików
+`block.json` (placeholder `blocks/index.js` usunięty w M5, #29). `build/` nie jest wersjonowany — buduje go CI (joby build,
+integration, e2e) i pakowanie wydania (M8). Własny `webpack.config.js` rozszerza konfigurację domyślną tylko o alias
+`trmz-bundled-api-fetch` (ADR-031).
 
 ## ADR-008: Dwie suity PHPUnit
 
@@ -597,3 +599,28 @@ opisania w dokumentacji M6.
 
 **Konsekwencje.** Eksport z offsetem przy równoległych zmianach może pominąć/zdublować wiersz na granicy partii —
 akceptowalne dla eksportu administracyjnego.
+
+## ADR-031: Blok „Rezerwacja” (`terminarz/booking`)
+
+**Decyzja.**
+- Blok **dynamiczny** (`save: null`), `block.json` apiVersion 3 w `blocks/booking/`, rejestrowany z `build/booking` przez
+  `Terminarz\Blocks\BookingBlock` (moduł, `register_block_type` + `render_callback`). Brak zbudowanych plików → blok nie
+  jest rejestrowany (bez błędów). Integracyjne testy PHP wymagają `npm run build` (krok w CI).
+- Atrybuty: `serviceIds` (int[], pusta = wszystkie aktywne usługi), `defaultServiceId` (0 = brak), `showResourcePicker`
+  (bool, domyślnie `true`; `false` = „dowolny” zasób), `firstDayOfWeek` (-1 = ustawienie witryny `start_of_week`, 0–6).
+  Serwer normalizuje atrybuty (`sanitize_attributes`) — treść wpisu można edytować ręcznie.
+- Render: pusty kontener z `get_block_wrapper_attributes()` (klasy/stylowanie z `supports`) i konfiguracją JSON
+  w `data-trmz-config` (escapowane przez `get_block_wrapper_attributes`) + `<noscript>`. Konfiguracja: `restRoot`,
+  `nonce` (tylko dla zalogowanych), atrybuty, `today`/`lastDate` (strefa witryny, horyzont rezerwacji), `locale`,
+  `currency`/`priceDecimals`, `consentHtml` (tekst zgody z ustawień przepuszczony przez `wp_kses` z listą elementów
+  inline, domyślny tekst gdy pusty). Filtr `trmz_booking_block_config` (punkt rozszerzenia dla M6/M7).
+- Front end: klasyczny `viewScript` (React z `@wordpress/element`) — stabilny od WP 6.5, bez Interactivity API/modułów.
+- REST z przeglądarki: **prywatna kopia `@wordpress/api-fetch`** (alias `trmz-bundled-api-fetch` wbudowany w view.js)
+  z `createRootURLMiddleware(restRoot)` i `createNonceMiddleware` wyłącznie dla zalogowanych. Skrypt `wp-api-fetch`
+  z rdzenia dodaje nonce każdemu odwiedzającemu; nonce zapisany w stronie z cache wygasa i anonimowa rezerwacja
+  kończyłaby się 403 `rest_cookie_invalid_nonce`. Edytor używa zwykłego `wp.apiFetch`.
+- Tłumaczenia JS: `wp_set_script_translations( <uchwyty edytora i widoku>, 'terminarz', languages/ )`; `.pot` obejmuje
+  źródła w `blocks/` (JS + `block.json`).
+
+**Konsekwencje.** view.js jest większy o api-fetch (~kilka KB). Pliki JSON tłumaczeń muszą odpowiadać ścieżkom
+skryptów z `build/` (do rozwiązania przy pakowaniu tłumaczeń w M8).

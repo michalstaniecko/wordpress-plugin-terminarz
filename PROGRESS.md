@@ -291,3 +291,15 @@ Jeden wpis na zamknięte issue: data, numer issue, co zrobione, decyzje, znane r
   przebiegi). Drobna poprawka: komunikat o strefie czasowej dla stref zapisanych jako offset (`UTC+00:00`).
 - **Decyzje:** brak nowych (ADR-010).
 - **Ryzyka:** środowisko testowe gromadzi dane z kolejnych przebiegów (zasoby/usługi E2E) — nie wpływa na asercje.
+
+## 2026-09-29 — #29 rejestracja bloku „Rezerwacja”
+
+- **Zrobione:** blok `terminarz/booking` (`blocks/booking/block.json`, apiVersion 3, dynamiczny) z atrybutami `serviceIds`,
+  `defaultServiceId`, `showResourcePicker`, `firstDayOfWeek`; edytor z InspectorControls (usługi z `/terminarz/v1/services`,
+  usługa domyślna, wybór zasobu, pierwszy dzień tygodnia) i statycznym podglądem. `Blocks\BookingBlock` rejestruje blok
+  z `build/`, renderuje kontener z konfiguracją w `data-trmz-config`, ustawia tłumaczenia skryptów. `webpack.config.js`
+  (alias api-fetch dla front endu), `npm run test:js` (Jest) + krok w CI, build przed testami integracyjnymi w CI.
+  Testy: integracyjne PHP (rejestracja, tłumaczenia, render, nonce tylko dla zalogowanych, sanitizacja atrybutów,
+  escaping zgody, filtr), JS unit (helpery edytora), E2E (wstawienie, konfiguracja i zapis bloku, konfiguracja na froncie).
+- **Decyzje:** ADR-031 (blok dynamiczny, konfiguracja w data-atrybucie, prywatna kopia api-fetch bez nonce dla anonimowych).
+- **Ryzyka:** JSON-y tłumaczeń JS muszą pasować do ścieżek w `build/` (M8).
