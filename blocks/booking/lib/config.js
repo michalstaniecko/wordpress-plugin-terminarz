@@ -49,5 +49,6 @@ export function parseConfig( json ) {
 			? raw.priceDecimals
 			: 2,
 		consentHtml: typeof raw.consentHtml === 'string' ? raw.consentHtml : '',
+		emailNotice: raw.emailNotice === true,
 	};
 }

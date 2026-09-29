@@ -73,5 +73,18 @@ describe( 'parseConfig', () => {
 		expect( config.lastDate ).toBeNull();
 		expect( config.nonce ).toBe( '' );
 		expect( config.consentHtml ).toBe( '' );
+		expect( config.emailNotice ).toBe( false );
+	} );
+
+	it( 'passes the e-mail notice flag only when it is true', () => {
+		const parse = ( emailNotice ) =>
+			parseConfig(
+				JSON.stringify( {
+					restRoot: 'http://example.org/wp-json/',
+					emailNotice,
+				} )
+			).emailNotice;
+		expect( parse( true ) ).toBe( true );
+		expect( parse( 'yes' ) ).toBe( false );
 	} );
 } );
