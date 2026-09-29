@@ -969,4 +969,4 @@ bywa jutro) i przywraca 24 h. Wspólne kroki klienta przeniesione do `tests/e2e/
 (`bookThroughBlock`, `offeredStarts`), używane też przez `booking-payment.spec.js`.
 
 **Konsekwencje.** Klient rezerwujący termin w ciągu `customer_cancel_limit_hours` dostaje link, który od razu prowadzi do
-komunikatu „za późno, skontaktuj się z nami” (świadome: strona tłumaczy sytuację; zob. issue uzupełniające).
+komunikatu „za późno, skontaktuj się z nami” (świadome: strona tłumaczy sytuację; poprawa w #102).
