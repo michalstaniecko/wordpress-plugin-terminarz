@@ -8,6 +8,7 @@
 		"node": ">=20"
 	},
 	"devDependencies": {
+		"@axe-core/playwright": "^4.13.0",
 		"@playwright/test": "^1.63.0",
 		"@types/node": "^20.19.43",
 		"@wordpress/api-fetch": "^7.56.0",
