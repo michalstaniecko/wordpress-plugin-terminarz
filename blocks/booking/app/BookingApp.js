@@ -16,6 +16,8 @@ import { __, _n, sprintf } from '@wordpress/i18n';
 import { get } from './api';
 import Calendar from './Calendar';
 import ChoiceList from './ChoiceList';
+import Confirmation from './Confirmation';
+import DetailsStep from './DetailsStep';
 import Step from './Step';
 import { monthOf, monthRange, addMonths, compareMonths } from '../lib/calendar';
 import {
@@ -24,6 +26,7 @@ import {
 	formatPrice,
 	timezoneLabel,
 } from '../lib/format';
+import { EMPTY_FORM } from '../lib/form';
 import {
 	availableDates,
 	findSlot,
@@ -38,6 +41,7 @@ export const STEPS = {
 	DATE: 'date',
 	TIME: 'time',
 	DETAILS: 'details',
+	DONE: 'done',
 };
 
 /** How many empty months are skipped automatically when the calendar opens. */
@@ -56,7 +60,7 @@ let instances = 0;
 const monthKey = ( serviceId, resource, month ) =>
 	`${ serviceId }|${ resource }|${ month.year }-${ month.month }`;
 
-export default function BookingApp( { config, renderDetails } ) {
+export default function BookingApp( { config } ) {
 	const [ idPrefix ] = useState( () => `trmz-booking-${ ++instances }` );
 	const [ step, setStep ] = useState( null );
 	const [ navigated, setNavigated ] = useState( false );
@@ -77,6 +81,9 @@ export default function BookingApp( { config, renderDetails } ) {
 	const [ slotStart, setSlotStart ] = useState( null );
 	const [ choiceError, setChoiceError ] = useState( '' );
 	const [ timeNotice, setTimeNotice ] = useState( '' );
+	const [ form, setForm ] = useState( EMPTY_FORM );
+	const [ booking, setBooking ] = useState( null );
+	const root = useRef();
 
 	const autoAdvance = useRef( AUTO_ADVANCE_MONTHS );
 
@@ -257,7 +264,12 @@ export default function BookingApp( { config, renderDetails } ) {
 	}, [ step, loadMonth ] );
 
 	const dates = availableDates( monthData?.data );
-	const timezone = timezoneLabel( monthData?.data?.timezone ?? '' );
+	// Remembered after the availability cache is cleared (confirmation screen).
+	const knownTimezone = useRef( '' );
+	if ( monthData?.data?.timezone ) {
+		knownTimezone.current = timezoneLabel( monthData.data.timezone );
+	}
+	const timezone = knownTimezone.current;
 
 	// Result announcement + skipping empty months when the calendar opens.
 	useEffect( () => {
@@ -746,31 +758,79 @@ export default function BookingApp( { config, renderDetails } ) {
 			resource === 'any'
 				? null
 				: ( resources ?? [] ).find( ( item ) => item.id === resource );
-		content = renderDetails( {
-			stepProps: stepProps( __( 'Your details', 'terminarz' ) ),
-			idPrefix,
-			config,
-			service,
-			resource,
-			resourceName: selectedResource?.name ?? '',
-			date,
-			slot,
-			timezone,
-			back,
-			backButton,
-			announce: setAnnouncement,
-			onSlotUnavailable: ( message ) => {
-				refreshAvailability();
-				setTimeNotice( message );
-				setSlotStart( null );
-				setMonth( monthOf( date ) );
-				goTo( STEPS.TIME );
-			},
-		} );
+		content = (
+			<DetailsStep
+				stepProps={ stepProps( __( 'Your details', 'terminarz' ) ) }
+				idPrefix={ idPrefix }
+				config={ config }
+				service={ service }
+				resource={ resource }
+				resourceName={ selectedResource?.name ?? '' }
+				date={ date }
+				slot={ slot }
+				timezone={ timezone }
+				backButton={ backButton }
+				form={ form }
+				setForm={ setForm }
+				announce={ setAnnouncement }
+				onBooked={ ( created, redirect ) => {
+					// Extension point: other scripts may react to a new booking (e.g. analytics).
+					root.current?.dispatchEvent(
+						new window.CustomEvent( 'terminarz:booking-created', {
+							bubbles: true,
+							detail: created,
+						} )
+					);
+					if ( redirect ) {
+						window.location.assign( redirect );
+						return;
+					}
+					refreshAvailability();
+					setBooking( created );
+					goTo( STEPS.DONE );
+				} }
+				onSlotUnavailable={ ( message ) => {
+					refreshAvailability();
+					setTimeNotice( message );
+					setSlotStart( null );
+					setMonth( monthOf( date ) );
+					goTo( STEPS.TIME );
+				} }
+			/>
+		);
+	} else if ( step === STEPS.DONE && booking ) {
+		const assigned = ( resourcesByService[ serviceId ] ?? [] ).find(
+			( item ) => item.id === booking.resource
+		);
+		content = (
+			<Confirmation
+				stepProps={ {
+					...stepProps(
+						__( 'Thank you for your booking', 'terminarz' )
+					),
+					index: 0,
+				} }
+				booking={ booking }
+				serviceName={ service?.name ?? '' }
+				resourceName={ assigned?.name ?? '' }
+				timezone={ timezone }
+				locale={ config.locale }
+				onRestart={ () => {
+					setBooking( null );
+					setForm( EMPTY_FORM );
+					resetSchedule();
+					if ( skipService ) {
+						continueWithService( serviceId );
+					} else {
+						goTo( STEPS.SERVICE );
+					}
+				} }
+			/>
+		);
 	}
 
 	return (
-		<div className="trmz-booking">
+		<div className="trmz-booking" ref={ root }>
 			<div
 				className="trmz-booking__status"
 				aria-live="polite"

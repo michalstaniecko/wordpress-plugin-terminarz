@@ -315,3 +315,16 @@ Jeden wpis na zamknięte issue: data, numer issue, co zrobione, decyzje, znane r
 - **Decyzje:** ADR-032 (natywne radio dla wyborów, kalendarz `grid` wg APG, dostępność pobierana miesiącami, automatyczne
   przejście do kolejnego miesiąca, gdy bieżący jest pusty).
 - **Ryzyka:** godziny wyświetlane w formacie 24 h niezależnie od ustawień formatu czasu witryny.
+
+## 2026-09-29 — #31 formularz klienta, zgoda i wysłanie rezerwacji
+
+- **Zrobione:** `DetailsStep` (formularz z honeypotem i zgodą z ustawień), `Confirmation` (termin i status z odpowiedzi),
+  `lib/form.js` (walidacja, treść żądania, mapowanie błędów 400/403/409/429, bezpieczny `payment_url`). 409 → powrót do
+  wyboru godziny z odświeżonymi slotami i zachowanym formularzem; 429 → komunikat z `Retry-After`; błędy pól przy polach.
+  Przekierowanie do `payment_url` i zdarzenie `terminarz:booking-created` jako punkty rozszerzenia (M6). mu-plugin E2E
+  podnoszący limit zapytań w środowisku testowym. Testy: Jest (walidacja, mapowanie błędów, URL), E2E
+  `booking-block-form.spec.js` (walidacja, happy path anonimowo bez nonce, 409 z zachowaniem danych, 429, 400, przekierowanie,
+  zalogowany z nonce, kolejna rezerwacja).
+- **Decyzje:** ADR-033.
+- **Ryzyka:** komunikat po sukcesie nie wspomina e-maila (powiadomienia dopiero w M7); mu-plugin wymaga restartu
+  `npm run env:start:tests` w istniejących lokalnych środowiskach.

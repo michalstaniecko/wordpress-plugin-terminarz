@@ -7,7 +7,6 @@ import { createRoot } from '@wordpress/element';
 
 import { configureApi } from './app/api';
 import BookingApp from './app/BookingApp';
-import DetailsStep from './app/DetailsStep';
 import { parseConfig } from './lib/config';
 
 domReady( () => {
@@ -21,11 +20,6 @@ domReady( () => {
 				return;
 			}
 			configureApi( config );
-			createRoot( container ).render(
-				<BookingApp
-					config={ config }
-					renderDetails={ ( props ) => <DetailsStep { ...props } /> }
-				/>
-			);
+			createRoot( container ).render( <BookingApp config={ config } /> );
 		} );
 } );
