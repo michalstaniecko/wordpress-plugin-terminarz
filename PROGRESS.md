@@ -33,3 +33,13 @@ Jeden wpis na zamknięte issue: data, numer issue, co zrobione, decyzje, znane r
   deaktywacja jej nie zdejmuje, `revoke()` czyści wszystkie role).
 - **Decyzje:** ADR-008 (biblioteka testów WP z wp-env zamiast `wp-phpunit/wp-phpunit`, osobny prefiks tabel).
 - **Ryzyka:** suita integration wymaga Dockera/wp-env; poza wp-env trzeba ustawić `WP_TESTS_DIR` i `WORDPRESS_DB_*`.
+
+## 2026-09-29 — #5 PHPCS (WPCS), PHPStan poziom 6 i lint JS/CSS
+
+- **Zrobione:** `phpcs.xml.dist` (WPCS 3.4 + PHPCompatibilityWP), `phpstan.neon.dist` (poziom 6, phpstan-wordpress,
+  stuby WooCommerce), `eslint.config.cjs`, `.stylelintrc.json`; skrypty `composer lint`, `lint:fix`, `phpstan`,
+  `npm run lint`, `lint:fix`. Cały obecny kod przechodzi bez błędów i bez baseline'u.
+- **Decyzje:** ADR-009 (wyłączenie `WordPress.Files.FileName` dla PSR-4, prefiks klas CSS, zakres analizy PHPStana).
+- **Ryzyka:** `phpcompatibility-wp` 2.1 opiera się na PHPCompatibility 9.3 (nie zna części składni PHP 8.x —
+  wykrywa głównie użycie zbyt nowych funkcji; realną zgodność zapewnia macierz PHP w CI). Testy integracyjne
+  nie są analizowane przez PHPStana.

@@ -37,7 +37,9 @@ Przydatne komendy:
 | Usunięcie środowisk | `npm run env:destroy` |
 | WP-CLI | `npm run env:cli -- wp plugin list` / `npm run env:tests:cli -- wp plugin list` |
 | Build bloków | `npm run build` (tryb watch: `npm start`) |
-| Lint JS/CSS | `npm run lint` |
+| Lint PHP (WPCS) | `composer lint` / `composer lint:fix` |
+| Analiza statyczna (PHPStan, poziom 6) | `composer phpstan` |
+| Lint JS/CSS (ESLint + stylelint) | `npm run lint` / `npm run lint:fix` |
 | Plik `.pot` | `npm run i18n` (WP-CLI i18n z Composera, bez Dockera) |
 | Testy PHP (unit + integration) | `composer test` (unit bez Dockera: `composer test:unit`; integration: `composer test:integration`, wymaga `npm run env:start:tests`) |
 | Testy E2E | `npm run test:e2e` |
