@@ -34,4 +34,9 @@ define( 'WP_PHP_BINARY', 'php' );
 define( 'WPLANG', '' );
 define( 'WP_DEBUG', true );
 
+// `WP_TESTS_MULTISITE=1` runs the suite on a multisite network (`composer test:integration:multisite`).
+if ( '1' === $trmz_env( 'WP_TESTS_MULTISITE', '0' ) ) {
+	define( 'WP_TESTS_MULTISITE', true );
+}
+
 unset( $trmz_env );

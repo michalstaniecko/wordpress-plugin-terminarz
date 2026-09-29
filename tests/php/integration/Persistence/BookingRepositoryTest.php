@@ -15,6 +15,7 @@ use Terminarz\Domain\Exception\InvalidValue;
 use Terminarz\Domain\Exception\SlotUnavailable;
 use Terminarz\Domain\Model\BookingStatus;
 use Terminarz\Domain\Model\TimeRange;
+use Terminarz\Domain\Repository\BookingCriteria;
 use Terminarz\Infrastructure\Database\Schema;
 use Terminarz\Infrastructure\Persistence\WpdbBookingRepository;
 use Terminarz\Tests\Integration\Support\BookingFixtures;
@@ -298,6 +299,52 @@ final class BookingRepositoryTest extends WP_UnitTestCase {
 	public function test_attach_order(): void {
 		$stored = $this->bookings->create( $this->booking( $this->resource, '2030-01-02 10:00' ), self::utc( '2030-01-01 08:00' ) );
 		$this->assertSame( 77, $this->bookings->attach_order( (int) $stored->id, 77 )->order_id );
+	}
+
+	public function test_count_by_status_uses_one_grouped_query_and_ignores_status_filter(): void {
+		$now = self::utc( '2030-01-01 08:00' );
+		$a   = $this->bookings->create( $this->booking( $this->resource, '2030-01-02 09:00' ), $now );
+		$this->bookings->create( $this->booking( $this->resource, '2030-01-02 10:00' ), $now );
+		$this->bookings->create( $this->booking( $this->resource, '2030-01-02 11:00', 60, 0, BookingStatus::Pending ), $now );
+		$this->bookings->create( $this->booking( $this->resource, '2030-01-05 11:00', 60, 0, BookingStatus::Pending ), $now );
+		$this->bookings->change_status( (int) $a->id, BookingStatus::Cancelled );
+
+		global $wpdb;
+		$before = $wpdb->num_queries;
+		$counts = $this->bookings->count_by_status( new BookingCriteria( array( BookingStatus::Confirmed ), null, null, $this->day() ) );
+
+		$this->assertSame( 1, $wpdb->num_queries - $before );
+		$this->assertCount( count( BookingStatus::cases() ), $counts );
+		$this->assertSame( 1, $counts['confirmed'] );
+		$this->assertSame( 1, $counts['cancelled'] );
+		$this->assertSame( 1, $counts['pending'] );
+		$this->assertSame( 0, $counts['expired'] );
+	}
+
+	public function test_search_after_id_pages_by_id_without_gaps_or_duplicates(): void {
+		$now = self::utc( '2030-01-01 08:00' );
+		$ids = array();
+		foreach ( array( '2030-01-02 15:00', '2030-01-02 09:00', '2030-01-02 12:00', '2030-01-02 10:00' ) as $start ) {
+			$ids[] = (int) $this->bookings->create( $this->booking( $this->resource, $start ), $now )->id;
+		}
+		$criteria = new BookingCriteria( array(), null, null, null, '', BookingCriteria::ORDER_START, true, 2 );
+		$id_of    = static fn( $booking ): int => (int) $booking->id;
+
+		$first = array_map( $id_of, $this->bookings->search_after_id( $criteria, 0 ) );
+		$this->assertSame( array( $ids[0], $ids[1] ), $first, 'Ordered by ID; start order and direction ignored.' );
+
+		// A concurrent change between pages: a booking from the first page moves, a new one is added.
+		$this->bookings->reschedule( $ids[0], $this->range( '2030-01-02 17:00', 60 ), null, $now );
+		$ids[] = (int) $this->bookings->create( $this->booking( $this->resource, '2030-01-02 07:00' ), $now )->id;
+
+		$second = array_map( $id_of, $this->bookings->search_after_id( $criteria, end( $first ) ) );
+		$third  = array_map( $id_of, $this->bookings->search_after_id( $criteria, end( $second ) ) );
+		$this->assertSame( array( $ids[2], $ids[3] ), $second );
+		$this->assertSame( array( $ids[4] ), $third );
+		$this->assertSame( array(), $this->bookings->search_after_id( $criteria, $ids[4] ) );
+
+		$cancelled_only = new BookingCriteria( array( BookingStatus::Cancelled ) );
+		$this->assertSame( array(), $this->bookings->search_after_id( $cancelled_only, 0 ) );
 	}
 
 	private function day(): TimeRange {

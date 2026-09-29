@@ -338,16 +338,63 @@ final class WpdbBookingRepository extends WpdbRepository implements BookingRepos
 	}
 
 	/**
-	 * WHERE clause (with placeholders) and its arguments for search criteria.
+	 * {@inheritDoc}
 	 *
 	 * @param BookingCriteria $criteria Criteria.
+	 * @return array<string, int>
+	 * @throws DatabaseError When the query fails.
+	 */
+	public function count_by_status( BookingCriteria $criteria ): array {
+		$table            = $this->table( Schema::BOOKINGS );
+		[ $where, $args ] = $this->criteria_where( $criteria, false );
+
+		$sql  = "SELECT status, COUNT(*) AS total FROM {$table} WHERE {$where} GROUP BY status";
+		$rows = $this->rows( array() === $args ? $sql : $this->db->prepare( $sql, $args ) ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- table from Schema, placeholders generated.
+
+		$counts = array();
+		foreach ( BookingStatus::cases() as $status ) {
+			$counts[ $status->value ] = 0;
+		}
+		foreach ( $rows as $row ) {
+			$status = (string) $row['status'];
+			if ( isset( $counts[ $status ] ) ) {
+				$counts[ $status ] = (int) $row['total'];
+			}
+		}
+		return $counts;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @param BookingCriteria $criteria Criteria.
+	 * @param int             $after_id Last ID of the previous page.
+	 * @return Booking[]
+	 */
+	public function search_after_id( BookingCriteria $criteria, int $after_id ): array {
+		$table            = $this->table( Schema::BOOKINGS );
+		[ $where, $args ] = $this->criteria_where( $criteria );
+		$args[]           = max( 0, $after_id );
+		$args[]           = $criteria->limit;
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- table from Schema, placeholders generated.
+		$rows = $this->rows( $this->db->prepare( 'SELECT ' . self::COLUMNS . " FROM {$table} WHERE {$where} AND id > %d ORDER BY id ASC LIMIT %d", $args ) );
+
+		return array_map( array( self::class, 'hydrate' ), $rows );
+	}
+
+	/**
+	 * WHERE clause (with placeholders) and its arguments for search criteria.
+	 *
+	 * @param BookingCriteria $criteria      Criteria.
+	 * @param bool            $with_statuses Apply the status filter.
 	 * @return array{0: string, 1: array<int, int|string>}
 	 */
-	private function criteria_where( BookingCriteria $criteria ): array {
+	private function criteria_where( BookingCriteria $criteria, bool $with_statuses = true ): array {
 		$where = array( '1=1' );
 		$args  = array();
 
-		if ( array() !== $criteria->statuses ) {
+		if ( $with_statuses && array() !== $criteria->statuses ) {
 			$where[] = 'status IN (' . implode( ', ', array_fill( 0, count( $criteria->statuses ), '%s' ) ) . ')';
 			foreach ( $criteria->statuses as $status ) {
 				$args[] = $status->value;
