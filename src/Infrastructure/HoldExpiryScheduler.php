@@ -73,9 +73,17 @@ final class HoldExpiryScheduler implements Module {
 	 * Whether Action Scheduler can be used now.
 	 */
 	public static function uses_action_scheduler(): bool {
-		return function_exists( 'as_schedule_recurring_action' )
+		$available = function_exists( 'as_schedule_recurring_action' )
 			&& function_exists( 'as_has_scheduled_action' )
 			&& did_action( 'action_scheduler_init' ) > 0;
+
+		/**
+		 * Filters whether Terminarz schedules its jobs (hold expiry, reminders) in Action Scheduler instead of WP-Cron.
+		 * Returning true has no effect when Action Scheduler is not loaded.
+		 *
+		 * @param bool $available Whether Action Scheduler is loaded and initialised.
+		 */
+		return $available && (bool) apply_filters( 'trmz_use_action_scheduler', true );
 	}
 
 	/**

@@ -447,3 +447,15 @@ Jeden wpis na zamknięte issue: data, numer issue, co zrobione, decyzje, znane r
 - **Decyzje:** ADR-042; założenie w #41 (sekret w bazie + HMAC zamiast hasha tokenu).
 - **Ryzyka:** rotacja `AUTH_SALT` unieważnia wysłane linki; strona anulowania nie używa motywu (spójność wizualna
   przez filtr `trmz_cancel_page_html`).
+
+## 2026-09-29 — #42 przypomnienia przed wizytą
+
+- **Zrobione:** ustawienie `reminder_hours_before` (domyślnie 24 h, 0 = wyłączone), `Notifications\ReminderScheduler`
+  (Action Scheduler / WP-Cron, hook `trmz_send_reminder`, przeplanowanie przy przeniesieniu, usunięcie przy anulowaniu
+  i wygaśnięciu, idempotentny handler z deduplikacją po czasie startu), filtr `trmz_use_action_scheduler`,
+  `unschedule_all()` dla uninstall. Testy integracyjne obu backendów (planowanie, potwierdzenie, przeniesienie,
+  anulowanie, jednokrotna wysyłka, nowa po przeniesieniu, brak dla anulowanych/wygasłych/rozpoczętych/wyłączonych,
+  za późno na przypomnienie, zbyt wczesne zadanie).
+- **Decyzje:** ADR-043.
+- **Ryzyka:** WP-Cron bez ruchu na stronie może spóźnić przypomnienie; zmiana ustawienia nie przesuwa już zaplanowanych
+  przypomnień na wcześniej.

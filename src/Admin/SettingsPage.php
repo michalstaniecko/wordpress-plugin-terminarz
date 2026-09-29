@@ -186,6 +186,11 @@ final class SettingsPage implements AdminPage {
 				'type'    => 'email',
 				'help'    => __( 'Where notifications about new bookings are sent. Leave empty to use the site administration e-mail.', 'terminarz' ),
 			),
+			'reminder_hours_before'       => array(
+				'section' => 'trmz_notifications',
+				'type'    => 'number',
+				'help'    => __( 'Customers of confirmed bookings get a reminder e-mail this many hours before the appointment (0 = no reminders). Bookings made later than that get no reminder.', 'terminarz' ),
+			),
 			'consent_text'                => array(
 				'section' => 'trmz_privacy',
 				'type'    => 'textarea',

@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-29T19:54:49+00:00\n"
+"POT-Creation-Date: 2026-09-29T19:58:05+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: terminarz\n"
@@ -1212,28 +1212,32 @@ msgid "Where notifications about new bookings are sent. Leave empty to use the s
 msgstr ""
 
 #: src/Admin/SettingsPage.php:192
-msgid "Shown next to the consent checkbox in the booking form. Basic HTML (links) is allowed. Leave empty to hide the checkbox."
+msgid "Customers of confirmed bookings get a reminder e-mail this many hours before the appointment (0 = no reminders). Bookings made later than that get no reminder."
 msgstr ""
 
 #: src/Admin/SettingsPage.php:197
+msgid "Shown next to the consent checkbox in the booking form. Basic HTML (links) is allowed. Leave empty to hide the checkbox."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:202
 msgid "When the plugin is deleted, also delete all bookings, resources, services and settings. This cannot be undone."
 msgstr ""
 
-#: src/Admin/SettingsPage.php:207
+#: src/Admin/SettingsPage.php:212
 msgid "Payments are processed by WooCommerce."
 msgstr ""
 
 #. translators: 1: required WooCommerce version, 2: installed WooCommerce version.
-#: src/Admin/SettingsPage.php:212
+#: src/Admin/SettingsPage.php:217
 #, php-format
 msgid "Payments require WooCommerce %1$s or newer (installed: %2$s), so bookings are accepted without payment regardless of the mode below."
 msgstr ""
 
-#: src/Admin/SettingsPage.php:218
+#: src/Admin/SettingsPage.php:223
 msgid "Payments require an active WooCommerce plugin. WooCommerce is not active, so bookings are accepted without payment regardless of the mode below."
 msgstr ""
 
-#: src/Admin/SettingsPage.php:309
+#: src/Admin/SettingsPage.php:314
 msgid "Sorry, you are not allowed to manage Terminarz settings."
 msgstr ""
 
@@ -1323,66 +1327,70 @@ msgid "Every 5 minutes (Terminarz)"
 msgstr ""
 
 #. translators: 1: field label, 2: minimum value, 3: maximum value.
-#: src/Infrastructure/Settings.php:236
+#: src/Infrastructure/Settings.php:238
 #, php-format
 msgid "%1$s: enter a whole number from %2$d to %3$d. The previous value was kept."
 msgstr ""
 
-#: src/Infrastructure/Settings.php:242
+#: src/Infrastructure/Settings.php:244
 msgid "Notification e-mail: enter a valid e-mail address. The previous value was kept."
 msgstr ""
 
 #. translators: %s: field label.
-#: src/Infrastructure/Settings.php:246
+#: src/Infrastructure/Settings.php:248
 #, php-format
 msgid "%s: invalid value. The previous value was kept."
 msgstr ""
 
-#: src/Infrastructure/Settings.php:261
+#: src/Infrastructure/Settings.php:263
 msgid "Slot grid step (minutes)"
 msgstr ""
 
-#: src/Infrastructure/Settings.php:262
+#: src/Infrastructure/Settings.php:264
 msgid "Minimum lead time (minutes)"
 msgstr ""
 
-#: src/Infrastructure/Settings.php:263
+#: src/Infrastructure/Settings.php:265
 msgid "Booking horizon (days)"
 msgstr ""
 
-#: src/Infrastructure/Settings.php:264
+#: src/Infrastructure/Settings.php:266
 msgid "Customer cancellation limit (hours)"
 msgstr ""
 
-#: src/Infrastructure/Settings.php:265
+#: src/Infrastructure/Settings.php:267
 msgid "Automatic confirmation"
 msgstr ""
 
-#: src/Infrastructure/Settings.php:266
+#: src/Infrastructure/Settings.php:268
 msgid "\"Any resource\" selection"
 msgstr ""
 
-#: src/Infrastructure/Settings.php:267
+#: src/Infrastructure/Settings.php:269
 msgid "Payment mode"
 msgstr ""
 
-#: src/Infrastructure/Settings.php:268
+#: src/Infrastructure/Settings.php:270
 msgid "Deposit (%)"
 msgstr ""
 
-#: src/Infrastructure/Settings.php:269
+#: src/Infrastructure/Settings.php:271
 msgid "Slot hold for payment (minutes)"
 msgstr ""
 
-#: src/Infrastructure/Settings.php:270
+#: src/Infrastructure/Settings.php:272
 msgid "Notification e-mail"
 msgstr ""
 
-#: src/Infrastructure/Settings.php:271
+#: src/Infrastructure/Settings.php:273
+msgid "Reminder (hours before)"
+msgstr ""
+
+#: src/Infrastructure/Settings.php:274
 msgid "Consent text"
 msgstr ""
 
-#: src/Infrastructure/Settings.php:272
+#: src/Infrastructure/Settings.php:275
 msgid "Delete data on uninstall"
 msgstr ""
 
