@@ -578,3 +578,22 @@ opisania w dokumentacji M6.
   co dla klienta (wyprzedzenie, horyzont, siatka) — panel ich nie omija.
 
 **Konsekwencje.** Liczniki statusów to 6 dodatkowych zapytań `COUNT` na wyświetlenie listy (akceptowalne).
+
+## ADR-030: Eksport rezerwacji do CSV
+
+**Decyzja.**
+- Przycisk „Eksportuj CSV” na liście rezerwacji prowadzi do `admin-post.php?action=trmz_export_bookings` z **aktywnymi
+  filtrami listy** (`BookingFilters::query_args()`) i nonce `trmz_export_bookings`; `BookingsPage::authorize_export()`
+  sprawdza `trmz_manage_bookings` i nonce, `export()` wysyła nagłówki (`text/csv; charset=utf-8`, `attachment`,
+  `nosniff`, bez cache) i strumieniuje do `php://output` — hook `admin_post_` działa przed wysłaniem jakiejkolwiek treści.
+- `Admin\BookingsCsvExporter::write($stream, $filters)`: BOM UTF-8, nagłówek, wiersze partiami po 100
+  (`BookingRepository::search()` z offsetem, stabilne sortowanie start+id; `fflush` po partii) — pamięć stała niezależnie
+  od liczby rezerwacji. Kolumny: ID publiczne, status, start/koniec (strefa witryny), start UTC, usługa, zasób, dane
+  klienta, notatka, data utworzenia, zamówienie.
+- Separator: filtr `trmz_csv_separator` (`,` domyślnie; dozwolone `,` `;` tab `|` — inne wartości → `,`); `fputcsv` z
+  pustym znakiem ucieczki (RFC 4180).
+- Ochrona przed CSV/formula injection: komórka zaczynająca się od `=`, `+`, `-`, `@`, tabulatora lub CR dostaje prefiks `'`
+  (dotyczy też np. telefonu `+48…`).
+
+**Konsekwencje.** Eksport z offsetem przy równoległych zmianach może pominąć/zdublować wiersz na granicy partii —
+akceptowalne dla eksportu administracyjnego.

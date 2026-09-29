@@ -196,6 +196,13 @@ final class BookingsListTable extends WP_List_Table {
 		}
 		submit_button( __( 'Filter', 'terminarz' ), '', 'filter_action', false, array( 'id' => 'trmz-filter-submit' ) );
 		echo '</div>';
+		echo '<div class="alignleft actions">';
+		printf(
+			'<a class="button" id="trmz-export-csv" href="%1$s">%2$s</a>',
+			esc_url( $this->page->action_url( 'export_bookings', $this->filters->query_args() ) ),
+			esc_html__( 'Export CSV', 'terminarz' )
+		);
+		echo '</div>';
 	}
 
 	/**
