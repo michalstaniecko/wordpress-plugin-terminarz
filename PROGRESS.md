@@ -82,3 +82,12 @@ Jeden wpis na zamknięte issue: data, numer issue, co zrobione, decyzje, znane r
   wyjątek „inne godziny” zastępuje też przerwy, przejścia statusów jak w ADR-015, bez `needs_attention`.
 - **Ryzyka:** brak nowych tekstów dla użytkownika (komunikaty wyjątków nietłumaczone — adaptery muszą je mapować).
   Walidacja e-maila przez `filter_var` może różnić się od `is_email()` WordPressa — adapter sanitizuje wcześniej.
+
+## 2026-09-29 — #11 silnik dostępności
+
+- **Zrobione:** `src/Domain/Availability`: `AvailabilityEngine` (`find_slots()`), `AvailabilityQuery` (+ `for_service()`),
+  `ResourceCalendar`, `BusyIntervals::from_bookings()`, `WallClock` (lokalne → UTC z regułami DST). Testy unit: godziny
+  pracy, przerwy, bufor (nowej i istniejącej rezerwacji), sąsiadujące rezerwacje, nakładające się zajętości, wyjątki
+  (pierwszeństwo zasobu), wyprzedzenie, horyzont w dniach lokalnych, krok siatki, sortowanie, wiele zasobów, wydajność.
+- **Decyzje:** ADR-016 (siatka od początku okna, horyzont w dniach lokalnych, reguły DST, jawne filtrowanie zajętości).
+- **Ryzyka:** test wydajności mierzy czas (< 300 ms przy ~7 ms lokalnie) — na bardzo wolnym runnerze CI mógłby być niestabilny.
