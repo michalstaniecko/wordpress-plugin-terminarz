@@ -42,6 +42,6 @@ Przydatne komendy:
 | Lint JS/CSS (ESLint + stylelint) | `npm run lint` / `npm run lint:fix` |
 | Plik `.pot` | `npm run i18n` (WP-CLI i18n z Composera, bez Dockera) |
 | Testy PHP (unit + integration) | `composer test` (unit bez Dockera: `composer test:unit`; integration: `composer test:integration`, wymaga `npm run env:start:tests`) |
-| Testy E2E | `npm run test:e2e` |
+| Testy E2E (Playwright, środowisko tests :8889) | `npm run test:e2e` (pierwszy raz: `npx playwright install chromium`; raport: `playwright-report/`) |
 
 Szczegóły architektury: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md). Dziennik postępu: [`PROGRESS.md`](PROGRESS.md).

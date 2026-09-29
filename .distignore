@@ -31,7 +31,7 @@ phpcs.xml.dist
 phpstan.neon.dist
 phpunit.xml.dist
 phpunit-integration.xml.dist
-playwright.config.ts
+playwright.config.js
 CLAUDE.md
 EPIC_ISSUE.md
 PROGRESS.md
