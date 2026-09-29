@@ -69,3 +69,21 @@ Dzięki temu `.pot` generuje się lokalnie i w CI bez uruchamiania wp-env. Plik 
 
 **Decyzja.** `@wordpress/scripts` z `--webpack-src-dir=blocks --output-path=build`. Do czasu powstania pierwszego bloku (M5)
 `blocks/index.js` jest pustym punktem wejścia, żeby `npm run build` przechodził; wynik nie jest nigdzie ładowany.
+
+## ADR-008: Dwie suity PHPUnit
+
+**Decyzja.**
+- PHPUnit **9.6** + `yoast/phpunit-polyfills` 4.x — najwyższa wersja PHPUnit w pełni wspierana przez bibliotekę testów
+  WordPressa; działa na PHP 8.1–8.4.
+- `unit` (`phpunit.xml.dist`, `tests/php/unit`) — bez WordPressa i bazy; bootstrap ładuje wyłącznie autoloader Composera.
+  Tu trafiają testy `src/Domain`. `composer test:unit` działa bez Dockera.
+- `integration` (`phpunit-integration.xml.dist`, `tests/php/integration`) — biblioteka testów WordPressa dostarczana przez
+  wp-env (`WP_TESTS_DIR`, zgodna z wersją core w kontenerze), uruchamiana w kontenerze `cli` środowiska testowego:
+  `composer test:integration`. Plugin ładowany na `muplugins_loaded`.
+- Własny `tests/php/integration/wp-tests-config.php` z prefiksem tabel `wptests_` — domyślny config wp-env używa `wp_`,
+  a instalator suity czyści tabele o tym prefiksie, co zniszczyłoby witrynę E2E w tej samej bazie. Parametry bazy
+  i `ABSPATH` można nadpisać zmiennymi środowiskowymi (`WORDPRESS_DB_*`, `TRMZ_TESTS_ABSPATH`, `WP_TESTS_DIR`),
+  żeby uruchomić suitę poza wp-env.
+- Odejście od rekomendacji `wp-phpunit/wp-phpunit`: biblioteka testów z wp-env jest zawsze zgodna z wersją core,
+  a pakiet Composera trzeba by synchronizować ręcznie.
+- `composer test` = unit + integration (wymaga uruchomionego `npm run env:start:tests`).
