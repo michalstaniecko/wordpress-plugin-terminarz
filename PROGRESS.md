@@ -475,3 +475,13 @@ Jeden wpis na zamknięte issue: data, numer issue, co zrobione, decyzje, znane r
 - **Zrobione:** helper `bookThroughBlock` nie usuwa trasy przechwytującej odpowiedź rezerwacji (unroute potrafił zawisnąć
   przy natychmiastowym przekierowaniu na płatność); kolejne żądania przechodzą bez zmian.
 - **Ryzyka:** brak.
+
+## 2026-09-29 — #84 zapytania listy admina i eksportu CSV
+
+- **Zrobione:** kolumna „Usługi” listy zasobów — jedno zapytanie (`ServiceRepository::service_ids_by_resource()`) zamiast
+  zapytań per wiersz; liczniki statusów listy rezerwacji — jedno `GROUP BY status`
+  (`BookingRepository::count_by_status()`); eksport CSV stronicowany keysetem po `id`
+  (`BookingRepository::search_after_id()`). Testy integracyjne (liczba zapytań niezależna od liczby wierszy,
+  zmiany między stronami keysetu bez pominięć/duplikatów).
+- **Decyzje:** CSV w kolejności ID (utworzenia), niezależnie od sortowania listy — warunek stabilnego keysetu.
+- **Ryzyka:** brak.

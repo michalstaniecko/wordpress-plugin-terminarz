@@ -160,6 +160,23 @@ final class WpdbServiceRepository extends WpdbRepository implements ServiceRepos
 	}
 
 	/**
+	 * {@inheritDoc}
+	 *
+	 * @return array<int, int[]>
+	 */
+	public function service_ids_by_resource(): array {
+		$pivot = $this->table( Schema::SERVICE_RESOURCES );
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table from Schema, no user input.
+		$rows = $this->rows( "SELECT resource_id, service_id FROM {$pivot} ORDER BY resource_id ASC, service_id ASC" );
+
+		$map = array();
+		foreach ( $rows as $row ) {
+			$map[ (int) $row['resource_id'] ][] = (int) $row['service_id'];
+		}
+		return $map;
+	}
+
+	/**
 	 * Row → entity.
 	 *
 	 * @param array<string, mixed> $row Row.

@@ -17,7 +17,8 @@ use Terminarz\Infrastructure\Services;
  * Writes the bookings matching the list filters as CSV to a stream, in batches (never the whole result in memory):
  * UTF-8 with BOM (Excel), separator from the `trmz_csv_separator` filter (`,` by default), dates in the site time zone
  * plus the UTC start. Cells starting with `=`, `+`, `-`, `@`, tab or carriage return get a leading apostrophe
- * (CSV/formula injection).
+ * (CSV/formula injection). Rows are paged by ID (keyset) in ascending ID order, so bookings created or changed during
+ * the export are neither skipped nor repeated.
  */
 final class BookingsCsvExporter {
 
@@ -61,16 +62,17 @@ final class BookingsCsvExporter {
 		fwrite( $stream, "\xEF\xBB\xBF" ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- Streaming to the response.
 		$this->put( $stream, $this->header(), $separator );
 
-		$written = 0;
-		$offset  = 0;
+		$written  = 0;
+		$after_id = 0;
+		$criteria = $filters->criteria( $timezone, self::BATCH );
 		do {
-			$batch = $this->services->bookings()->search( $filters->criteria( $timezone, self::BATCH, $offset ) );
+			$batch = $this->services->bookings()->search_after_id( $criteria, $after_id );
 			foreach ( $batch as $booking ) {
 				$this->put( $stream, $this->row( $booking, $services, $resources ), $separator );
+				$after_id = (int) $booking->id;
 				++$written;
 			}
-			$offset += self::BATCH;
-			$full    = count( $batch ) === self::BATCH;
+			$full = count( $batch ) === self::BATCH;
 			fflush( $stream );
 		} while ( $full );
 
