@@ -37,8 +37,17 @@ final class Templates {
 		return new Template(
 			(bool) ( $stored['enabled'] ?? true ),
 			isset( $stored['subject'] ) && is_string( $stored['subject'] ) ? $stored['subject'] : $default->subject,
-			isset( $stored['body'] ) && is_string( $stored['body'] ) ? $stored['body'] : $default->body
+			isset( $stored['body'] ) && is_string( $stored['body'] ) ? self::upgrade_body( $stored['body'] ) : $default->body
 		);
+	}
+
+	/**
+	 * Replaces the pre-1.0 default cancellation paragraph of a stored body with the conditional one.
+	 *
+	 * @param string $body Stored body.
+	 */
+	private static function upgrade_body( string $body ): string {
+		return str_replace( self::sanitize_body( self::legacy_cancel_block() ), self::cancel_block(), $body );
 	}
 
 	/**
@@ -234,6 +243,14 @@ final class Templates {
 	 * Cancellation link paragraph of customer e-mails.
 	 */
 	private static function cancel_block(): string {
+		return '<p>{cancel_info}</p>';
+	}
+
+	/**
+	 * Cancellation paragraph of the defaults before 1.0 (link and deadline always shown). A stored, otherwise customised
+	 * body containing it exactly gets the conditional `{cancel_info}` paragraph instead.
+	 */
+	private static function legacy_cancel_block(): string {
 		return '<p>'
 			/* translators: Default e-mail text. Keep the {placeholders} unchanged. */
 			. __( 'If you cannot come, please cancel your booking by {cancel_deadline}:', 'terminarz' )

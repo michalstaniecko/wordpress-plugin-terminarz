@@ -46,14 +46,23 @@ final class BookingPlaceholders {
 		$start    = $booking->range->start->getTimestamp();
 		$end      = $booking->range->end->getTimestamp();
 
+		// Online cancellation is offered only while it is still possible; afterwards (e.g. a booking made within the
+		// cancellation limit, or a reminder sent after the deadline) `{cancel_info}` asks the customer to contact the
+		// business and the link and deadline stay empty.
 		$cancel = array();
-		$token  = $booking->status->is_active() ? $this->services->booking_service()->cancel_token( $booking ) : '';
-		if ( '' !== $token ) {
+		if ( $booking->status->is_active() ) {
+			$token    = $this->services->booking_service()->cancel_token( $booking );
 			$deadline = BookingService::cancellation_deadline( $booking, $this->services->settings()->customer_cancel_limit_hours() );
-			$cancel   = array(
-				'cancel_url'      => CancellationPage::url( $booking, $token ),
-				'cancel_deadline' => (string) wp_date( trim( $date . ' ' . $time ), $deadline->getTimestamp() ),
-			);
+			$cancel   = array( 'cancel_info' => Placeholders::cancel_info( '', '' ) );
+			if ( '' !== $token && $this->services->clock()->now() < $deadline ) {
+				$url    = CancellationPage::url( $booking, $token );
+				$until  = (string) wp_date( trim( $date . ' ' . $time ), $deadline->getTimestamp() );
+				$cancel = array(
+					'cancel_info'     => Placeholders::cancel_info( $url, $until ),
+					'cancel_url'      => $url,
+					'cancel_deadline' => $until,
+				);
+			}
 		}
 
 		$values = array_merge(

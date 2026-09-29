@@ -15,6 +15,8 @@ use Terminarz\Domain\Model\Booking;
 use Terminarz\Domain\Model\BookingStatus;
 use Terminarz\Frontend\CancellationPage;
 use Terminarz\Infrastructure\Settings;
+use Terminarz\Notifications\MessageType;
+use Terminarz\Notifications\Template;
 use Terminarz\Notifications\Templates;
 use Terminarz\Tests\Integration\Rest\RestTestCase;
 use Terminarz\Tests\Integration\Support\CapturedMails;
@@ -159,6 +161,67 @@ final class CancellationPageTest extends RestTestCase {
 		$this->assertStringContainsString( '2030-01-08', $page['body'] );
 		$this->assertStringContainsString( 'until 2030-01-07 10:00', $page['body'] );
 		$this->assertSame( BookingStatus::Confirmed, $this->container->bookings()->get( (int) $booking->id )?->status, 'GET never cancels.' );
+	}
+
+	public function test_booking_within_the_cancellation_limit_gets_no_link_nor_past_deadline(): void {
+		$this->book( '2030-01-07T11:00:00+01:00' ); // Deadline 2030-01-06 11:00 — already passed.
+
+		$mails = self::mails_with_subject( 'Your booking is confirmed' );
+		$this->assertCount( 1, $mails );
+		$body = $mails[0]['body'];
+		$this->assertStringNotContainsString( 'trmz_cancel', $body );
+		$this->assertStringNotContainsString( 'cancel your booking by', $body );
+		$this->assertStringNotContainsString( '2030-01-06', $body );
+		$this->assertStringContainsString( 'To change or cancel your booking, please contact us.', $body );
+		$this->assertStringNotContainsString( '{cancel_info}', $body );
+	}
+
+	public function test_custom_templates_keep_working_with_the_link_placeholders(): void {
+		( new Templates() )->save(
+			MessageType::CustomerConfirmed,
+			new Template( true, 'Your booking is confirmed', '<p>Deadline: [{cancel_deadline}] <a href="{cancel_url}">Cancel</a></p><p>{cancel_info}</p>' )
+		);
+
+		$this->book();
+		$body = self::mails_with_subject( 'Your booking is confirmed' )[0]['body'];
+		$this->assertStringContainsString( 'Deadline: [2030-01-07 10:00]', $body );
+		$this->assertMatchesRegularExpression( '/<a href="[^"]*trmz_cancel=[^"]*">Cancel<\/a>/', $body );
+		$this->assertMatchesRegularExpression( '/by 2030-01-07 10:00: <a href="[^"]*trmz_cancel=[^"]*">Cancel booking<\/a>/', $body );
+
+		reset_phpmailer_instance();
+		$this->book( '2030-01-07T11:00:00+01:00' );
+		$body = self::mails_with_subject( 'Your booking is confirmed' )[0]['body'];
+		$this->assertStringContainsString( 'Deadline: []', $body, 'Past deadline is left out.' );
+		$this->assertStringNotContainsString( 'trmz_cancel', $body );
+		$this->assertStringContainsString( 'please contact us', $body );
+	}
+
+	public function test_stored_body_with_the_old_default_cancellation_paragraph_is_upgraded(): void {
+		$legacy    = '<p>If you cannot come, please cancel your booking by {cancel_deadline}: <a href="{cancel_url}">Cancel booking</a></p>';
+		$templates = new Templates();
+		$templates->save( MessageType::CustomerReminder, new Template( true, 'Reminder', '<p>Our own intro.</p>' . $legacy ) );
+
+		$body = $templates->get( MessageType::CustomerReminder )->body;
+		$this->assertStringContainsString( 'Our own intro.', $body );
+		$this->assertStringContainsString( '<p>{cancel_info}</p>', $body );
+		$this->assertStringNotContainsString( '{cancel_deadline}', $body );
+		$this->assertStringContainsString( '<p>{cancel_info}</p>', Templates::default_template( MessageType::CustomerConfirmed )->body );
+	}
+
+	public function test_cancel_info_from_a_filter_is_limited_to_safe_html(): void {
+		$filter = static function ( array $values ): array {
+			$values['cancel_info'] = 'Call us <script>alert(1)</script><a href="javascript:alert(1)" onclick="x()">now</a>';
+			return $values;
+		};
+		add_filter( 'trmz_email_placeholders', $filter );
+		$this->book();
+		remove_filter( 'trmz_email_placeholders', $filter );
+
+		$body = self::mails_with_subject( 'Your booking is confirmed' )[0]['body'];
+		$this->assertStringContainsString( 'Call us', $body );
+		$this->assertStringNotContainsString( '<script', $body );
+		$this->assertStringNotContainsString( 'javascript:', $body );
+		$this->assertStringNotContainsString( 'onclick', $body );
 	}
 
 	public function test_post_cancels_frees_the_slot_and_notifies_customer_and_business(): void {

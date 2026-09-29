@@ -934,6 +934,14 @@ E-maile wysyłane później (potwierdzenie po płatności, przypomnienie) nie mo
 **Konsekwencje.** Rotacja `AUTH_SALT` unieważnia wszystkie wysłane linki anulowania (klient musi się skontaktować
 z firmą). Własne (zmienione) szablony zapisane przed tą zmianą nie dostaną linku automatycznie.
 
+**Aktualizacja (#102).** Link i termin anulowania są oferowane tylko, gdy klient może jeszcze anulować online
+(rezerwacja aktywna, jest token, teraz < termin). Nowy placeholder `{cancel_info}` (lista `Placeholders::HTML`, gotowy
+fragment HTML filtrowany `wp_kses` do `a[href]`, `br`, `strong`, `em`): zdanie z terminem i linkiem albo — po terminie
+(np. rezerwacja w oknie limitu, przypomnienie po terminie) — „aby zmienić lub odwołać rezerwację, skontaktuj się z nami”.
+Domyślne szablony klienta używają `<p>{cancel_info}</p>`. `{cancel_url}`/`{cancel_deadline}` pozostają (własne szablony
+działają), ale po terminie są puste. Zapisany, zmieniony szablon zawierający dokładnie dawny domyślny akapit anulowania
+jest przy odczycie (`Templates::get()`) podmieniany na `{cancel_info}`.
+
 ## ADR-043: Przypomnienia przed wizytą
 
 **Decyzja.**

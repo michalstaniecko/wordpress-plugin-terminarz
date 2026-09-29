@@ -20,6 +20,12 @@ final class Placeholders {
 	public const URLS = array( 'cancel_url', 'site_url', 'admin_booking_url', 'order_url' );
 
 	/**
+	 * Placeholders whose value is a ready HTML fragment (filtered by {@see Placeholders::kses_html()} in the body,
+	 * tags stripped in the subject).
+	 */
+	public const HTML = array( 'cancel_info' );
+
+	/**
 	 * Translated descriptions keyed by placeholder name (without braces).
 	 *
 	 * @return array<string, string>
@@ -38,8 +44,9 @@ final class Placeholders {
 			'price'             => __( 'Service price', 'terminarz' ),
 			'status'            => __( 'Booking status', 'terminarz' ),
 			'booking_id'        => __( 'Booking number (public ID)', 'terminarz' ),
-			'cancel_url'        => __( 'Link the customer can use to cancel the booking', 'terminarz' ),
-			'cancel_deadline'   => __( 'Last moment the customer can cancel online (see the cancellation limit)', 'terminarz' ),
+			'cancel_info'       => __( 'Cancellation sentence: the deadline with a cancellation link, or — when online cancellation is no longer possible — a request to contact you', 'terminarz' ),
+			'cancel_url'        => __( 'Link the customer can use to cancel the booking (empty when online cancellation is no longer possible)', 'terminarz' ),
+			'cancel_deadline'   => __( 'Last moment the customer can cancel online, see the cancellation limit (empty when it has passed)', 'terminarz' ),
 			'site_name'         => __( 'Site name', 'terminarz' ),
 			'site_url'          => __( 'Site address', 'terminarz' ),
 			'admin_booking_url' => __( 'Link to the booking in the admin panel (business e-mails)', 'terminarz' ),
@@ -92,6 +99,7 @@ final class Placeholders {
 				'price'             => '150.00',
 				'status'            => _x( 'Confirmed', 'booking status', 'terminarz' ),
 				'booking_id'        => '0123456789abcdef0123456789abcdef',
+				'cancel_info'       => self::cancel_info( home_url( '/' ), (string) wp_date( trim( $date . ' ' . $time ), $start - DAY_IN_SECONDS ) ),
 				'cancel_url'        => home_url( '/' ),
 				'cancel_deadline'   => (string) wp_date( trim( $date . ' ' . $time ), $start - DAY_IN_SECONDS ),
 				'site_name'         => wp_specialchars_decode( (string) get_option( 'blogname' ), ENT_QUOTES ),
@@ -100,6 +108,46 @@ final class Placeholders {
 				'order_number'      => '1234',
 				'order_url'         => admin_url(),
 				'reason'            => __( 'This is an example explanation.', 'terminarz' ),
+			)
+		);
+	}
+
+	/**
+	 * Value of `{cancel_info}` (HTML fragment, no enclosing paragraph): with a cancellation link and deadline while the
+	 * customer can still cancel online, otherwise a request to contact the business.
+	 *
+	 * @param string $url      Cancellation link ('' = online cancellation no longer possible).
+	 * @param string $deadline Formatted deadline.
+	 */
+	public static function cancel_info( string $url, string $deadline ): string {
+		if ( '' === $url ) {
+			/* translators: Sentence in customer e-mails when the booking can no longer be cancelled online. */
+			return esc_html__( 'To change or cancel your booking, please contact us.', 'terminarz' );
+		}
+		return esc_html(
+			sprintf(
+				/* translators: %s: date and time (cancellation deadline). */
+				__( 'If you cannot come, please cancel your booking by %s:', 'terminarz' ),
+				$deadline
+			)
+		)
+			/* translators: Default e-mail text (link label). */
+			. ' <a href="' . esc_url( $url ) . '">' . esc_html__( 'Cancel booking', 'terminarz' ) . '</a>';
+	}
+
+	/**
+	 * Filters an HTML placeholder value: links and basic inline formatting only.
+	 *
+	 * @param string $html Value.
+	 */
+	public static function kses_html( string $html ): string {
+		return wp_kses(
+			$html,
+			array(
+				'a'      => array( 'href' => true ),
+				'br'     => array(),
+				'strong' => array(),
+				'em'     => array(),
 			)
 		);
 	}
