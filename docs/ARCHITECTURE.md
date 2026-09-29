@@ -824,3 +824,42 @@ ponownie, a slot jest zajęty, zamówienie trafia do obsługi ręcznej.
 **Konsekwencje.** Po zmianie mu-pluginów trzeba zrestartować środowisko testowe (`wp-env stop` + `npm run env:start:tests`).
 Przy aktywnym sklepie motyw pokazuje dodatkowe elementy WooCommerce w nagłówku — test klawiatury bloku dopuszcza do 60
 naciśnięć Tab przed dotarciem do bloku.
+
+## ADR-040: Moduł powiadomień e-mail i edytowalne szablony
+
+**Kontekst.** M7 wysyła e-maile do klienta i firmy (potwierdzenie, anulowanie, przypomnienie, płatność wymagająca
+uwagi). Treści muszą być edytowalne, przetłumaczalne i bezpieczne (dane klienta w HTML).
+
+**Decyzja.**
+- Nowa przestrzeń `Terminarz\Notifications` (warstwa adaptera: używa funkcji WP, domena jej nie zna):
+  `MessageType` (enum: `customer_pending`, `customer_confirmed`, `customer_cancelled`, `customer_reminder`, `admin_new`,
+  `admin_cancelled`, `admin_payment_needs_attention`), `Template` (włączony, temat, treść), `Templates` (opcja
+  `trmz_email_templates`, bez autoload), `Placeholders`, `BookingPlaceholders`, `Renderer`, `Mailer`
+  (`Services::mailer()`).
+- Opcja przechowuje tylko różnice: `[typ => [enabled, subject|null, body|null]]`; `null` = domyślny tekst tłumaczony
+  w chwili wysyłki (nieedytowane szablony podążają za językiem witryny). Zapis tekstu równego domyślnemu = `null`.
+- Placeholdery: `{customer_name}`, `{customer_email}`, `{customer_phone}`, `{customer_note}`, `{service_name}`,
+  `{resource_name}`, `{start_date}`, `{start_time}`, `{end_time}`, `{price}`, `{status}`, `{booking_id}` (publiczny ID),
+  `{cancel_url}`, `{site_name}`, `{site_url}`, `{admin_booking_url}`, `{order_number}`, `{order_url}`, `{reason}`.
+  Daty/godziny: `wp_date()` w strefie witryny z formatami witryny.
+- Bezpieczeństwo: temat przy zapisie `sanitize_text_field`, przy wysyłce wartości wstawiane „na surowo”, a wynik
+  sprowadzany do jednej linii bez tagów (brak wstrzyknięcia nagłówków). Treść przy zapisie `wp_kses_post`; przy wysyłce
+  wartości `esc_html` (+`nl2br`), URL-e `esc_url`, a całość ponownie `wp_kses_post`. Nieznane `{x}` zostają bez zmian.
+- Wysyłka `wp_mail()` z nagłówkiem `Content-Type: text/html; charset=UTF-8` przekazanym w wywołaniu (nie globalny filtr
+  `wp_mail_content_type`), prosty layout tabelaryczny z krótkimi liniami. Do klienta `Reply-To` = adres powiadomień,
+  do firmy `Reply-To` = e-mail klienta. Filtry: `trmz_email` (argumenty `wp_mail`, `false` pomija), `trmz_email_html`
+  (layout), `trmz_email_placeholders` (wartości).
+- Ekran „Terminarz → E-maile” (`trmz-emails`, `Admin\EmailsPage`, PRG przez `Screen`: nonce + `trmz_manage_bookings`):
+  lista, edycja (włącz/wyłącz, temat, treść), lista placeholderów, podgląd zapisanej wersji na przykładowych danych,
+  „Wyślij testowy e-mail do mnie” (także gdy wyłączony), „Przywróć domyślny tekst” (przełącznik zostaje).
+- `OrderStatusSync::notify_business()` używa szablonu `admin_payment_needs_attention` (`{reason}`, `{order_number}`,
+  `{order_url}`).
+- Przechwytywanie e-maili w testach: PHPUnit — `MockPHPMailer` z WP test suite (`tests_retrieve_phpmailer_instance()`,
+  trait `Support\CapturedMails` dekoduje quoted-printable); E2E — mu-plugin `tests/e2e/mu-plugins/trmz-mail-catcher.php`
+  (`pre_wp_mail` zapisuje do opcji `trmz_e2e_mails`, ostatnie 50; `GET/DELETE /trmz-e2e/v1/mails` dla `manage_options`;
+  pomijany w PHPUnit) + `tests/e2e/utils/mails.js`. Mailpit odrzucony: dodatkowy kontener w wp-env/CI bez zysku
+  dla asercji.
+
+**Konsekwencje.** Każdy e-mail witryny testowej E2E (także WooCommerce) trafia do opcji zamiast do sieci. Zmiana
+zestawu placeholderów wymaga aktualizacji `Placeholders::descriptions()` (test pilnuje, że domyślne szablony używają
+tylko znanych nazw). Uninstall (M8) powinien usuwać opcję `trmz_email_templates`.

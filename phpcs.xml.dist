@@ -28,6 +28,7 @@
 	-->
 	<rule ref="PHPCompatibility.Variables.ForbiddenThisUseContexts.OutsideObjectContext">
 		<exclude-pattern>/src/Domain/Model/BookingStatus\.php$</exclude-pattern>
+		<exclude-pattern>/src/Notifications/MessageType\.php$</exclude-pattern>
 	</rule>
 	<rule ref="PHPCompatibility.FunctionDeclarations.NewParamTypeDeclarations.SelfOutsideClassScopeFound">
 		<exclude-pattern>/src/Domain/Model/BookingStatus\.php$</exclude-pattern>

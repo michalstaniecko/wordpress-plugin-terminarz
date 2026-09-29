@@ -27,6 +27,7 @@ use Terminarz\Infrastructure\Persistence\WpdbResourceRepository;
 use Terminarz\Infrastructure\Persistence\WpdbScheduleExceptionRepository;
 use Terminarz\Infrastructure\Persistence\WpdbScheduleRepository;
 use Terminarz\Infrastructure\Persistence\WpdbServiceRepository;
+use Terminarz\Notifications\Mailer;
 use wpdb;
 
 /**
@@ -97,6 +98,13 @@ final class Services {
 	 * @var Settings|null
 	 */
 	private ?Settings $plugin_settings = null;
+
+	/**
+	 * E-mail sender.
+	 *
+	 * @var Mailer|null
+	 */
+	private ?Mailer $mailer = null;
 
 	/**
 	 * Constructor.
@@ -220,6 +228,13 @@ final class Services {
 	 */
 	public function settings(): Settings {
 		return $this->plugin_settings ??= Settings::load();
+	}
+
+	/**
+	 * E-mail sender (templates from the `trmz_email_templates` option).
+	 */
+	public function mailer(): Mailer {
+		return $this->mailer ??= new Mailer( $this );
 	}
 
 	/**

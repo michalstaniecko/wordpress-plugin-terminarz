@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Terminarz;
 
 use Terminarz\Admin\BookingsPage;
+use Terminarz\Admin\EmailsPage;
 use Terminarz\Admin\ExceptionsPage;
 use Terminarz\Admin\Menu;
 use Terminarz\Admin\Privacy;
@@ -87,6 +88,7 @@ final class Plugin {
 					new SchedulePage(),
 					new ExceptionsPage(),
 					new ServicesPage(),
+					new EmailsPage(),
 					new SettingsPage(),
 				)
 			),

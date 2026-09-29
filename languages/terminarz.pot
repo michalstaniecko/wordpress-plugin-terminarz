@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-29T19:13:28+00:00\n"
+"POT-Creation-Date: 2026-09-29T19:37:43+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: terminarz\n"
@@ -40,6 +40,7 @@ msgstr ""
 #: src/Admin/BookingsCsvExporter.php:120
 #: src/Admin/BookingsListTable.php:66
 #: src/Admin/BookingsPage.php:305
+#: src/Admin/EmailsPage.php:198
 #: src/Admin/Privacy.php:207
 #: src/Admin/ResourcesListTable.php:47
 #: src/Admin/ResourcesPage.php:300
@@ -67,6 +68,7 @@ msgstr ""
 #: src/Admin/BookingsListTable.php:178
 #: src/Admin/BookingsPage.php:307
 #: src/Admin/Privacy.php:203
+#: src/Notifications/Placeholders.php:33
 #: blocks/booking/app/Summary.js:21
 #: blocks/booking/edit.js:174
 msgid "Service"
@@ -93,6 +95,7 @@ msgstr ""
 
 #: src/Admin/BookingsCsvExporter.php:127
 #: src/Admin/BookingsPage.php:314
+#: src/Admin/EmailsPage.php:196
 #: src/Admin/Privacy.php:209
 #: blocks/booking/app/DetailsStep.js:269
 msgid "E-mail"
@@ -349,6 +352,128 @@ msgstr ""
 msgid "Guest"
 msgstr ""
 
+#: src/Admin/EmailsPage.php:37
+#: src/Admin/EmailsPage.php:44
+#: src/Admin/EmailsPage.php:183
+msgid "E-mails"
+msgstr ""
+
+#: src/Admin/EmailsPage.php:75
+#: src/Admin/EmailsPage.php:117
+#: src/Admin/EmailsPage.php:134
+#: src/Admin/EmailsPage.php:226
+msgid "Unknown e-mail."
+msgstr ""
+
+#: src/Admin/EmailsPage.php:87
+msgid "Enter a subject."
+msgstr ""
+
+#: src/Admin/EmailsPage.php:90
+msgid "Enter the message text."
+msgstr ""
+
+#: src/Admin/EmailsPage.php:105
+msgid "E-mail saved."
+msgstr ""
+
+#: src/Admin/EmailsPage.php:122
+msgid "The default subject and text were restored."
+msgstr ""
+
+#. translators: %s: e-mail address.
+#: src/Admin/EmailsPage.php:144
+#, php-format
+msgid "Test e-mail sent to %s."
+msgstr ""
+
+#: src/Admin/EmailsPage.php:149
+msgid "The test e-mail could not be sent. Check the e-mail configuration of the site."
+msgstr ""
+
+#. translators: %s: e-mail address.
+#: src/Admin/EmailsPage.php:189
+#, php-format
+msgid "E-mails for the business are sent to %s (Settings → Notification e-mail)."
+msgstr ""
+
+#: src/Admin/EmailsPage.php:197
+#: src/Admin/EmailsPage.php:254
+msgid "Subject"
+msgstr ""
+
+#: src/Admin/EmailsPage.php:199
+msgid "Text"
+msgstr ""
+
+#: src/Admin/EmailsPage.php:212
+msgid "Enabled"
+msgstr ""
+
+#: src/Admin/EmailsPage.php:212
+msgid "Disabled"
+msgstr ""
+
+#: src/Admin/EmailsPage.php:213
+msgid "Customized"
+msgstr ""
+
+#: src/Admin/EmailsPage.php:213
+msgid "Default"
+msgstr ""
+
+#: src/Admin/EmailsPage.php:225
+msgid "Edit e-mail"
+msgstr ""
+
+#: src/Admin/EmailsPage.php:239
+msgid "&larr; Back to e-mails"
+msgstr ""
+
+#: src/Admin/EmailsPage.php:248
+msgid "Sending"
+msgstr ""
+
+#: src/Admin/EmailsPage.php:250
+msgid "Send this e-mail"
+msgstr ""
+
+#: src/Admin/EmailsPage.php:260
+msgid "Message"
+msgstr ""
+
+#: src/Admin/EmailsPage.php:262
+msgid "HTML allowed in posts (paragraphs, links, bold…). Placeholders in braces are replaced with booking data."
+msgstr ""
+
+#: src/Admin/EmailsPage.php:265
+msgid "Save e-mail"
+msgstr ""
+
+#: src/Admin/EmailsPage.php:271
+msgid "More actions"
+msgstr ""
+
+#: src/Admin/EmailsPage.php:275
+msgid "Send a test e-mail to me"
+msgstr ""
+
+#: src/Admin/EmailsPage.php:279
+msgid "Restore default text"
+msgstr ""
+
+#: src/Admin/EmailsPage.php:287
+msgid "Placeholders"
+msgstr ""
+
+#: src/Admin/EmailsPage.php:302
+msgid "Preview (saved version, example data)"
+msgstr ""
+
+#: src/Admin/EmailsPage.php:303
+msgid "Subject:"
+msgstr ""
+
 #: src/Admin/ExceptionsListTable.php:50
 msgid "Dates"
 msgstr ""
@@ -546,6 +671,7 @@ msgid "Awaiting payment"
 msgstr ""
 
 #: src/Admin/Labels.php:30
+#: src/Notifications/Placeholders.php:92
 msgctxt "booking status"
 msgid "Confirmed"
 msgstr ""
@@ -1277,40 +1403,292 @@ msgstr ""
 msgid "The payment time of booking %s ran out and its slot was released."
 msgstr ""
 
-#. translators: 1: site name, 2: order number.
-#: src/Integrations/WooCommerce/OrderStatusSync.php:347
-#, php-format
-msgid "[%1$s] Order #%2$s needs attention"
-msgstr ""
-
-#. translators: %s: order number.
-#: src/Integrations/WooCommerce/OrderStatusSync.php:355
-#, php-format
-msgid "Order: #%s"
-msgstr ""
-
-#. translators: %s: public booking ID.
-#: src/Integrations/WooCommerce/OrderStatusSync.php:357
-#, php-format
-msgid "Booking: %s"
-msgstr ""
-
-#. translators: %s: appointment date and time.
-#: src/Integrations/WooCommerce/OrderStatusSync.php:359
-#, php-format
-msgid "Appointment: %s"
-msgstr ""
-
-#. translators: 1: customer name, 2: customer e-mail.
-#: src/Integrations/WooCommerce/OrderStatusSync.php:361
-#, php-format
-msgid "Customer: %1$s <%2$s>"
-msgstr ""
-
 #. translators: 1: required WooCommerce version, 2: installed WooCommerce version.
 #: src/Integrations/WooCommerce/WooCommerceModule.php:143
 #, php-format
 msgid "Terminarz online payments require WooCommerce %1$s or newer (installed: %2$s). Bookings are accepted without payment until WooCommerce is updated."
+msgstr ""
+
+#: src/Notifications/MessageType.php:37
+msgid "Booking request received (customer)"
+msgstr ""
+
+#: src/Notifications/MessageType.php:38
+msgid "Booking confirmed (customer)"
+msgstr ""
+
+#: src/Notifications/MessageType.php:39
+msgid "Booking cancelled (customer)"
+msgstr ""
+
+#: src/Notifications/MessageType.php:40
+msgid "Appointment reminder (customer)"
+msgstr ""
+
+#: src/Notifications/MessageType.php:41
+msgid "New booking (business)"
+msgstr ""
+
+#: src/Notifications/MessageType.php:42
+msgid "Booking cancelled (business)"
+msgstr ""
+
+#: src/Notifications/MessageType.php:43
+msgid "Payment needs attention (business)"
+msgstr ""
+
+#: src/Notifications/MessageType.php:52
+msgid "Sent to the customer when a booking waits for confirmation by staff."
+msgstr ""
+
+#: src/Notifications/MessageType.php:53
+msgid "Sent to the customer when a booking is confirmed (automatically, by staff or after payment)."
+msgstr ""
+
+#: src/Notifications/MessageType.php:54
+msgid "Sent to the customer when a confirmed or pending booking is cancelled."
+msgstr ""
+
+#: src/Notifications/MessageType.php:55
+msgid "Sent to the customer before a confirmed appointment (see the reminder setting)."
+msgstr ""
+
+#: src/Notifications/MessageType.php:56
+msgid "Sent to the notification e-mail when a new booking is placed (after payment for paid services)."
+msgstr ""
+
+#: src/Notifications/MessageType.php:57
+msgid "Sent to the notification e-mail when a confirmed or pending booking is cancelled."
+msgstr ""
+
+#: src/Notifications/MessageType.php:58
+msgid "Sent to the notification e-mail when a payment arrives for a slot that is no longer available."
+msgstr ""
+
+#: src/Notifications/Placeholders.php:29
+msgid "Customer name"
+msgstr ""
+
+#: src/Notifications/Placeholders.php:30
+msgid "Customer e-mail"
+msgstr ""
+
+#: src/Notifications/Placeholders.php:31
+msgid "Customer phone"
+msgstr ""
+
+#: src/Notifications/Placeholders.php:32
+msgid "Note from the customer"
+msgstr ""
+
+#: src/Notifications/Placeholders.php:34
+msgid "Resource (person, room, device)"
+msgstr ""
+
+#: src/Notifications/Placeholders.php:35
+msgid "Appointment date (site time zone)"
+msgstr ""
+
+#: src/Notifications/Placeholders.php:36
+msgid "Appointment start time"
+msgstr ""
+
+#: src/Notifications/Placeholders.php:37
+msgid "Appointment end time"
+msgstr ""
+
+#: src/Notifications/Placeholders.php:38
+msgid "Service price"
+msgstr ""
+
+#: src/Notifications/Placeholders.php:39
+msgid "Booking status"
+msgstr ""
+
+#: src/Notifications/Placeholders.php:40
+msgid "Booking number (public ID)"
+msgstr ""
+
+#: src/Notifications/Placeholders.php:41
+msgid "Link the customer can use to cancel the booking"
+msgstr ""
+
+#: src/Notifications/Placeholders.php:42
+msgid "Site name"
+msgstr ""
+
+#: src/Notifications/Placeholders.php:43
+msgid "Site address"
+msgstr ""
+
+#: src/Notifications/Placeholders.php:44
+msgid "Link to the booking in the admin panel (business e-mails)"
+msgstr ""
+
+#: src/Notifications/Placeholders.php:45
+msgid "WooCommerce order number (payment e-mails)"
+msgstr ""
+
+#: src/Notifications/Placeholders.php:46
+msgid "Link to the WooCommerce order (payment e-mails)"
+msgstr ""
+
+#: src/Notifications/Placeholders.php:47
+msgid "Explanation of what needs attention (payment e-mails)"
+msgstr ""
+
+#: src/Notifications/Placeholders.php:82
+msgid "Jane Doe"
+msgstr ""
+
+#: src/Notifications/Placeholders.php:85
+msgid "This is an example note."
+msgstr ""
+
+#: src/Notifications/Placeholders.php:86
+msgid "Example service"
+msgstr ""
+
+#: src/Notifications/Placeholders.php:87
+msgid "Example resource"
+msgstr ""
+
+#: src/Notifications/Placeholders.php:100
+msgid "This is an example explanation."
+msgstr ""
+
+#. translators: Default e-mail subject. Keep the {placeholders} unchanged.
+#: src/Notifications/Templates.php:138
+msgid "[{site_name}] We have received your booking request"
+msgstr ""
+
+#. translators: Default e-mail text. Keep the {placeholders} unchanged.
+#: src/Notifications/Templates.php:140
+#: src/Notifications/Templates.php:150
+#: src/Notifications/Templates.php:160
+#: src/Notifications/Templates.php:170
+msgid "Hello {customer_name},"
+msgstr ""
+
+#. translators: Default e-mail text. Keep the {placeholders} unchanged.
+#: src/Notifications/Templates.php:142
+msgid "Thank you for your booking request. We will confirm it by e-mail shortly."
+msgstr ""
+
+#. translators: Default e-mail subject. Keep the {placeholders} unchanged.
+#: src/Notifications/Templates.php:148
+msgid "[{site_name}] Your booking is confirmed: {start_date} {start_time}"
+msgstr ""
+
+#. translators: Default e-mail text. Keep the {placeholders} unchanged.
+#: src/Notifications/Templates.php:152
+msgid "Your booking is confirmed. We look forward to seeing you."
+msgstr ""
+
+#. translators: Default e-mail subject. Keep the {placeholders} unchanged.
+#: src/Notifications/Templates.php:158
+msgid "[{site_name}] Your booking has been cancelled"
+msgstr ""
+
+#. translators: Default e-mail text. Keep the {placeholders} unchanged.
+#: src/Notifications/Templates.php:162
+msgid "Your booking has been cancelled. If this is a mistake, please make a new booking or contact us."
+msgstr ""
+
+#. translators: Default e-mail subject. Keep the {placeholders} unchanged.
+#: src/Notifications/Templates.php:168
+msgid "[{site_name}] Reminder: {service_name} on {start_date} at {start_time}"
+msgstr ""
+
+#. translators: Default e-mail text. Keep the {placeholders} unchanged.
+#: src/Notifications/Templates.php:172
+msgid "This is a reminder of your upcoming appointment."
+msgstr ""
+
+#. translators: Default e-mail subject. Keep the {placeholders} unchanged.
+#: src/Notifications/Templates.php:178
+msgid "[{site_name}] New booking: {service_name}, {start_date} {start_time}"
+msgstr ""
+
+#. translators: Default e-mail text. Keep the {placeholders} unchanged.
+#: src/Notifications/Templates.php:180
+msgid "A new booking has been placed ({status})."
+msgstr ""
+
+#. translators: Default e-mail text. Keep the {placeholders} unchanged.
+#: src/Notifications/Templates.php:184
+#: src/Notifications/Templates.php:195
+msgid "View the booking in the admin panel"
+msgstr ""
+
+#. translators: Default e-mail subject. Keep the {placeholders} unchanged.
+#: src/Notifications/Templates.php:189
+msgid "[{site_name}] Booking cancelled: {service_name}, {start_date} {start_time}"
+msgstr ""
+
+#. translators: Default e-mail text. Keep the {placeholders} unchanged.
+#: src/Notifications/Templates.php:191
+msgid "A booking has been cancelled and its slot is free again."
+msgstr ""
+
+#. translators: Default e-mail subject. Keep the {placeholders} unchanged.
+#: src/Notifications/Templates.php:200
+msgid "[{site_name}] Order #{order_number} needs attention"
+msgstr ""
+
+#. translators: Default e-mail text. Keep the {placeholders} unchanged.
+#: src/Notifications/Templates.php:203
+msgid "Order: #{order_number}"
+msgstr ""
+
+#. translators: Default e-mail text. Keep the {placeholders} unchanged.
+#: src/Notifications/Templates.php:205
+msgid "Booking: {booking_id}"
+msgstr ""
+
+#. translators: Default e-mail text. Keep the {placeholders} unchanged.
+#: src/Notifications/Templates.php:209
+msgid "Open the order"
+msgstr ""
+
+#. translators: Default e-mail text. Keep the {placeholders} unchanged.
+#: src/Notifications/Templates.php:220
+msgid "Service: {service_name}"
+msgstr ""
+
+#. translators: Default e-mail text. Keep the {placeholders} unchanged.
+#: src/Notifications/Templates.php:222
+msgid "With: {resource_name}"
+msgstr ""
+
+#. translators: Default e-mail text. Keep the {placeholders} unchanged.
+#: src/Notifications/Templates.php:224
+msgid "Date: {start_date}, {start_time}–{end_time}"
+msgstr ""
+
+#. translators: Default e-mail text. Keep the {placeholders} unchanged.
+#: src/Notifications/Templates.php:226
+msgid "Booking number: {booking_id}"
+msgstr ""
+
+#. translators: Default e-mail text. Keep the {placeholders} unchanged.
+#: src/Notifications/Templates.php:236
+msgid "Customer: {customer_name}"
+msgstr ""
+
+#. translators: Default e-mail text. Keep the {placeholders} unchanged.
+#: src/Notifications/Templates.php:238
+msgid "E-mail: {customer_email}"
+msgstr ""
+
+#. translators: Default e-mail text. Keep the {placeholders} unchanged.
+#: src/Notifications/Templates.php:240
+msgid "Phone: {customer_phone}"
+msgstr ""
+
+#. translators: Default e-mail text. Keep the {placeholders} unchanged.
+#: src/Notifications/Templates.php:242
+msgid "Note: {customer_note}"
 msgstr ""
 
 #: src/Rest/AdminBookingsController.php:54
