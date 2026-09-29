@@ -516,3 +516,5 @@ Jeden wpis na zamknięte issue: data, numer issue, co zrobione, decyzje, znane r
   aktualizacja ADR-042.
 - **Ryzyka:** własne szablony z `{cancel_url}` bez `{cancel_info}` po terminie pokażą pusty link — opisane w pomocy
   placeholderów.
+  Przy ustawieniach domyślnych (przypomnienie 24 h przed, limit anulowania 24 h) przypomnienie wychodzi dokładnie w chwili
+  terminu, więc nie zawiera linku — tylko prośbę o kontakt.
