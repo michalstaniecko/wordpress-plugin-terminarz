@@ -34,6 +34,8 @@ final class Service {
 	 * @param int    $price_minor          Price in minor currency units, >= 0 (0 = free).
 	 * @param int    $buffer_after_minutes Buffer after the service, 0–1440 minutes.
 	 * @param bool   $is_active            Inactive services are not offered to customers.
+	 * @param string $description          Description, may be empty.
+	 * @param int    $sort_order           Display order (lower first).
 	 *
 	 * @throws InvalidValue On invalid data.
 	 */
@@ -43,7 +45,9 @@ final class Service {
 		public readonly int $duration_minutes,
 		public readonly int $price_minor = 0,
 		public readonly int $buffer_after_minutes = 0,
-		public readonly bool $is_active = true
+		public readonly bool $is_active = true,
+		public readonly string $description = '',
+		public readonly int $sort_order = 0
 	) {
 		if ( null !== $id && $id <= 0 ) {
 			throw new InvalidValue( 'Id must be a positive integer.' );
@@ -82,6 +86,15 @@ final class Service {
 	 * @param int $id Persistence id.
 	 */
 	public function with_id( int $id ): self {
-		return new self( $id, $this->name, $this->duration_minutes, $this->price_minor, $this->buffer_after_minutes, $this->is_active );
+		return new self( $id, $this->name, $this->duration_minutes, $this->price_minor, $this->buffer_after_minutes, $this->is_active, $this->description, $this->sort_order );
+	}
+
+	/**
+	 * Returns an active or inactive copy.
+	 *
+	 * @param bool $is_active Whether the service is offered to customers.
+	 */
+	public function with_active( bool $is_active ): self {
+		return new self( $this->id, $this->name, $this->duration_minutes, $this->price_minor, $this->buffer_after_minutes, $is_active, $this->description, $this->sort_order );
 	}
 }

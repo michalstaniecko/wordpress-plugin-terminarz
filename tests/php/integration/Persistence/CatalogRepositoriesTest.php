@@ -75,6 +75,16 @@ final class CatalogRepositoriesTest extends WP_UnitTestCase {
 		$this->assertSame( 'First floor', $reloaded->with_active( false )->description );
 	}
 
+	public function test_service_description_and_order_round_trip(): void {
+		$saved    = $this->services->save( new Service( null, 'Massage', 60, 10000, 10, true, 'Relaxing', 4 ) );
+		$reloaded = $this->services->get( (int) $saved->id );
+
+		$this->assertSame( 'Relaxing', $reloaded->description );
+		$this->assertSame( 4, $reloaded->sort_order );
+		$this->assertFalse( $reloaded->with_active( false )->is_active );
+		$this->assertSame( 'Relaxing', $reloaded->with_active( false )->description );
+	}
+
 	public function test_resource_listing_and_get_many(): void {
 		$a = $this->resources->save( new BookableResource( null, 'A' ) );
 		$b = $this->resources->save( new BookableResource( null, 'B', false ) );

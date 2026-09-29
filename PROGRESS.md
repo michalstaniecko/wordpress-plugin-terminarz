@@ -238,3 +238,13 @@ Jeden wpis na zamknięte issue: data, numer issue, co zrobione, decyzje, znane r
   capability, nonce, escaping listy), test migracji schematu, unit test typu.
 - **Decyzje:** ADR-026 (klasyczne ekrany PHP zamiast React).
 - **Ryzyka:** kolumna „Usługi” na liście robi zapytanie na wiersz (akceptowalne przy małej liczbie zasobów).
+
+## 2026-09-29 — #23 zarządzanie usługami
+
+- **Zrobione:** `Admin\ServicesPage` + `ServicesListTable` (`trmz-services`): lista (czas, cena, bufor, zasoby, status),
+  formularz z walidacją (czas 1–1440, bufor 0–1440, cena ≥ 0), checkboxy zasobów, aktywacja/dezaktywacja, usuwanie
+  (blokowane przy rezerwacjach). `Admin\Money` (parsowanie/formatowanie ceny, waluta z WooCommerce lub filtra).
+  `Service` + `description`/`sort_order`. Testy integracyjne (tworzenie z zasobami, 9 przypadków walidacji, darmowa
+  usługa, aktualizacja przypisań, blokada usuwania, capability/nonce, escaping, parsowanie kwot).
+- **Decyzje:** ADR-027. Bez WooCommerce cena informacyjna, waluta z `trmz_currency` (założenie, `assumption`).
+- **Ryzyka:** zmiana liczby miejsc po przecinku w WooCommerce zmienia interpretację zapisanych cen.

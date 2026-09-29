@@ -515,3 +515,20 @@ w zamówieniu WooCommerce obsługuje eraser WooCommerce (M6).
 
 **Konsekwencje.** Test migracji: `ALTER TABLE` (także na tabelach tymczasowych) niejawnie zatwierdza transakcję testu WP,
 więc test aktualizacji schematu woła `Schema::install()` bez opcji wersji/blokady (inaczej wyciekłyby do kolejnych testów).
+
+## ADR-027: Usługi w panelu i waluta ceny
+
+**Decyzja.**
+- `Admin\ServicesPage` (`admin.php?page=trmz-services`, pozycja 30) + `ServicesListTable`: CRUD usług (nazwa, opis,
+  czas trwania 1–1440 min, bufor po usłudze 0–1440 min, cena ≥ 0, przypisane zasoby — checkboxy, kolejność, aktywna),
+  aktywacja/dezaktywacja, usuwanie blokowane przy rezerwacjach (ADR-013). Kolejność preferencji zasobów przy „dowolnym
+  zasobie” (ADR-018) = kolejność wyświetlania zasobów (nie kolejność kliknięć). Aktywna usługa bez zasobów → ostrzeżenie.
+- `Service` rozszerzony zachowawczo o `description` i `sort_order` (kolumny istniały od v1) oraz `with_active()`.
+- Cena: `Admin\Money` — wpisywana jako kwota dziesiętna (`150`, `150,50`, `1 200,00`), zapisywana w jednostkach
+  podrzędnych (`price_minor`). Waluta i liczba miejsc po przecinku z WooCommerce (`get_woocommerce_currency()`,
+  `wc_get_price_decimals()`), gdy jest aktywny. **Założenie (#23):** bez WooCommerce cena jest informacyjna (brak płatności),
+  waluta pochodzi z filtra `trmz_currency` (domyślnie brak kodu), miejsca po przecinku z `trmz_price_decimals` (domyślnie 2).
+  Kolumna `trmz_services.currency` pozostaje nieużywana (waluta nie jest częścią domeny, ADR-015).
+
+**Konsekwencje.** Zmiana liczby miejsc po przecinku w WooCommerce po zapisaniu cen zmienia ich interpretację — do
+opisania w dokumentacji M6.

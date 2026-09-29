@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-29T17:15:00+00:00\n"
+"POT-Creation-Date: 2026-09-29T17:25:35+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: terminarz\n"
@@ -76,6 +76,10 @@ msgctxt "resource type"
 msgid "Device"
 msgstr ""
 
+#: src/Admin/Money.php:98
+msgid "Free"
+msgstr ""
+
 #: src/Admin/Privacy.php:55
 #: src/Admin/Privacy.php:70
 msgid "Terminarz bookings"
@@ -140,12 +144,16 @@ msgstr ""
 #: src/Admin/Privacy.php:207
 #: src/Admin/ResourcesListTable.php:47
 #: src/Admin/ResourcesPage.php:295
+#: src/Admin/ServicesListTable.php:55
+#: src/Admin/ServicesPage.php:300
 msgid "Status"
 msgstr ""
 
 #: src/Admin/Privacy.php:208
 #: src/Admin/ResourcesListTable.php:44
 #: src/Admin/ResourcesPage.php:276
+#: src/Admin/ServicesListTable.php:50
+#: src/Admin/ServicesPage.php:252
 msgid "Name"
 msgstr ""
 
@@ -171,6 +179,9 @@ msgid "Type"
 msgstr ""
 
 #: src/Admin/ResourcesListTable.php:46
+#: src/Admin/ServicesPage.php:41
+#: src/Admin/ServicesPage.php:48
+#: src/Admin/ServicesPage.php:204
 msgid "Services"
 msgstr ""
 
@@ -179,14 +190,17 @@ msgid "No resources yet. Add the first person, room or device that can be booked
 msgstr ""
 
 #: src/Admin/ResourcesListTable.php:80
+#: src/Admin/ServicesListTable.php:92
 msgid "Edit"
 msgstr ""
 
 #: src/Admin/ResourcesListTable.php:92
+#: src/Admin/ServicesListTable.php:104
 msgid "Deactivate"
 msgstr ""
 
 #: src/Admin/ResourcesListTable.php:101
+#: src/Admin/ServicesListTable.php:104
 msgid "Activate"
 msgstr ""
 
@@ -195,28 +209,35 @@ msgid "Delete this resource permanently?"
 msgstr ""
 
 #: src/Admin/ResourcesListTable.php:107
+#: src/Admin/ServicesListTable.php:110
 msgid "Delete"
 msgstr ""
 
 #: src/Admin/ResourcesListTable.php:150
+#: src/Admin/ServicesListTable.php:172
 msgid "Active"
 msgstr ""
 
 #: src/Admin/ResourcesListTable.php:151
+#: src/Admin/ServicesListTable.php:172
 msgid "Inactive"
 msgstr ""
 
 #: src/Admin/ResourcesPage.php:46
 #: src/Admin/ResourcesPage.php:53
 #: src/Admin/ResourcesPage.php:239
+#: src/Admin/ServicesListTable.php:54
+#: src/Admin/ServicesPage.php:279
 msgid "Resources"
 msgstr ""
 
 #: src/Admin/ResourcesPage.php:93
+#: src/Admin/ServicesPage.php:95
 msgid "Enter a name."
 msgstr ""
 
 #: src/Admin/ResourcesPage.php:95
+#: src/Admin/ServicesPage.php:97
 msgid "The name is too long."
 msgstr ""
 
@@ -287,10 +308,12 @@ msgid "&larr; Back to resources"
 msgstr ""
 
 #: src/Admin/ResourcesPage.php:286
+#: src/Admin/ServicesPage.php:256
 msgid "Description"
 msgstr ""
 
 #: src/Admin/ResourcesPage.php:290
+#: src/Admin/ServicesPage.php:296
 msgid "Order"
 msgstr ""
 
@@ -299,10 +322,12 @@ msgid "Lower numbers are listed first."
 msgstr ""
 
 #: src/Admin/ResourcesPage.php:297
+#: src/Admin/ServicesPage.php:302
 msgid "Active (offered to customers)"
 msgstr ""
 
 #: src/Admin/ResourcesPage.php:300
+#: src/Admin/ServicesPage.php:305
 msgid "Save changes"
 msgstr ""
 
@@ -320,6 +345,142 @@ msgstr ""
 
 #: src/Admin/Screen.php:98
 msgid "The change could not be saved. Please check the data and try again."
+msgstr ""
+
+#: src/Admin/ServicesListTable.php:51
+msgid "Duration"
+msgstr ""
+
+#: src/Admin/ServicesListTable.php:52
+#: src/Admin/ServicesPage.php:270
+msgid "Price"
+msgstr ""
+
+#: src/Admin/ServicesListTable.php:53
+msgid "Buffer after"
+msgstr ""
+
+#: src/Admin/ServicesListTable.php:75
+msgid "No services yet."
+msgstr ""
+
+#: src/Admin/ServicesListTable.php:109
+msgid "Delete this service permanently?"
+msgstr ""
+
+#. translators: %d: number of minutes.
+#: src/Admin/ServicesListTable.php:124
+#: src/Admin/ServicesListTable.php:146
+#, php-format
+msgid "%d minute"
+msgid_plural "%d minutes"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Admin/ServicesListTable.php:162
+msgid "None — cannot be booked"
+msgstr ""
+
+#: src/Admin/ServicesPage.php:100
+msgid "The duration must be a whole number of minutes between 1 and 1440."
+msgstr ""
+
+#: src/Admin/ServicesPage.php:103
+msgid "The buffer must be a whole number of minutes between 0 and 1440."
+msgstr ""
+
+#: src/Admin/ServicesPage.php:106
+msgid "The price must be a non-negative amount, e.g. 150 or 150.00."
+msgstr ""
+
+#: src/Admin/ServicesPage.php:111
+msgid "Some of the selected resources do not exist."
+msgstr ""
+
+#: src/Admin/ServicesPage.php:133
+#: src/Admin/ServicesPage.php:163
+#: src/Admin/ServicesPage.php:180
+#: src/Admin/ServicesPage.php:228
+msgid "The service does not exist."
+msgstr ""
+
+#: src/Admin/ServicesPage.php:136
+msgid "The service data is not valid."
+msgstr ""
+
+#: src/Admin/ServicesPage.php:141
+msgid "Service updated."
+msgstr ""
+
+#: src/Admin/ServicesPage.php:141
+msgid "Service added."
+msgstr ""
+
+#: src/Admin/ServicesPage.php:143
+msgid "No resource performs this service yet, so customers cannot book it."
+msgstr ""
+
+#: src/Admin/ServicesPage.php:168
+msgid "Service activated."
+msgstr ""
+
+#: src/Admin/ServicesPage.php:168
+msgid "Service deactivated. It is no longer offered to customers; existing bookings stay valid."
+msgstr ""
+
+#: src/Admin/ServicesPage.php:187
+msgid "This service has bookings and cannot be deleted. Deactivate it instead."
+msgstr ""
+
+#: src/Admin/ServicesPage.php:191
+msgid "Service deleted."
+msgstr ""
+
+#: src/Admin/ServicesPage.php:204
+#: src/Admin/ServicesPage.php:245
+#: src/Admin/ServicesPage.php:305
+msgid "Add service"
+msgstr ""
+
+#: src/Admin/ServicesPage.php:227
+#: src/Admin/ServicesPage.php:245
+msgid "Edit service"
+msgstr ""
+
+#: src/Admin/ServicesPage.php:246
+msgid "&larr; Back to services"
+msgstr ""
+
+#: src/Admin/ServicesPage.php:260
+msgid "Duration (minutes)"
+msgstr ""
+
+#: src/Admin/ServicesPage.php:264
+msgid "Buffer after (minutes)"
+msgstr ""
+
+#: src/Admin/ServicesPage.php:266
+msgid "Time blocked after each appointment (cleaning, travel). Not shown to customers."
+msgstr ""
+
+#: src/Admin/ServicesPage.php:274
+msgid "In the WooCommerce shop currency. 0 = free."
+msgstr ""
+
+#: src/Admin/ServicesPage.php:275
+msgid "Informational without WooCommerce (no online payments). 0 = free."
+msgstr ""
+
+#: src/Admin/ServicesPage.php:282
+msgid "Add resources first."
+msgstr ""
+
+#: src/Admin/ServicesPage.php:290
+msgid "inactive"
+msgstr ""
+
+#: src/Admin/ServicesPage.php:293
+msgid "Who or what performs the service. With \"any resource\", the first free one in the resource order is chosen."
 msgstr ""
 
 #: src/Admin/SettingsPage.php:43

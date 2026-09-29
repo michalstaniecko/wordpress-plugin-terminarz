@@ -12,6 +12,7 @@ namespace Terminarz;
 use Terminarz\Admin\Menu;
 use Terminarz\Admin\Privacy;
 use Terminarz\Admin\ResourcesPage;
+use Terminarz\Admin\ServicesPage;
 use Terminarz\Admin\SettingsPage;
 use Terminarz\Infrastructure\Database\Migrator;
 use Terminarz\Infrastructure\I18n;
@@ -76,6 +77,7 @@ final class Plugin {
 			new Menu(
 				array(
 					new ResourcesPage(),
+					new ServicesPage(),
 					new SettingsPage(),
 				)
 			),
