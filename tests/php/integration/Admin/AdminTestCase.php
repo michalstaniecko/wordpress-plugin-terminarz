@@ -112,7 +112,8 @@ abstract class AdminTestCase extends WP_UnitTestCase {
 	 * @param array<string, int|string> $query  Query arguments ($_GET).
 	 */
 	protected function render( Screen $screen, array $query = array() ): string {
-		$_GET = $query;
+		$_GET     = $query;
+		$_REQUEST = $query; // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- WP_List_Table reads paging from $_REQUEST.
 		ob_start();
 		try {
 			$screen->render();

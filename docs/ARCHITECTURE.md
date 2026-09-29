@@ -555,3 +555,26 @@ opisania w dokumentacji M6.
 - Wyjątek nie zmienia istniejących rezerwacji — ekran ostrzega o liczbie aktywnych rezerwacji w tych dniach.
 
 **Konsekwencje.** Wyjątki zapisane wcześniej przez `save()` (jednodniowe) są widoczne jako okresy jednodniowe.
+
+## ADR-029: Lista rezerwacji w panelu
+
+**Decyzja.**
+- `Admin\BookingsPage` (`admin.php?page=trmz-bookings`, pozycja 10 — cel pozycji „Terminarz” w menu) +
+  `BookingsListTable`: widoki statusów z licznikami, filtry (usługa, zasób, daty lokalne startu od–do), wyszukiwanie
+  (fragment imienia/e-maila lub dokładne `public_id`), sortowanie (start, data utworzenia), paginacja po 20 — przez
+  `BookingRepository::search()/count()` i `BookingCriteria` (ADR-023). Filtry z zapytania czyta i sanitizuje
+  `Admin\BookingFilters` (wspólne z eksportem CSV; `query_args()` odtwarza je w linkach). Daty zakresu to dni lokalne
+  witryny → przedział UTC `[od 00:00, dzień po „do” 00:00)`.
+- Wszystkie daty wyświetlane w strefie witryny (`wp_date()` z formatami witryny, `Admin\Labels`).
+- Szczegóły (`view=view&id=`): dane rezerwacji i klienta, konto WP, zamówienie, wstrzymanie płatności; akcje jako
+  formularze POST.
+- Potwierdź/anuluj: `BookingService::change_status()` (maszyna stanów; niedozwolone przejście → komunikat), linki akcji
+  tylko dla dozwolonych przejść. Po akcji powrót do strony, z której przyszło żądanie (`wp_get_referer()` — lista z filtrami
+  lub szczegóły).
+- Przeniesienie (`view=reschedule&id=&date=`): wybór dnia (poprzedni/następny), lista wolnych slotów wszystkich zasobów
+  usługi z `AvailabilityService::slots(…, exclude_booking_id)` (własny termin nie blokuje); wartość slotu
+  `"<timestamp UTC>:<id zasobu>"`; zapis `BookingService::reschedule()` — atomowy (ADR-014) z ponowną weryfikacją
+  dostępności; przegrany wyścig (`SlotUnavailable`) → komunikat i powrót do wyboru, bez zmian. Obowiązują te same reguły
+  co dla klienta (wyprzedzenie, horyzont, siatka) — panel ich nie omija.
+
+**Konsekwencje.** Liczniki statusów to 6 dodatkowych zapytań `COUNT` na wyświetlenie listy (akceptowalne).

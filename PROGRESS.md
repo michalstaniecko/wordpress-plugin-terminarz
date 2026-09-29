@@ -260,3 +260,14 @@ Jeden wpis na zamknięte issue: data, numer issue, co zrobione, decyzje, znane r
   i ich wpływ na dostępność, konflikty, capability/nonce, escaping, filtry listy).
 - **Decyzje:** ADR-028 (okres = jeden wiersz, formularz bez JS).
 - **Ryzyka:** przerwa obejmująca styk dwóch przedziałów pracy jest odrzucana (trzeba ją podzielić).
+
+## 2026-09-29 — #25 lista rezerwacji z filtrami i akcjami
+
+- **Zrobione:** `Admin\BookingsPage` (`trmz-bookings`, pierwszy ekran menu) + `BookingsListTable` + `BookingFilters`:
+  lista z widokami statusów, filtrami (usługa, zasób, daty), wyszukiwaniem, sortowaniem i paginacją; szczegóły rezerwacji;
+  potwierdzanie/anulowanie przez maszynę stanów; przenoszenie z listą wolnych slotów (bez własnego terminu) i atomowym
+  zapisem. Daty w strefie witryny. Testy integracyjne (lista/escaping/filtry/wyszukiwanie, paginacja, filtry → UTC,
+  potwierdź/anuluj + hook + zwolnienie slotu, powrót do listy z filtrami, sloty i przeniesienie, konflikt 409 →
+  komunikat, szczegóły, capability/nonce).
+- **Decyzje:** ADR-029. Przeniesienie w panelu podlega tym samym regułom dostępności co rezerwacja klienta.
+- **Ryzyka:** brak akcji zbiorczych i ręcznego „zakończ” (completed) — poza zakresem issue.
