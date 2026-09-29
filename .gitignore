@@ -18,6 +18,7 @@
 # Tools
 .phpcs-cache
 /.wp-env.override.json
+/.wp-env.tests.override.json
 
 # OS / editors
 .DS_Store

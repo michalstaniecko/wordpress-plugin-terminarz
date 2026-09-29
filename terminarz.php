@@ -29,6 +29,8 @@ define( 'TRMZ_MIN_WP', '6.5' );
 /**
  * Returns a list of unmet requirements (empty when everything is fine).
  *
+ * Messages are translated, so call this function no earlier than on `init`.
+ *
  * @return string[]
  */
 function trmz_unmet_requirements() {
@@ -60,21 +62,32 @@ function trmz_unmet_requirements() {
 	return $errors;
 }
 
-$trmz_requirement_errors = trmz_unmet_requirements();
-
-if ( array() !== $trmz_requirement_errors ) {
-	add_action(
-		'admin_notices',
-		function () use ( $trmz_requirement_errors ) {
-			foreach ( $trmz_requirement_errors as $trmz_error ) {
-				echo '<div class="notice notice-error"><p>' . esc_html( $trmz_error ) . '</p></div>';
-			}
-		}
-	);
-	return;
+/**
+ * Whether the environment meets the plugin requirements (no translation calls, safe before `init`).
+ *
+ * @return bool
+ */
+function trmz_requirements_met() {
+	return version_compare( PHP_VERSION, TRMZ_MIN_PHP, '>=' )
+		&& version_compare( (string) get_bloginfo( 'version' ), TRMZ_MIN_WP, '>=' )
+		&& is_readable( __DIR__ . '/vendor/autoload.php' );
 }
 
-unset( $trmz_requirement_errors );
+/**
+ * Prints an admin notice for every unmet requirement.
+ *
+ * @return void
+ */
+function trmz_requirements_notice() {
+	foreach ( trmz_unmet_requirements() as $trmz_error ) {
+		echo '<div class="notice notice-error"><p>' . esc_html( $trmz_error ) . '</p></div>';
+	}
+}
+
+if ( ! trmz_requirements_met() ) {
+	add_action( 'admin_notices', 'trmz_requirements_notice' );
+	return;
+}
 
 require_once __DIR__ . '/vendor/autoload.php';
 

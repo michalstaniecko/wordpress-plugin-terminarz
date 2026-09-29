@@ -12,3 +12,15 @@ Jeden wpis na zamknięte issue: data, numer issue, co zrobione, decyzje, znane r
 - **Ryzyka:** testy, lint i phpstan powstają w #4/#5, CI w #7 — dla tego issue weryfikacja ograniczona do
   `php -l` i ręcznego przeglądu; test integracyjny aktywacji dochodzi w #4. Capability dla witryn tworzonych
   po aktywacji sieciowej (multisite) — M8.
+
+## 2026-09-29 — #3 środowisko wp-env i konfiguracja npm
+
+- **Zrobione:** `package.json` (skrypty `env:start`/`env:stop`/`env:destroy`, `build`, `start`, `lint`, `test:e2e`, `i18n`),
+  `.wp-env.json` (dev, 8888) i `.wp-env.tests.json` (tests, 8889) z WooCommerce latest-stable, `WP_DEBUG`/`WP_DEBUG_LOG`;
+  placeholder `blocks/index.js`; `wp-cli/i18n-command` i wygenerowany `languages/terminarz.pot`; README z instrukcją.
+  Poprawka bootstrapu: komunikaty o wymaganiach tłumaczone dopiero w `admin_notices` (bez wczesnego ładowania tłumaczeń).
+- **Decyzje:** ADR-005 (dwa pliki konfiguracyjne zamiast przestarzałego `testsEnvironment`, stałe slugi przez `mappings`,
+  PHP 8.1 w kontenerach), ADR-006 (.pot przez Composer), ADR-007 (placeholder bloków).
+- **Ryzyka:** WooCommerce „latest-stable” zmienia się w czasie — testy mogą zacząć się sypać po wydaniu WC
+  (ew. przypięcie wersji później). WooCommerce 11.x zapisuje w `debug.log` notice `_load_textdomain_just_in_time`
+  — smoke test E2E (#6) musi to uwzględnić. Skrypty `lint`/`test:e2e` są konfigurowane w #5/#6.
