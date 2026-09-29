@@ -10,6 +10,10 @@ declare(strict_types=1);
 namespace Terminarz\Tests\Integration\WooCommerce;
 
 use Terminarz\Admin\SettingsPage;
+use Terminarz\Domain\Model\BookingStatus;
+use Terminarz\Domain\Model\Customer;
+use Terminarz\Infrastructure\HoldExpiryScheduler;
+use Terminarz\Infrastructure\Lifecycle;
 use Terminarz\Infrastructure\Settings;
 use Terminarz\Integrations\WooCommerce\WooCommerce;
 use Terminarz\Integrations\WooCommerce\WooCommerceModule;
@@ -80,5 +84,30 @@ final class WithoutWooCommerceTest extends RestTestCase {
 		$data = $response->get_data();
 		$this->assertSame( 'pending', $data['status'] );
 		$this->assertArrayNotHasKey( 'payment_url', $data );
+	}
+
+	public function test_hold_expiry_job_falls_back_to_wp_cron(): void {
+		$this->assertFalse( HoldExpiryScheduler::uses_action_scheduler() );
+		wp_clear_scheduled_hook( HoldExpiryScheduler::HOOK );
+
+		( new HoldExpiryScheduler() )->schedule();
+
+		$this->assertNotFalse( wp_next_scheduled( HoldExpiryScheduler::HOOK ) );
+		$this->assertSame( HoldExpiryScheduler::CRON_SCHEDULE, wp_get_schedule( HoldExpiryScheduler::HOOK ) );
+
+		Lifecycle::deactivate();
+		$this->assertFalse( wp_next_scheduled( HoldExpiryScheduler::HOOK ) );
+	}
+
+	public function test_hold_expiry_job_expires_holds_without_woocommerce(): void {
+		$resource = $this->make_resource();
+		$service  = $this->make_service( 60, 0, array( $resource ) );
+		$this->open_daily( $resource );
+		$booking = $this->container->booking_service()->reserve( $service, $resource, self::warsaw( self::MONDAY . ' 10:00' ), new Customer( 'Jan', 'jan@example.org' ), BookingStatus::PendingPayment, 15 )->booking;
+		$this->clock->set( '2030-01-07 06:16' );
+
+		do_action( 'trmz_expire_holds' );
+
+		$this->assertSame( BookingStatus::Expired, $this->container->bookings()->get( (int) $booking->id )?->status );
 	}
 }

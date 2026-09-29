@@ -375,3 +375,17 @@ Jeden wpis na zamknięte issue: data, numer issue, co zrobione, decyzje, znane r
 - **Decyzje:** ADR-036; założenie (assumption w #35): pozycja `WC_Order_Item_Product` bez produktu, kwota bez doliczania
   podatku.
 - **Ryzyka:** rozliczenie VAT usług do decyzji biznesowej; weryfikacja e-maila gościa przez WC po 10 min.
+
+## 2026-09-29 — #36 wstrzymanie slotu na czas płatności i wygasanie
+
+- **Zrobione:** `Infrastructure\HoldExpiryScheduler` (Action Scheduler z grupą `terminarz` albo WP-Cron co 5 min,
+  sprzątanie przy deaktywacji), `BookingService::rebook()` (nowa rezerwacja dla zwolnionego slotu, atomowo),
+  `Integrations\WooCommerce\OrderStatusSync` (wygaśnięcie → anulowanie nieopłaconego zamówienia; płatność → potwierdzenie,
+  płatność po czasie → ponowna rezerwacja wolnego slotu albo zamówienie `on-hold` + notatka + e-mail + akcja
+  `trmz_payment_needs_attention`). Testy integracyjne: slot wolny przed uruchomieniem zadania, anulowanie zamówień,
+  zamówienia `on-hold`, płatność w czasie / po czasie (przed i po zadaniu) / po zajęciu slotu, harmonogram AS i WP-Cron
+  (bez WC), deaktywacja.
+- **Decyzje:** ADR-037; założenie w #36: brak statusu `needs-attention` — zamówienie `on-hold` i powiadomienie (zwrot to
+  decyzja człowieka, `needs-human`).
+- **Ryzyka:** e-mail do biura jest prostym `wp_mail` (M7 może go przenieść do systemu powiadomień); nowa rezerwacja po
+  płatności po czasie ma nowy `public_id`.

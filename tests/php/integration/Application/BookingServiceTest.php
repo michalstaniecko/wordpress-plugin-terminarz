@@ -194,6 +194,59 @@ final class BookingServiceTest extends WP_UnitTestCase {
 		$this->assertSame( $fired + 1, did_action( BookingService::EVENT_STATUS_CHANGED ) );
 	}
 
+	public function test_rebook_creates_a_new_booking_for_an_expired_one(): void {
+		$resource = $this->make_resource();
+		$service  = $this->make_service( 60, 10, array( $resource ) );
+		$expired  = $this->service->reserve( $service, $resource, self::utc( '2030-01-02 10:00' ), $this->customer(), BookingStatus::PendingPayment, 15 )->booking;
+		$this->container->bookings()->attach_order( (int) $expired->id, 321 );
+		$this->clock->set( '2030-01-01 08:20' );
+		$this->service->expire_holds();
+		$created = did_action( BookingService::EVENT_CREATED );
+
+		$reservation = $this->service->rebook( (int) $expired->id );
+
+		$new = $reservation->booking;
+		$this->assertNotSame( $expired->id, $new->id );
+		$this->assertNotSame( $expired->public_id, $new->public_id );
+		$this->assertSame( BookingStatus::Confirmed, $new->status );
+		$this->assertEquals( $expired->range, $new->range );
+		$this->assertSame( 10, $new->buffer_after_minutes );
+		$this->assertSame( 321, $new->order_id );
+		$this->assertNull( $new->hold_expires_at );
+		$this->assertTrue( BookingService::verify_cancel_token( $new, $reservation->cancel_token ) );
+		$this->assertSame( BookingStatus::Expired, $this->container->bookings()->get( (int) $expired->id )?->status );
+		$this->assertSame( $created + 1, did_action( BookingService::EVENT_CREATED ) );
+	}
+
+	public function test_rebook_fails_when_the_slot_was_taken(): void {
+		$resource = $this->make_resource();
+		$service  = $this->make_service( 60, 0, array( $resource ) );
+		$expired  = $this->service->reserve( $service, $resource, self::utc( '2030-01-02 10:00' ), $this->customer(), BookingStatus::PendingPayment, 15 )->booking;
+		$this->clock->set( '2030-01-01 08:20' );
+		$this->service->reserve( $service, $resource, self::utc( '2030-01-02 10:30' ), $this->customer() );
+
+		$this->expectException( SlotUnavailable::class );
+		$this->service->rebook( (int) $expired->id );
+	}
+
+	public function test_rebook_rejects_active_bookings_and_past_slots(): void {
+		$resource = $this->make_resource();
+		$service  = $this->make_service( 60, 0, array( $resource ) );
+		$active   = $this->service->reserve( $service, $resource, self::utc( '2030-01-02 10:00' ), $this->customer() )->booking;
+
+		try {
+			$this->service->rebook( (int) $active->id );
+			$this->fail( 'An active booking must not be booked again.' );
+		} catch ( InvalidValue $e ) {
+			$this->assertStringContainsString( 'expired or cancelled', $e->getMessage() );
+		}
+
+		$this->service->cancel( (int) $active->id );
+		$this->clock->set( '2030-01-02 10:00' );
+		$this->expectException( SlotUnavailable::class );
+		$this->service->rebook( (int) $active->id );
+	}
+
 	private function customer(): Customer {
 		return new Customer( 'Jan Kowalski', 'jan@example.org' );
 	}

@@ -56,6 +56,7 @@ final class WooCommerceModule implements Module {
 		return array(
 			new OrderPayments(),
 			new OrderAdmin(),
+			new OrderStatusSync(),
 		);
 	}
 

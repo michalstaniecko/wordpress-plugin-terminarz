@@ -194,6 +194,53 @@ final class BookingService {
 	}
 
 	/**
+	 * Books again the slot of an inactive (expired or cancelled) booking as a new booking — e.g. a payment arrived
+	 * after the payment hold ran out. The expired/cancelled booking stays untouched (terminal statuses never change);
+	 * the new one copies its service, resource, time, buffer, customer and order.
+	 *
+	 * Only collisions are checked (atomically): the slot was valid when the customer chose it, so schedule changes,
+	 * lead time and horizon do not apply. A start in the past is rejected.
+	 *
+	 * @param int           $id     ID of the inactive booking.
+	 * @param BookingStatus $status Status of the new booking (active).
+	 * @throws EntityNotFound  When the booking does not exist.
+	 * @throws InvalidValue    When the booking is still active or the status is not active.
+	 * @throws SlotUnavailable When the slot is taken or already started.
+	 */
+	public function rebook( int $id, BookingStatus $status = BookingStatus::Confirmed ): Reservation {
+		$previous = $this->require_booking( $id );
+		if ( $previous->status->is_active() ) {
+			throw new InvalidValue( 'Only an expired or cancelled booking can be booked again.' );
+		}
+		if ( ! $status->is_active() || BookingStatus::PendingPayment === $status ) {
+			throw new InvalidValue( 'A booking can only be booked again as pending or confirmed.' );
+		}
+
+		$now = $this->clock->now();
+		if ( $previous->range->start <= $now ) {
+			throw SlotUnavailable::at( $previous->resource_id, $previous->range->start );
+		}
+
+		$token   = bin2hex( random_bytes( 32 ) );
+		$booking = new Booking(
+			resource_id: $previous->resource_id,
+			service_id: $previous->service_id,
+			range: $previous->range,
+			status: $status,
+			customer: $previous->customer,
+			buffer_after_minutes: $previous->buffer_after_minutes,
+			order_id: $previous->order_id,
+			cancel_token_hash: self::hash_token( $token ),
+			public_id: bin2hex( random_bytes( 16 ) )
+		);
+
+		$stored = $this->bookings->create( $booking, $now );
+		$this->events->dispatch( self::EVENT_CREATED, $stored );
+
+		return new Reservation( $stored, $token );
+	}
+
+	/**
 	 * Moves a booking to a new start (same duration), optionally to another resource of the same service.
 	 *
 	 * @param int               $id          Booking ID.
