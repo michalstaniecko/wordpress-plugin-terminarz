@@ -22,6 +22,17 @@
 	<config name="testVersion" value="8.1-"/>
 	<rule ref="PHPCompatibilityWP"/>
 
+	<!--
+		PHPCompatibility 9.3 does not understand PHP 8.1 enums and reports $this/self inside enum
+		methods as used outside a class. Enums are listed here explicitly (see ADR-012).
+	-->
+	<rule ref="PHPCompatibility.Variables.ForbiddenThisUseContexts.OutsideObjectContext">
+		<exclude-pattern>/src/Domain/Model/BookingStatus\.php$</exclude-pattern>
+	</rule>
+	<rule ref="PHPCompatibility.FunctionDeclarations.NewParamTypeDeclarations.SelfOutsideClassScopeFound">
+		<exclude-pattern>/src/Domain/Model/BookingStatus\.php$</exclude-pattern>
+	</rule>
+
 	<!-- WordPress: minimum supported version. -->
 	<config name="minimum_wp_version" value="6.5"/>
 
