@@ -115,7 +115,9 @@ jobs:
       - name: Start wp-env (tests environment)
         run: npm run env:start:tests
       - name: Run integration tests
-        run: composer test:integration
+        run: composer test:integration -- --exclude-group concurrency
+      - name: Run concurrency test (parallel WP-CLI processes, no double bookings)
+        run: composer test:integration -- --group concurrency
 
   e2e:
     name: E2E (Playwright)

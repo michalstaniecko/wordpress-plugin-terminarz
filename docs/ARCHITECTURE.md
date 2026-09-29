@@ -280,3 +280,16 @@ rozwija do obiektów `ScheduleException` per dzień.
 
 **Konsekwencje.** Wymagane InnoDB (ADR-012). W testach integracyjnych transakcje działają na savepointach (ADR-013),
 więc prawdziwą współbieżność sprawdza osobny test procesowy (#14).
+
+## ADR-017: Test współbieżności rezerwacji
+
+**Decyzja.** `tests/php/integration/Concurrency/DoubleBookingTest.php` (`@group concurrency`) uruchamia N (domyślnie 12,
+min. 10) osobnych procesów `wp eval-file tests/php/concurrency/worker.php reserve …` — każdy z własnym połączeniem MySQL
+i prawdziwymi transakcjami InnoDB (poza transakcją suity PHPUnit), na prawdziwych tabelach witryny wp-env. Procesy
+synchronizuje bariera czasowa (wspólny znacznik czasu w przyszłości, domyślnie +8 s na bootstrap WordPressa); test
+sprawdza, że nikt nie spóźnił się na barierę i że starty mieszczą się w 0,5 s. Scenariusze: ten sam slot (dokładnie
+1 sukces), nakładające się sloty o różnych startach/usługach/długościach (dokładnie 1 sukces), różne zasoby
+(wszystkie sukcesy — brak fałszywych konfliktów i deadlocków). Każda porażka musi być czystym `SlotUnavailable`.
+Dane testu są usuwane w `tear_down_after_class`. Kontrola negatywna: po usunięciu blokady wiersza zasobu scenariusz
+„różne starty” kończy się wieloma sukcesami (test to wykrywa).
+W CI osobny krok joba `integration`. Zmienne: `TRMZ_CONCURRENCY_WORKERS`, `TRMZ_CONCURRENCY_BARRIER`, `TRMZ_SKIP_CONCURRENCY=1`.

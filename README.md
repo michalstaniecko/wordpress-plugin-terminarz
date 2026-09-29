@@ -41,7 +41,7 @@ Przydatne komendy:
 | Analiza statyczna (PHPStan, poziom 6) | `composer phpstan` |
 | Lint JS/CSS (ESLint + stylelint) | `npm run lint` / `npm run lint:fix` |
 | Plik `.pot` | `npm run i18n` (WP-CLI i18n z Composera, bez Dockera) |
-| Testy PHP (unit + integration) | `composer test` (unit bez Dockera: `composer test:unit`; integration: `composer test:integration`, wymaga `npm run env:start:tests`) |
+| Testy PHP (unit + integration) | `composer test` (unit bez Dockera: `composer test:unit`; integration: `composer test:integration`, wymaga `npm run env:start:tests`; tylko test współbieżności: `composer test:integration -- --group concurrency`) |
 | Testy E2E (Playwright, środowisko tests :8889) | `npm run test:e2e` (pierwszy raz: `npx playwright install chromium`; raport: `playwright-report/`) |
 
 Szczegóły architektury: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md). Dziennik postępu: [`PROGRESS.md`](PROGRESS.md).
@@ -57,7 +57,7 @@ Workflow [`.github/workflows/ci.yml`](.github/workflows/ci.yml) uruchamia się d
 | `PHPStan (level 6)` | `composer phpstan` — zero błędów, bez baseline'u |
 | `PHPUnit unit (PHP 8.1)`, `PHPUnit unit (PHP 8.3)` | `composer test:unit` na minimalnej i nowszej wersji PHP |
 | `Build` | `npm run build` i generowanie `.pot` (`npm run i18n`) |
-| `PHPUnit integration (wp-env)` | `composer test:integration` w środowisku testowym wp-env (PHP 8.1, najnowszy WordPress) |
+| `PHPUnit integration (wp-env)` | `composer test:integration` w środowisku testowym wp-env (PHP 8.1, najnowszy WordPress); osobny krok: test współbieżności `--group concurrency` (równoległe procesy WP-CLI, brak podwójnych rezerwacji) |
 | `E2E (Playwright)` | `npm run test:e2e` na wp-env; raport HTML i ślady jako artefakt `playwright-report` (14 dni) |
 
 Zależności Composera i npm są cache'owane (`ramsey/composer-install`, `actions/setup-node` z `cache: npm`).
