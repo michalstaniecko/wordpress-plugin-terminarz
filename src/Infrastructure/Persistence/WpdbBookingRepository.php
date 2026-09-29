@@ -18,6 +18,7 @@ use Terminarz\Domain\Model\Booking;
 use Terminarz\Domain\Model\BookingStatus;
 use Terminarz\Domain\Model\Customer;
 use Terminarz\Domain\Model\TimeRange;
+use Terminarz\Domain\Repository\BookingCriteria;
 use Terminarz\Domain\Repository\BookingRepository;
 use Terminarz\Infrastructure\Database\DatabaseError;
 use Terminarz\Infrastructure\Database\Schema;
@@ -295,6 +296,83 @@ final class WpdbBookingRepository extends WpdbRepository implements BookingRepos
 		$rows = $this->rows( $this->db->prepare( 'SELECT ' . self::COLUMNS . " FROM {$table} WHERE {$where} ORDER BY start_utc, id", $args ) );
 
 		return array_map( array( self::class, 'hydrate' ), $rows );
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @param BookingCriteria $criteria Criteria.
+	 * @return Booking[]
+	 */
+	public function search( BookingCriteria $criteria ): array {
+		$table            = $this->table( Schema::BOOKINGS );
+		[ $where, $args ] = $this->criteria_where( $criteria );
+		$column           = BookingCriteria::ORDER_CREATED === $criteria->order_by ? 'created_at' : 'start_utc';
+		$direction        = $criteria->descending ? 'DESC' : 'ASC';
+		$args[]           = $criteria->limit;
+		$args[]           = $criteria->offset;
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- table from Schema, order from a whitelist, placeholders generated.
+		$rows = $this->rows( $this->db->prepare( 'SELECT ' . self::COLUMNS . " FROM {$table} WHERE {$where} ORDER BY {$column} {$direction}, id {$direction} LIMIT %d OFFSET %d", $args ) );
+
+		return array_map( array( self::class, 'hydrate' ), $rows );
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @param BookingCriteria $criteria Criteria.
+	 * @throws DatabaseError When the query fails.
+	 */
+	public function count( BookingCriteria $criteria ): int {
+		$table            = $this->table( Schema::BOOKINGS );
+		[ $where, $args ] = $this->criteria_where( $criteria );
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- table from Schema, placeholders generated.
+		$sql   = array() === $args ? "SELECT COUNT(*) FROM {$table} WHERE {$where}" : $this->db->prepare( "SELECT COUNT(*) FROM {$table} WHERE {$where}", $args );
+		$count = $this->db->get_var( $sql ); // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- prepared above (or no arguments).
+		if ( null === $count && '' !== $this->db->last_error ) {
+			throw DatabaseError::from_wpdb( $this->db, 'Count bookings' );
+		}
+		return (int) $count;
+	}
+
+	/**
+	 * WHERE clause (with placeholders) and its arguments for search criteria.
+	 *
+	 * @param BookingCriteria $criteria Criteria.
+	 * @return array{0: string, 1: array<int, int|string>}
+	 */
+	private function criteria_where( BookingCriteria $criteria ): array {
+		$where = array( '1=1' );
+		$args  = array();
+
+		if ( array() !== $criteria->statuses ) {
+			$where[] = 'status IN (' . implode( ', ', array_fill( 0, count( $criteria->statuses ), '%s' ) ) . ')';
+			foreach ( $criteria->statuses as $status ) {
+				$args[] = $status->value;
+			}
+		}
+		if ( null !== $criteria->service_id ) {
+			$where[] = 'service_id = %d';
+			$args[]  = $criteria->service_id;
+		}
+		if ( null !== $criteria->resource_id ) {
+			$where[] = 'resource_id = %d';
+			$args[]  = $criteria->resource_id;
+		}
+		if ( null !== $criteria->starts_in ) {
+			$where[] = 'start_utc >= %s AND start_utc < %s';
+			$args[]  = self::to_sql( $criteria->starts_in->start );
+			$args[]  = self::to_sql( $criteria->starts_in->end );
+		}
+		if ( '' !== $criteria->search ) {
+			$like    = '%' . $this->db->esc_like( $criteria->search ) . '%';
+			$where[] = '(customer_name LIKE %s OR customer_email LIKE %s OR public_id = %s)';
+			array_push( $args, $like, $like, $criteria->search );
+		}
+
+		return array( implode( ' AND ', $where ), $args );
 	}
 
 	/**

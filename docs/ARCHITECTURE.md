@@ -412,3 +412,21 @@ token przy wysyłce.
 
 **Konsekwencje.** Za reverse proxy/CDN bez skonfigurowanego filtra wszyscy klienci mają to samo `REMOTE_ADDR` i dzielą
 limit — trzeba to opisać w dokumentacji wydania (M8, readme).
+
+## ADR-023: Administracyjne endpointy rezerwacji
+
+**Decyzja.**
+- `Rest\AdminBookingsController` (wszystko za `manage_permissions_check()` — `trmz_manage_bookings`; 401 anonim, 403 bez
+  uprawnienia): `GET /bookings` (filtry `status[]`, `service`, `resource`, `from`/`to` — daty lokalne startu, `search` —
+  fragment imienia/e-maila lub dokładny `public_id`; `orderby` `start|created`, `order`, `page`, `per_page` ≤ 100; nagłówki
+  `X-WP-Total`, `X-WP-TotalPages`), `GET /bookings/{id}`, `POST /bookings/{id}/confirm|cancel|reschedule`.
+- `{id}` to wewnętrzne ID (tylko dla panelu); reprezentacja admina zawiera `public_id`, dane klienta, `allowed_transitions`
+  (z maszyny stanów — UI może pokazać tylko dozwolone akcje), czasy lokalne i UTC; nigdy skrótu tokenu anulowania.
+- Trasa `/bookings` jest współdzielona z publicznym `POST` (WordPress scala endpointy tej samej trasy); administracyjny
+  `GET` rejestrowany jest bez `schema`, żeby schemat trasy pozostał publiczny.
+- Zmiany statusu przez `BookingService::change_status()` (hook `trmz_booking_status_changed`); niedozwolone przejście → 422
+  `trmz_invalid_status_transition`. Przeniesienie przez `BookingService::reschedule()` — atomowe (ADR-014) z weryfikacją
+  dostępności z wykluczeniem własnego terminu (ADR-018), hook `trmz_booking_rescheduled`; konflikt/poza godzinami → 409,
+  nieaktywna rezerwacja → 422, zasób spoza usługi → 400.
+- Repozytorium: `BookingRepository::search()` / `count()` z `Domain\Repository\BookingCriteria` (walidowane filtry,
+  kolumna sortowania z białej listy, `LIKE` z `esc_like`) — do reużycia przez listę w panelu (#25).

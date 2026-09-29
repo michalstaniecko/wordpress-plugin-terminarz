@@ -192,3 +192,14 @@ Jeden wpis na zamknięte issue: data, numer issue, co zrobione, decyzje, znane r
 - **Decyzje:** ADR-022. Liczone są wszystkie poprawne składniowo żądania (także 409). Menedżerowie
   (`trmz_manage_bookings`) bez limitu.
 - **Ryzyka:** nieatomowa inkrementacja; za proxy bez filtra `trmz_client_ip` wszyscy dzielą jeden limit (do opisania w M8).
+
+## 2026-09-29 — #20 endpointy administracyjne rezerwacji
+
+- **Zrobione:** `Rest\AdminBookingsController`: `GET /bookings` (filtry, wyszukiwanie, sortowanie, paginacja z `X-WP-Total`),
+  `GET /bookings/{id}`, `POST /bookings/{id}/confirm|cancel|reschedule` — tylko `trmz_manage_bookings`.
+  `BookingRepository::search()`/`count()` + `BookingCriteria`. Testy integracyjne (401 anonim / 403 subskrybent i redaktor bez
+  uprawnienia na wszystkich trasach, reprezentacja, filtry i paginacja, maszyna stanów + hook, przeniesienie + hook, 409/422/400),
+  unit `BookingCriteria`, E2E `tests/e2e/specs/rest-api.spec.js` (smoke REST na prawdziwym WP: katalog, walidacja, 401/200).
+- **Decyzje:** ADR-023. `{id}` = wewnętrzne ID (panel), domyślne sortowanie po starcie rosnąco.
+- **Ryzyka:** wyszukiwanie `LIKE '%…%'` po imieniu/e-mailu nie używa indeksu — przy bardzo dużej liczbie rezerwacji może
+  wymagać ograniczenia zakresem dat.
