@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Terminarz\Notifications;
 
+defined( 'ABSPATH' ) || exit; // No direct access.
+
 /**
  * Names and descriptions of the `{placeholders}` (admin help) and sample values (preview, test e-mail).
  */

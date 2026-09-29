@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Terminarz\Admin;
 
+defined( 'ABSPATH' ) || exit; // No direct access.
+
 use Terminarz\Domain\Exception\InvalidValue;
 use Terminarz\Domain\Model\LocalTime;
 use Terminarz\Domain\Model\TimeWindow;

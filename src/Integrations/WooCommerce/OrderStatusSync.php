@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Terminarz\Integrations\WooCommerce;
 
+defined( 'ABSPATH' ) || exit; // No direct access.
+
 use Terminarz\Application\BookingService;
 use Terminarz\Domain\Exception\DomainError;
 use Terminarz\Domain\Exception\SlotUnavailable;

@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Terminarz\Domain\Availability;
 
+defined( 'ABSPATH' ) || exit; // No direct access.
+
 use DateTimeImmutable;
 use DateTimeZone;
 use Terminarz\Domain\Exception\InvalidValue;

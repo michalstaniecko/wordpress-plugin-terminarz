@@ -1,7 +1,31 @@
 import { uses12HourClock } from './format';
 
 /**
- * Parses and normalises the block configuration from `data-trmz-config` (see BookingBlock::config()).
+ * Class of the script element with the configuration (BookingBlock::CONFIG_CLASS).
+ */
+export const CONFIG_CLASS = 'trmz-booking__config';
+
+/**
+ * Reads the configuration of a block container rendered by the server.
+ *
+ * Only a `<script type="application/json">` child is trusted: authors without the `unfiltered_html` capability can put
+ * a look-alike container with arbitrary `data-*` attributes into post content, but not a script element (ADR-048).
+ *
+ * @param {Element} container Block container.
+ * @return {Object|null} Configuration, or null when the container was not rendered by the block.
+ */
+export function readConfig( container ) {
+	const script = Array.from( container?.children ?? [] ).find(
+		( child ) =>
+			child.tagName === 'SCRIPT' &&
+			child.type === 'application/json' &&
+			child.classList.contains( CONFIG_CLASS )
+	);
+	return script ? parseConfig( script.textContent ) : null;
+}
+
+/**
+ * Parses and normalises the block configuration JSON (see BookingBlock::config()).
  *
  * @param {string|null} json JSON.
  * @return {Object|null} Configuration, or null when missing/invalid.

@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Terminarz\Infrastructure;
 
+defined( 'ABSPATH' ) || exit; // No direct access.
+
 /**
  * Grants and revokes the custom capability used to guard every admin action.
  */

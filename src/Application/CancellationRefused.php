@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Terminarz\Application;
 
+defined( 'ABSPATH' ) || exit; // No direct access.
+
 use Terminarz\Domain\Exception\DomainError;
 use Terminarz\Domain\Model\Booking;
 

@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Terminarz\Notifications;
 
+defined( 'ABSPATH' ) || exit; // No direct access.
+
 /**
  * Every e-mail the plugin sends. The value is the key in the `trmz_email_templates` option.
  */

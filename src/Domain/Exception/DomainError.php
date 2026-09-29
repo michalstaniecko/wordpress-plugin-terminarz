@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Terminarz\Domain\Exception;
 
+defined( 'ABSPATH' ) || exit; // No direct access.
+
 /**
  * Implemented by every exception thrown by the domain layer.
  *

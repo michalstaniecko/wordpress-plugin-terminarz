@@ -119,6 +119,22 @@ final class RequestLimitTest extends RestTestCase {
 		$this->assertSame( 201, $this->book( 5 )->get_status(), 'Another IP has its own limit.' );
 	}
 
+	public function test_ipv6_clients_are_limited_per_64_network(): void {
+		$this->assertSame( '203.0.113.10', RequestLimit::client_key( '203.0.113.10' ) );
+		$this->assertSame( '2001:db8:1:2::/64', RequestLimit::client_key( '2001:db8:1:2:aaaa:bbbb:cccc:dddd' ) );
+		$this->assertSame( 'unknown', RequestLimit::client_key( 'unknown' ) );
+
+		for ( $i = 0; $i < 5; $i++ ) {
+			$_SERVER['REMOTE_ADDR'] = '2001:db8:1:2::' . dechex( $i + 1 );
+			$this->assertSame( 201, $this->book( $i )->get_status() );
+		}
+		$_SERVER['REMOTE_ADDR'] = '2001:db8:1:2:ffff::1';
+		$this->assertSame( 429, $this->book( 5 )->get_status(), 'Another address of the same /64 shares the limit.' );
+
+		$_SERVER['REMOTE_ADDR'] = '2001:db8:1:3::1';
+		$this->assertSame( 201, $this->book( 5 )->get_status(), 'Another /64 has its own limit.' );
+	}
+
 	public function test_client_ip_filter_and_invalid_ip(): void {
 		$request = new WP_REST_Request( 'POST', '/terminarz/v1/bookings' );
 		$this->assertSame( '203.0.113.10', RequestLimit::client_ip( $request ) );

@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Terminarz\Rest;
 
+defined( 'ABSPATH' ) || exit; // No direct access.
+
 use DateTimeImmutable;
 use Terminarz\Application\PaymentFailed;
 use Terminarz\Application\PaymentProvider;
@@ -174,7 +176,9 @@ final class BookingsController extends Controller {
 		} catch ( \Exception $e ) {
 			return $this->payment_failed( $booking, $e );
 		}
-		if ( '' === $url || ! wp_http_validate_url( $url ) ) {
+		// The block redirects the customer to this URL: only this site's hosts or hosts allowed with the core
+		// `allowed_redirect_hosts` filter (e.g. an off-site payment page), never an arbitrary address.
+		if ( '' === $url || ! wp_http_validate_url( $url ) || '' === wp_validate_redirect( $url, '' ) ) {
 			return $this->payment_failed( $booking, new PaymentFailed( 'The payment provider returned an invalid URL.' ) );
 		}
 		return $url;

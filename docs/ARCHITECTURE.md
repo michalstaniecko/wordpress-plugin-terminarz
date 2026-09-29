@@ -610,7 +610,7 @@ akceptowalne dla eksportu administracyjnego.
   (bool, domyślnie `true`; `false` = „dowolny” zasób), `firstDayOfWeek` (-1 = ustawienie witryny `start_of_week`, 0–6).
   Serwer normalizuje atrybuty (`sanitize_attributes`) — treść wpisu można edytować ręcznie.
 - Render: pusty kontener z `get_block_wrapper_attributes()` (klasy/stylowanie z `supports`) i konfiguracją JSON
-  w `data-trmz-config` (escapowane przez `get_block_wrapper_attributes`) + `<noscript>`. Konfiguracja: `restRoot`,
+  w elemencie `<script type="application/json" class="trmz-booking__config">` (od #47, ADR-048; wcześniej `data-trmz-config`) + `<noscript>`. Konfiguracja: `restRoot`,
   `nonce` (tylko dla zalogowanych), atrybuty, `today`/`lastDate` (strefa witryny, horyzont rezerwacji), `locale`,
   `currency`/`priceDecimals`, `consentHtml` (tekst zgody z ustawień przepuszczony przez `wp_kses` z listą elementów
   inline, domyślny tekst gdy pusty). Filtr `trmz_booking_block_config` (punkt rozszerzenia dla M6/M7).
@@ -1039,4 +1039,24 @@ filtrem `locale` z mu-pluginu E2E (WordPress odrzuca `WPLANG=pl_PL` bez zainstal
 
 **Konsekwencje.** Każda zmiana tekstu wymaga `npm run i18n && npm run i18n:update-po`, przetłumaczenia i
 `npm run i18n:compile` — inaczej CI jest czerwone. Rdzeń WordPressa bez paczki pl_PL pozostaje po angielsku.
+
+## ADR-048: Utwardzenie po przeglądzie bezpieczeństwa (#47)
+
+**Kontekst.** Przegląd (docs/SECURITY-REVIEW.md) wykazał, że konfiguracja bloku w atrybucie `data-trmz-config` mogła
+zostać podrobiona przez autorów bez `unfiltered_html` (kses przepuszcza `class` i `data-*`), co dawało XSS przez
+`consentHtml` i przejęcie `restRoot`.
+
+**Decyzje.**
+- Konfiguracja bloku w potomnym `<script type="application/json" class="trmz-booking__config">` (JSON z
+  `JSON_HEX_TAG | JSON_HEX_AMP`); `readConfig()` w `view.js` ufa tylko takiemu bezpośredniemu dziecku kontenera.
+- `payment_url` musi przejść `wp_validate_redirect()` (host witryny lub `allowed_redirect_hosts`).
+- Limit zapytań dla IPv6 liczony per sieć /64 (`RequestLimit::client_key()`).
+- Strona anulowania: `X-Frame-Options: DENY`, CSP `frame-ancestors 'none'`, `nosniff`.
+- Wiersze szczegółów rezerwacji (filtr `trmz_admin_booking_details_rows`) przez `wp_kses_post()`.
+- Każdy plik `src/` z `defined( 'ABSPATH' ) || exit;` po deklaracji przestrzeni nazw; bootstrap testów jednostkowych
+  definiuje `ABSPATH`.
+
+**Konsekwencje.** Własne skrypty czytające `data-trmz-config` muszą czytać element JSON (filtr
+`trmz_booking_block_config` bez zmian). Pozostałe ryzyka: #112 (spam rezerwacji, `needs-human`), #113 (proxy), #114
+(limit `GET /availability`).
 

@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Terminarz\Frontend;
 
+defined( 'ABSPATH' ) || exit; // No direct access.
+
 use Terminarz\Admin\Labels;
 use Terminarz\Application\BookingService;
 use Terminarz\Application\CancellationRefused;
@@ -95,6 +97,9 @@ final class CancellationPage implements Module {
 		header( 'Content-Type: text/html; charset=' . get_option( 'blog_charset', 'UTF-8' ) );
 		header( 'X-Robots-Tag: noindex, nofollow' );
 		header( 'Referrer-Policy: no-referrer' );
+		header( 'X-Frame-Options: DENY' );
+		header( "Content-Security-Policy: frame-ancestors 'none'" );
+		header( 'X-Content-Type-Options: nosniff' );
 		if ( $page['retry_after'] > 0 ) {
 			header( 'Retry-After: ' . $page['retry_after'] );
 		}

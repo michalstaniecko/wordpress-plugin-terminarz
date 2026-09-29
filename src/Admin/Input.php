@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Terminarz\Admin;
 
+defined( 'ABSPATH' ) || exit; // No direct access.
+
 /**
  * Every value read by admin handlers passes through one of these helpers.
  */

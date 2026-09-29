@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Terminarz\Notifications;
 
+defined( 'ABSPATH' ) || exit; // No direct access.
+
 use Terminarz\Application\BookingService;
 use Terminarz\Domain\Model\Booking;
 use Terminarz\Domain\Model\BookingStatus;

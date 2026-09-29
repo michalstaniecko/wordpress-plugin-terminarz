@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Terminarz\Integrations\WooCommerce;
 
+defined( 'ABSPATH' ) || exit; // No direct access.
+
 /**
  * Tells whether a supported WooCommerce is loaded. The single place deciding if payments can be used.
  *

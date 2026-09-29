@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Terminarz\Infrastructure;
 
+defined( 'ABSPATH' ) || exit; // No direct access.
+
 /**
  * Loads the plugin text domain from the bundled languages/ directory.
  */

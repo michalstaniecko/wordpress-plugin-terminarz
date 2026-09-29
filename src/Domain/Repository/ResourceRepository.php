@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Terminarz\Domain\Repository;
 
+defined( 'ABSPATH' ) || exit; // No direct access.
+
 use Terminarz\Domain\Exception\EntityInUse;
 use Terminarz\Domain\Exception\EntityNotFound;
 use Terminarz\Domain\Model\BookableResource;

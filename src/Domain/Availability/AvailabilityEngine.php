@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Terminarz\Domain\Availability;
 
+defined( 'ABSPATH' ) || exit; // No direct access.
+
 use Terminarz\Domain\Model\Slot;
 use Terminarz\Domain\Model\TimeRange;
 

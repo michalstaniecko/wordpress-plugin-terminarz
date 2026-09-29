@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Terminarz\Domain\Repository;
 
+defined( 'ABSPATH' ) || exit; // No direct access.
+
 use Terminarz\Domain\Exception\InvalidValue;
 use Terminarz\Domain\Model\BookingStatus;
 use Terminarz\Domain\Model\TimeRange;

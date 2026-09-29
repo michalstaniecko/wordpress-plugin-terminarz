@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Terminarz\Rest;
 
+defined( 'ABSPATH' ) || exit; // No direct access.
+
 use Terminarz\Infrastructure\Capabilities;
 use Terminarz\Infrastructure\Services;
 use WP_Error;
