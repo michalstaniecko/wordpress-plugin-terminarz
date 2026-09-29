@@ -98,7 +98,7 @@ final class ReminderSchedulerTest extends RestTestCase {
 	 * @param array<string, mixed> $values Settings.
 	 */
 	private function settings( array $values ): void {
-		update_option( Settings::OPTION, $values );
+		update_option( Settings::OPTION, $values + array( 'reminder_hours_before' => 24 ) ); // Tests are written for 24 h.
 		$this->use_settings( $this->container->availability_settings() );
 	}
 
@@ -322,8 +322,10 @@ final class ReminderSchedulerTest extends RestTestCase {
 	}
 
 	public function test_setting_is_validated(): void {
-		$this->assertSame( 24, Settings::load()->reminder_hours_before() );
-		$this->assertSame( 24, ( new Settings( array( 'reminder_hours_before' => 500 ) ) )->reminder_hours_before() );
+		delete_option( Settings::OPTION );
+		// 48 h > the default customer cancellation limit (24 h): the default reminder still contains the cancellation link.
+		$this->assertSame( 48, Settings::load()->reminder_hours_before() );
+		$this->assertSame( 48, ( new Settings( array( 'reminder_hours_before' => 500 ) ) )->reminder_hours_before() );
 		$this->assertSame( 0, ( new Settings( array( 'reminder_hours_before' => '0' ) ) )->reminder_hours_before() );
 	}
 }

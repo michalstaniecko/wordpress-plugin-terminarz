@@ -29,8 +29,8 @@ confirmations, reminders and cancellations.
 * **Administration** – booking list with filters, search, CSV export, confirmation, cancellation and rescheduling.
 * **E-mails** – seven editable templates (booking received, confirmed, reminder, cancelled and notifications for the business)
   with placeholders, preview and test sending (Terminarz → E-mails).
-* **Reminders** – sent a configurable number of hours before the appointment (Action Scheduler when WooCommerce is active,
-  WP-Cron otherwise).
+* **Reminders** – sent a configurable number of hours before the appointment (default 48 hours, so the reminder still
+  comes before the default 24-hour cancellation limit; Action Scheduler when WooCommerce is active, WP-Cron otherwise).
 * **Cancellation link** – customers cancel from a secure link in the e-mail, up to the cancellation limit set in the settings.
 * **Optional WooCommerce payments** – full payment or a deposit through any WooCommerce payment gateway. The slot is held
   while the customer pays and released when the payment is not completed in time. Without WooCommerce the plugin works
@@ -74,9 +74,12 @@ free again and the unpaid WooCommerce order is cancelled.
 
 = How does the customer cancel a booking? =
 
-Every booking e-mail can contain the `{cancel_url}` link (included in the default templates). The link opens a
-confirmation page on your site (`/?trmz_cancel=…&token=…`); cancellation is possible until the "Customer cancellation
-limit" before the appointment. Paid orders are not refunded automatically – the business is notified and decides.
+The default customer e-mails contain the `{cancel_info}` placeholder: while online cancellation is possible it becomes
+"If you cannot come, please cancel your booking by <deadline>:" followed by the cancellation link; after the
+"Customer cancellation limit" has passed it becomes a request to contact you instead. Custom templates can also use
+`{cancel_url}` (the bare link, empty after the deadline) and `{cancel_deadline}`. The link opens a confirmation page on
+your site (`/?trmz_cancel=…&token=…`); cancellation is possible until the "Customer cancellation limit" before the
+appointment. Paid orders are not refunded automatically – the business is notified and decides.
 Links are signed with the WordPress `AUTH_SALT`: changing the salts invalidates links sent earlier.
 
 = My site is behind a reverse proxy or a CDN. What should I change? =

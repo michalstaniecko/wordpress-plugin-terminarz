@@ -1,0 +1,277 @@
+{
+    "translation-revision-date": "2026-09-29T21:10:49+00:00",
+    "generator": "WP-CLI\/2.12.0",
+    "source": "build\/booking\/index.js",
+    "domain": "messages",
+    "locale_data": {
+        "messages": {
+            "": {
+                "domain": "messages",
+                "lang": "pl_PL",
+                "plural-forms": "nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);"
+            },
+            "Service": [
+                "Us\u0142uga"
+            ],
+            "E-mail": [
+                "E-mail"
+            ],
+            "Phone": [
+                "Telefon"
+            ],
+            "Date": [
+                "Data"
+            ],
+            "Day": [
+                "Dzie\u0144"
+            ],
+            "Free": [
+                "Bezp\u0142atna"
+            ],
+            "Services": [
+                "Us\u0142ugi"
+            ],
+            "With": [
+                "Osoba lub miejsce"
+            ],
+            "Time": [
+                "Godzina"
+            ],
+            "Your session has expired. Please reload the page and try again.": [
+                "Twoja sesja wygas\u0142a. Od\u015bwie\u017c stron\u0119 i spr\u00f3buj ponownie."
+            ],
+            "Please accept the terms to book an appointment.": [
+                "Aby zarezerwowa\u0107 wizyt\u0119, zaakceptuj warunki."
+            ],
+            "Loading services\u2026": [
+                "Wczytywanie us\u0142ug\u2026"
+            ],
+            "Loading\u2026": [
+                "Wczytywanie\u2026"
+            ],
+            "Loading available dates\u2026": [
+                "Wczytywanie dost\u0119pnych dat\u2026"
+            ],
+            "%1$s: %2$d day with free times.": [
+                "%1$s: %2$d dzie\u0144 z wolnymi terminami.",
+                "%1$s: %2$d dni z wolnymi terminami.",
+                "%1$s: %2$d dni z wolnymi terminami."
+            ],
+            "%s: no free times.": [
+                "%s: brak wolnych termin\u00f3w."
+            ],
+            "Back": [
+                "Wstecz"
+            ],
+            "Times are shown in the %s time zone.": [
+                "Godziny s\u0105 podane w strefie czasowej %s."
+            ],
+            "The booking form could not be loaded.": [
+                "Nie uda\u0142o si\u0119 wczyta\u0107 formularza rezerwacji."
+            ],
+            "Try again": [
+                "Spr\u00f3buj ponownie"
+            ],
+            "No services are available for booking at the moment.": [
+                "Obecnie \u017cadne us\u0142ugi nie s\u0105 dost\u0119pne do rezerwacji."
+            ],
+            "Choose a service": [
+                "Wybierz us\u0142ug\u0119"
+            ],
+            "%d min": [
+                "%d min"
+            ],
+            "Something went wrong. Please try again.": [
+                "Co\u015b posz\u0142o nie tak. Spr\u00f3buj ponownie."
+            ],
+            "Please choose a service.": [
+                "Wybierz us\u0142ug\u0119."
+            ],
+            "Continue": [
+                "Dalej"
+            ],
+            "Choose a person or resource": [
+                "Wybierz osob\u0119 lub zas\u00f3b"
+            ],
+            "Any available": [
+                "Dowolny dost\u0119pny"
+            ],
+            "The first free person or resource is assigned.": [
+                "Zostanie przydzielona pierwsza wolna osoba lub zas\u00f3b."
+            ],
+            "Please choose a person or resource.": [
+                "Wybierz osob\u0119 lub zas\u00f3b."
+            ],
+            "Choose a day": [
+                "Wybierz dzie\u0144"
+            ],
+            "Available dates could not be loaded.": [
+                "Nie uda\u0142o si\u0119 wczyta\u0107 dost\u0119pnych dat."
+            ],
+            "There are no free times in this month. Please choose another month.": [
+                "W tym miesi\u0105cu nie ma wolnych termin\u00f3w. Wybierz inny miesi\u0105c."
+            ],
+            "Morning": [
+                "Rano"
+            ],
+            "Afternoon": [
+                "Po po\u0142udniu"
+            ],
+            "Evening": [
+                "Wieczorem"
+            ],
+            "Choose a time": [
+                "Wybierz godzin\u0119"
+            ],
+            "There are no free times on this day any more. Please choose another day.": [
+                "Tego dnia nie ma ju\u017c wolnych termin\u00f3w. Wybierz inny dzie\u0144."
+            ],
+            "Please choose a time.": [
+                "Wybierz godzin\u0119."
+            ],
+            "Your details": [
+                "Twoje dane"
+            ],
+            "Thank you for your booking": [
+                "Dzi\u0119kujemy za rezerwacj\u0119"
+            ],
+            "Previous month": [
+                "Poprzedni miesi\u0105c"
+            ],
+            "Next month": [
+                "Nast\u0119pny miesi\u0105c"
+            ],
+            "%s, free times available": [
+                "%s, s\u0105 wolne terminy"
+            ],
+            "%s, no free times": [
+                "%s, brak wolnych termin\u00f3w"
+            ],
+            "Your booking is confirmed.": [
+                "Twoja rezerwacja jest potwierdzona."
+            ],
+            "Your booking is waiting for payment.": [
+                "Twoja rezerwacja czeka na p\u0142atno\u015b\u0107."
+            ],
+            "Your booking is awaiting confirmation. We will get back to you soon.": [
+                "Twoja rezerwacja czeka na potwierdzenie. Wkr\u00f3tce si\u0119 odezwiemy."
+            ],
+            "We have sent the details to your e-mail address, together with a link to cancel the booking if you cannot come.": [
+                "Szczeg\u00f3\u0142y wys\u0142ali\u015bmy na Tw\u00f3j adres e-mail wraz z linkiem do anulowania rezerwacji, je\u015bli nie mo\u017cesz przyj\u015b\u0107."
+            ],
+            "Book another appointment": [
+                "Zarezerwuj kolejn\u0105 wizyt\u0119"
+            ],
+            "Please enter your e-mail address.": [
+                "Wpisz adres e-mail."
+            ],
+            "Please enter your name.": [
+                "Wpisz imi\u0119 i nazwisko."
+            ],
+            "Please enter a valid e-mail address, e.g. name@example.com.": [
+                "Wpisz prawid\u0142owy adres e-mail, np. imie@example.com."
+            ],
+            "The phone number may contain only digits, spaces and + ( ) - . \/": [
+                "Numer telefonu mo\u017ce zawiera\u0107 tylko cyfry, spacje i znaki + ( ) - . \/"
+            ],
+            "This text is too long.": [
+                "Ten tekst jest za d\u0142ugi."
+            ],
+            "Please check this field.": [
+                "Sprawd\u017a to pole."
+            ],
+            "Too many booking attempts. Please try again in %d minute.": [
+                "Zbyt wiele pr\u00f3b rezerwacji. Spr\u00f3buj ponownie za %d minut\u0119.",
+                "Zbyt wiele pr\u00f3b rezerwacji. Spr\u00f3buj ponownie za %d minuty.",
+                "Zbyt wiele pr\u00f3b rezerwacji. Spr\u00f3buj ponownie za %d minut."
+            ],
+            "Too many booking attempts. Please try again later.": [
+                "Zbyt wiele pr\u00f3b rezerwacji. Spr\u00f3buj ponownie p\u00f3\u017aniej."
+            ],
+            "The booking could not be sent. Please check your connection and try again.": [
+                "Nie uda\u0142o si\u0119 wys\u0142a\u0107 rezerwacji. Sprawd\u017a po\u0142\u0105czenie i spr\u00f3buj ponownie."
+            ],
+            "Please correct the marked fields.": [
+                "Popraw zaznaczone pola."
+            ],
+            "Sending your booking\u2026": [
+                "Wysy\u0142anie rezerwacji\u2026"
+            ],
+            "Sorry, this time has just been booked by someone else. Please choose another time \u2014 your details are kept.": [
+                "Niestety, kto\u015b w\u0142a\u015bnie zarezerwowa\u0142 ten termin. Wybierz inny \u2014 Twoje dane zosta\u0142y zachowane."
+            ],
+            "(required)": [
+                "(wymagane)"
+            ],
+            "Full name": [
+                "Imi\u0119 i nazwisko"
+            ],
+            "Optional.": [
+                "Opcjonalnie."
+            ],
+            "Note for us": [
+                "Uwagi dla nas"
+            ],
+            "Leave this field empty": [
+                "Pozostaw to pole puste"
+            ],
+            "Sending\u2026": [
+                "Wysy\u0142anie\u2026"
+            ],
+            "Book appointment": [
+                "Zarezerwuj wizyt\u0119"
+            ],
+            "Step %1$d of %2$d": [
+                "Krok %1$d z %2$d"
+            ],
+            "Could not load services.": [
+                "Nie uda\u0142o si\u0119 wczyta\u0107 us\u0142ug."
+            ],
+            "There are no active services yet. Add them under Terminarz \u2192 Services.": [
+                "Nie ma jeszcze aktywnych us\u0142ug. Dodaj je w Terminarz \u2192 Us\u0142ugi."
+            ],
+            "Offer only the selected services (none selected = all services).": [
+                "Oferuj tylko wybrane us\u0142ugi (brak wyboru = wszystkie us\u0142ugi)."
+            ],
+            "Preselected service": [
+                "Domy\u015blnie wybrana us\u0142uga"
+            ],
+            "None": [
+                "Brak"
+            ],
+            "Booking steps": [
+                "Kroki rezerwacji"
+            ],
+            "Let customers choose the person or resource": [
+                "Pozw\u00f3l klientom wybra\u0107 osob\u0119 lub zas\u00f3b"
+            ],
+            "When off, the first available person or resource is assigned.": [
+                "Po wy\u0142\u0105czeniu przydzielana jest pierwsza dost\u0119pna osoba lub zas\u00f3b."
+            ],
+            "First day of the week": [
+                "Pierwszy dzie\u0144 tygodnia"
+            ],
+            "Book an appointment": [
+                "Zarezerwuj wizyt\u0119"
+            ],
+            "Person or resource": [
+                "Osoba lub zas\u00f3b"
+            ],
+            "Services: %s": [
+                "Us\u0142ugi: %s"
+            ],
+            "Site default": [
+                "Domy\u015blny witryny"
+            ],
+            "Monday": [
+                "Poniedzia\u0142ek"
+            ],
+            "Sunday": [
+                "Niedziela"
+            ],
+            "Saturday": [
+                "Sobota"
+            ]
+        }
+    }
+}

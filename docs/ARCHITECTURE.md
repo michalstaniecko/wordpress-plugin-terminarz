@@ -1015,3 +1015,28 @@ krok w CI); `tests/php/integration/Multisite/MultisiteTest.php` (grupa `multisit
 Akcje AS grupy `terminarz` pozostałe w tabelach AS, gdy WooCommerce jest nieaktywny w chwili deinstalacji, nie są
 usuwane (AS nie jest załadowany); po ponownym włączeniu WooCommerce nie mają obsługi i AS oznaczy je jako nieudane.
 
+## ADR-047: Tłumaczenia — `.pot`, polski `.po` i pliki skompilowane w repozytorium
+
+**Kontekst.** Blok ładuje tłumaczenia JS przez `wp_set_script_translations()`; WordPress szuka pliku
+`terminarz-<locale>-<md5 ścieżki skryptu>.json`, gdzie ścieżką jest zbudowany plik (`build/booking/view.js`,
+`build/booking/index.js`), a odwołania w `.po` wskazują źródła w `blocks/` (#90).
+
+**Decyzja.**
+- Źródłem prawdy jest `languages/terminarz-pl_PL.po` (commitowany). `npm run i18n` generuje `.pot`,
+  `npm run i18n:update-po` dopisuje nowe stringi do `.po`, `npm run i18n:compile` (po `npm run build`) tworzy
+  `.mo`, `.l10n.php` (szybki format WP 6.5+) i JSON-y skryptów.
+- JSON-y: `wp i18n make-json --use-map` z mapą generowaną przez `bin/i18n-js-map.js` — każde źródło JS bloku mapowane
+  na każdy zbudowany skrypt bloku (kilka zbędnych stringów w pliku zamiast utrzymywania grafu importów).
+- Pliki skompilowane (`.mo`, `.l10n.php`, `.json`) są **commitowane**: działają w wp-env bez dodatkowego kroku i trafiają
+  do ZIP-a bez zależności od WP-CLI. Kompilacja jest deterministyczna (data rewizji z nagłówka `.po`), więc CI (job
+  Build) sprawdza: `composer i18n:check` (`.pot` zgodny z kodem — porównanie zbioru stringów, bez numerów linii;
+  każdy `.po` kompletny, bez fuzzy) oraz brak zmian w `languages/` po `composer i18n:compile`.
+- Tłumaczenia z translate.wordpress.org (katalog `wp-content/languages/plugins`) mają pierwszeństwo przed dołączonymi.
+
+**Weryfikacja.** `TranslationsTest` (PHP, liczba mnoga, domyślne e-maile, JSON-y ładowane dla uchwytów bloku),
+E2E `i18n-polish.spec.js` (panel, blok w edytorze i na froncie, e-mail, strona anulowania) z lokalizacją ustawianą
+filtrem `locale` z mu-pluginu E2E (WordPress odrzuca `WPLANG=pl_PL` bez zainstalowanej paczki językowej core).
+
+**Konsekwencje.** Każda zmiana tekstu wymaga `npm run i18n && npm run i18n:update-po`, przetłumaczenia i
+`npm run i18n:compile` — inaczej CI jest czerwone. Rdzeń WordPressa bez paczki pl_PL pozostaje po angielsku.
+

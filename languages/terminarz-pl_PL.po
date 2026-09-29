@@ -1,17 +1,16 @@
-# Copyright (C) 2026 Michał Staniećko
-# This file is distributed under the GPL-2.0-or-later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Terminarz 0.1.0\n"
-"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/terminarz\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"Project-Id-Version: Terminarz 1.0.0\n"
+"Report-Msgid-Bugs-To: https://github.com/michalstaniecko/wordpress-plugin-terminarz/issues\n"
+"Last-Translator: Michał Staniećko\n"
+"Language-Team: Polish\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-29T21:09:27+00:00\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"X-Generator: WP-CLI 2.12.0\n"
+"POT-Creation-Date: 2026-09-29T21:10:49+00:00\n"
+"PO-Revision-Date: 2026-09-29T21:10:49+00:00\n"
+"Language: pl_PL\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
 "X-Domain: terminarz\n"
 
 #. Plugin Name of the plugin
@@ -19,23 +18,23 @@ msgstr ""
 #: src/Admin/Menu.php:98
 #: src/Admin/Privacy.php:187
 msgid "Terminarz"
-msgstr ""
+msgstr "Terminarz"
 
 #. Description of the plugin
 #: terminarz.php:4
 msgid "Online appointment booking for service businesses, with optional WooCommerce payments."
-msgstr ""
+msgstr "Rezerwacja wizyt online dla firm usługowych, z opcjonalnymi płatnościami przez WooCommerce."
 
 #. Author of the plugin
 #: terminarz.php:8
 msgid "Michał Staniećko"
-msgstr ""
+msgstr "Michał Staniećko"
 
 #: src/Admin/BookingsCsvExporter.php:121
 #: src/Admin/BookingsPage.php:304
 #: src/Admin/Privacy.php:202
 msgid "Booking ID"
-msgstr ""
+msgstr "Numer rezerwacji"
 
 #: src/Admin/BookingsCsvExporter.php:122
 #: src/Admin/BookingsListTable.php:66
@@ -48,21 +47,21 @@ msgstr ""
 #: src/Admin/ServicesPage.php:300
 #: src/Frontend/CancellationPage.php:265
 msgid "Status"
-msgstr ""
+msgstr "Status"
 
 #: src/Admin/BookingsCsvExporter.php:123
 #: src/Admin/Privacy.php:205
 msgid "Start"
-msgstr ""
+msgstr "Początek"
 
 #: src/Admin/BookingsCsvExporter.php:124
 #: src/Admin/Privacy.php:206
 msgid "End"
-msgstr ""
+msgstr "Koniec"
 
 #: src/Admin/BookingsCsvExporter.php:125
 msgid "Start (UTC)"
-msgstr ""
+msgstr "Początek (UTC)"
 
 #: src/Admin/BookingsCsvExporter.php:126
 #: src/Admin/BookingsListTable.php:64
@@ -74,7 +73,7 @@ msgstr ""
 #: blocks/booking/app/Summary.js:21
 #: blocks/booking/edit.js:174
 msgid "Service"
-msgstr ""
+msgstr "Usługa"
 
 #: src/Admin/BookingsCsvExporter.php:127
 #: src/Admin/BookingsListTable.php:65
@@ -84,7 +83,7 @@ msgstr ""
 #: src/Admin/SchedulePage.php:131
 #: src/Integrations/WooCommerce/OrderPayments.php:137
 msgid "Resource"
-msgstr ""
+msgstr "Zasób"
 
 #: src/Admin/BookingsCsvExporter.php:128
 #: src/Admin/Privacy.php:208
@@ -93,7 +92,7 @@ msgstr ""
 #: src/Admin/ServicesListTable.php:50
 #: src/Admin/ServicesPage.php:252
 msgid "Name"
-msgstr ""
+msgstr "Imię i nazwisko"
 
 #: src/Admin/BookingsCsvExporter.php:129
 #: src/Admin/BookingsPage.php:314
@@ -101,14 +100,14 @@ msgstr ""
 #: src/Admin/Privacy.php:209
 #: blocks/booking/app/DetailsStep.js:270
 msgid "E-mail"
-msgstr ""
+msgstr "E-mail"
 
 #: src/Admin/BookingsCsvExporter.php:130
 #: src/Admin/BookingsPage.php:315
 #: src/Admin/Privacy.php:210
 #: blocks/booking/app/DetailsStep.js:277
 msgid "Phone"
-msgstr ""
+msgstr "Telefon"
 
 #: src/Admin/BookingsCsvExporter.php:131
 #: src/Admin/BookingsPage.php:316
@@ -116,14 +115,14 @@ msgstr ""
 #: src/Admin/ExceptionsPage.php:302
 #: src/Admin/Privacy.php:211
 msgid "Note"
-msgstr ""
+msgstr "Uwagi"
 
 #: src/Admin/BookingsCsvExporter.php:132
 #: src/Admin/BookingsListTable.php:67
 #: src/Admin/BookingsPage.php:318
 #: src/Admin/Privacy.php:212
 msgid "Booked on"
-msgstr ""
+msgstr "Data rezerwacji"
 
 #: src/Admin/BookingsCsvExporter.php:133
 #: src/Admin/BookingsPage.php:321
@@ -131,153 +130,153 @@ msgstr ""
 #: src/Admin/ServicesPage.php:296
 #: src/Integrations/WooCommerce/OrderAdmin.php:108
 msgid "Order"
-msgstr ""
+msgstr "Zamówienie"
 
 #: src/Admin/BookingsListTable.php:62
 #: src/Admin/BookingsPage.php:306
 #: src/Frontend/CancellationPage.php:263
 #: blocks/booking/app/Summary.js:31
 msgid "Date"
-msgstr ""
+msgstr "Data"
 
 #: src/Admin/BookingsListTable.php:63
 #: src/Admin/BookingsPage.php:313
 msgid "Customer"
-msgstr ""
+msgstr "Klient"
 
 #: src/Admin/BookingsListTable.php:117
 msgid "No bookings found."
-msgstr ""
+msgstr "Nie znaleziono rezerwacji."
 
 #: src/Admin/BookingsListTable.php:148
 #: src/Admin/ExceptionsListTable.php:115
 msgid "All"
-msgstr ""
+msgstr "Wszystkie"
 
 #: src/Admin/BookingsListTable.php:179
 msgid "All services"
-msgstr ""
+msgstr "Wszystkie usługi"
 
 #: src/Admin/BookingsListTable.php:185
 #: src/Admin/ExceptionsListTable.php:158
 msgid "All resources"
-msgstr ""
+msgstr "Wszystkie zasoby"
 
 #: src/Admin/BookingsListTable.php:190
 msgid "From"
-msgstr ""
+msgstr "Od"
 
 #: src/Admin/BookingsListTable.php:192
 msgid "To"
-msgstr ""
+msgstr "Do"
 
 #: src/Admin/BookingsListTable.php:197
 #: src/Admin/ExceptionsListTable.php:122
 msgid "Filter"
-msgstr ""
+msgstr "Filtruj"
 
 #: src/Admin/BookingsListTable.php:203
 msgid "Export CSV"
-msgstr ""
+msgstr "Eksportuj CSV"
 
 #: src/Admin/BookingsListTable.php:222
 msgid "Details"
-msgstr ""
+msgstr "Szczegóły"
 
 #: src/Admin/BookingsListTable.php:225
 msgid "Confirm"
-msgstr ""
+msgstr "Potwierdź"
 
 #: src/Admin/BookingsListTable.php:235
 #: src/Admin/BookingsPage.php:366
 msgid "Reschedule"
-msgstr ""
+msgstr "Przenieś"
 
 #: src/Admin/BookingsListTable.php:241
 #: src/Admin/BookingsPage.php:376
 msgid "Cancel this booking?"
-msgstr ""
+msgstr "Anulować tę rezerwację?"
 
 #: src/Admin/BookingsListTable.php:242
 msgid "Cancel"
-msgstr ""
+msgstr "Anuluj"
 
 #: src/Admin/BookingsPage.php:47
 #: src/Admin/BookingsPage.php:54
 #: src/Admin/BookingsPage.php:258
 #: src/Admin/Privacy.php:93
 msgid "Bookings"
-msgstr ""
+msgstr "Rezerwacje"
 
 #: src/Admin/BookingsPage.php:110
 #: src/Admin/Screen.php:81
 msgid "Sorry, you are not allowed to do this."
-msgstr ""
+msgstr "Niestety, nie masz uprawnień do wykonania tej czynności."
 
 #: src/Admin/BookingsPage.php:125
 msgid "Booking confirmed."
-msgstr ""
+msgstr "Rezerwacja została potwierdzona."
 
 #: src/Admin/BookingsPage.php:134
 msgid "Booking cancelled."
-msgstr ""
+msgstr "Rezerwacja została anulowana."
 
 #: src/Admin/BookingsPage.php:146
 #: src/Admin/BookingsPage.php:235
 #: src/Admin/BookingsPage.php:283
 #: src/Rest/AdminBookingsController.php:307
 msgid "The booking does not exist."
-msgstr ""
+msgstr "Rezerwacja nie istnieje."
 
 #: src/Admin/BookingsPage.php:161
 msgid "Choose a new time."
-msgstr ""
+msgstr "Wybierz nowy termin."
 
 #: src/Admin/BookingsPage.php:170
 #: src/Rest/ErrorMapper.php:47
 msgid "The selected time is no longer available. Please choose another one."
-msgstr ""
+msgstr "Wybrany termin nie jest już dostępny. Wybierz inny."
 
 #: src/Admin/BookingsPage.php:173
 msgid "This booking cannot be moved to the selected time (it is no longer active or the resource does not perform the service)."
-msgstr ""
+msgstr "Tej rezerwacji nie można przenieść na wybrany termin (nie jest już aktywna lub zasób nie wykonuje tej usługi)."
 
 #. translators: %s: new date and time.
 #: src/Admin/BookingsPage.php:180
 #, php-format
 msgid "Booking moved to %s."
-msgstr ""
+msgstr "Rezerwacja została przeniesiona na %s."
 
 #: src/Admin/BookingsPage.php:237
 #: src/Rest/ErrorMapper.php:62
 msgid "This action is not possible for the booking in its current status."
-msgstr ""
+msgstr "Ta czynność nie jest możliwa dla rezerwacji w obecnym statusie."
 
 #: src/Admin/BookingsPage.php:270
 msgid "Search bookings"
-msgstr ""
+msgstr "Szukaj rezerwacji"
 
 #: src/Admin/BookingsPage.php:282
 #: src/Integrations/WooCommerce/OrderAdmin.php:67
 msgid "Booking"
-msgstr ""
+msgstr "Rezerwacja"
 
 #: src/Admin/BookingsPage.php:283
 msgid "Back to bookings"
-msgstr ""
+msgstr "Powrót do rezerwacji"
 
 #: src/Admin/BookingsPage.php:300
 msgid "Booking details"
-msgstr ""
+msgstr "Szczegóły rezerwacji"
 
 #: src/Admin/BookingsPage.php:301
 msgid "&larr; Back to bookings"
-msgstr ""
+msgstr "&larr; Powrót do rezerwacji"
 
 #: src/Admin/BookingsPage.php:309
 #: src/Admin/ServicesListTable.php:53
 msgid "Buffer after"
-msgstr ""
+msgstr "Przerwa po wizycie"
 
 #. translators: %d: number of minutes.
 #: src/Admin/BookingsPage.php:311
@@ -286,20 +285,21 @@ msgstr ""
 #, php-format
 msgid "%d minute"
 msgid_plural "%d minutes"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d minuta"
+msgstr[1] "%d minuty"
+msgstr[2] "%d minut"
 
 #: src/Admin/BookingsPage.php:317
 msgid "Account"
-msgstr ""
+msgstr "Konto"
 
 #: src/Admin/BookingsPage.php:324
 msgid "Held until"
-msgstr ""
+msgstr "Wstrzymana do"
 
 #: src/Admin/BookingsPage.php:355
 msgid "Confirm booking"
-msgstr ""
+msgstr "Potwierdź rezerwację"
 
 #. translators: Default e-mail text (link label).
 #: src/Admin/BookingsPage.php:372
@@ -307,237 +307,237 @@ msgstr ""
 #: src/Notifications/Placeholders.php:135
 #: src/Notifications/Templates.php:258
 msgid "Cancel booking"
-msgstr ""
+msgstr "Anuluj rezerwację"
 
 #: src/Admin/BookingsPage.php:392
 msgid "Reschedule booking"
-msgstr ""
+msgstr "Przenieś rezerwację"
 
 #: src/Admin/BookingsPage.php:399
 msgid "&larr; Back to the booking"
-msgstr ""
+msgstr "&larr; Powrót do rezerwacji"
 
 #: src/Admin/BookingsPage.php:402
 msgid "Only active bookings can be moved."
-msgstr ""
+msgstr "Przenosić można tylko aktywne rezerwacje."
 
 #: src/Admin/BookingsPage.php:414
 msgid "Current time:"
-msgstr ""
+msgstr "Obecny termin:"
 
 #: src/Admin/BookingsPage.php:433
 msgid "&larr; Previous day"
-msgstr ""
+msgstr "&larr; Poprzedni dzień"
 
 #: src/Admin/BookingsPage.php:435
 #: src/Admin/SchedulePage.php:158
 #: blocks/booking/edit.js:178
 msgid "Day"
-msgstr ""
+msgstr "Dzień"
 
 #: src/Admin/BookingsPage.php:437
 msgid "Show free times"
-msgstr ""
+msgstr "Pokaż wolne terminy"
 
 #: src/Admin/BookingsPage.php:439
 msgid "Next day &rarr;"
-msgstr ""
+msgstr "Następny dzień &rarr;"
 
 #: src/Admin/BookingsPage.php:445
 msgid "No free times on this day."
-msgstr ""
+msgstr "Brak wolnych terminów tego dnia."
 
 #: src/Admin/BookingsPage.php:457
 msgid "Free times"
-msgstr ""
+msgstr "Wolne terminy"
 
 #: src/Admin/BookingsPage.php:469
 msgid "Move booking"
-msgstr ""
+msgstr "Przenieś rezerwację"
 
 #: src/Admin/BookingsPage.php:480
 msgid "Guest"
-msgstr ""
+msgstr "Gość"
 
 #: src/Admin/EmailsPage.php:37
 #: src/Admin/EmailsPage.php:44
 #: src/Admin/EmailsPage.php:183
 msgid "E-mails"
-msgstr ""
+msgstr "E-maile"
 
 #: src/Admin/EmailsPage.php:75
 #: src/Admin/EmailsPage.php:117
 #: src/Admin/EmailsPage.php:134
 #: src/Admin/EmailsPage.php:226
 msgid "Unknown e-mail."
-msgstr ""
+msgstr "Nieznany e-mail."
 
 #: src/Admin/EmailsPage.php:87
 msgid "Enter a subject."
-msgstr ""
+msgstr "Wpisz temat."
 
 #: src/Admin/EmailsPage.php:90
 msgid "Enter the message text."
-msgstr ""
+msgstr "Wpisz treść wiadomości."
 
 #: src/Admin/EmailsPage.php:105
 msgid "E-mail saved."
-msgstr ""
+msgstr "E-mail został zapisany."
 
 #: src/Admin/EmailsPage.php:122
 msgid "The default subject and text were restored."
-msgstr ""
+msgstr "Przywrócono domyślny temat i treść."
 
 #. translators: %s: e-mail address.
 #: src/Admin/EmailsPage.php:144
 #, php-format
 msgid "Test e-mail sent to %s."
-msgstr ""
+msgstr "Testowy e-mail został wysłany na adres %s."
 
 #: src/Admin/EmailsPage.php:149
 msgid "The test e-mail could not be sent. Check the e-mail configuration of the site."
-msgstr ""
+msgstr "Nie udało się wysłać testowego e-maila. Sprawdź konfigurację poczty witryny."
 
 #. translators: %s: e-mail address.
 #: src/Admin/EmailsPage.php:189
 #, php-format
 msgid "E-mails for the business are sent to %s (Settings → Notification e-mail)."
-msgstr ""
+msgstr "E-maile dla firmy są wysyłane na adres %s (Ustawienia → E-mail do powiadomień)."
 
 #: src/Admin/EmailsPage.php:197
 #: src/Admin/EmailsPage.php:254
 msgid "Subject"
-msgstr ""
+msgstr "Temat"
 
 #: src/Admin/EmailsPage.php:199
 msgid "Text"
-msgstr ""
+msgstr "Treść"
 
 #: src/Admin/EmailsPage.php:212
 msgid "Enabled"
-msgstr ""
+msgstr "Włączony"
 
 #: src/Admin/EmailsPage.php:212
 msgid "Disabled"
-msgstr ""
+msgstr "Wyłączony"
 
 #: src/Admin/EmailsPage.php:213
 msgid "Customized"
-msgstr ""
+msgstr "Zmieniony"
 
 #: src/Admin/EmailsPage.php:213
 msgid "Default"
-msgstr ""
+msgstr "Domyślny"
 
 #: src/Admin/EmailsPage.php:225
 msgid "Edit e-mail"
-msgstr ""
+msgstr "Edytuj e-mail"
 
 #: src/Admin/EmailsPage.php:239
 msgid "&larr; Back to e-mails"
-msgstr ""
+msgstr "&larr; Powrót do e-maili"
 
 #: src/Admin/EmailsPage.php:248
 msgid "Sending"
-msgstr ""
+msgstr "Wysyłanie"
 
 #: src/Admin/EmailsPage.php:250
 msgid "Send this e-mail"
-msgstr ""
+msgstr "Wysyłaj ten e-mail"
 
 #: src/Admin/EmailsPage.php:260
 msgid "Message"
-msgstr ""
+msgstr "Wiadomość"
 
 #: src/Admin/EmailsPage.php:262
 msgid "HTML allowed in posts (paragraphs, links, bold…). Placeholders in braces are replaced with booking data."
-msgstr ""
+msgstr "Dozwolony HTML jak we wpisach (akapity, linki, pogrubienie…). Znaczniki w nawiasach klamrowych są zastępowane danymi rezerwacji."
 
 #: src/Admin/EmailsPage.php:265
 msgid "Save e-mail"
-msgstr ""
+msgstr "Zapisz e-mail"
 
 #: src/Admin/EmailsPage.php:271
 msgid "More actions"
-msgstr ""
+msgstr "Więcej działań"
 
 #: src/Admin/EmailsPage.php:275
 msgid "Send a test e-mail to me"
-msgstr ""
+msgstr "Wyślij do mnie testowy e-mail"
 
 #: src/Admin/EmailsPage.php:279
 msgid "Restore default text"
-msgstr ""
+msgstr "Przywróć domyślną treść"
 
 #: src/Admin/EmailsPage.php:287
 msgid "Placeholders"
-msgstr ""
+msgstr "Znaczniki"
 
 #: src/Admin/EmailsPage.php:302
 msgid "Preview (saved version, example data)"
-msgstr ""
+msgstr "Podgląd (zapisana wersja, przykładowe dane)"
 
 #: src/Admin/EmailsPage.php:303
 msgid "Subject:"
-msgstr ""
+msgstr "Temat:"
 
 #: src/Admin/ExceptionsListTable.php:50
 msgid "Dates"
-msgstr ""
+msgstr "Daty"
 
 #: src/Admin/ExceptionsListTable.php:51
 #: src/Admin/ExceptionsListTable.php:113
 #: src/Admin/ExceptionsPage.php:271
 msgid "Applies to"
-msgstr ""
+msgstr "Dotyczy"
 
 #: src/Admin/ExceptionsListTable.php:52
 #: src/Admin/ExceptionsPage.php:112
 msgid "Hours"
-msgstr ""
+msgstr "Godziny"
 
 #: src/Admin/ExceptionsListTable.php:99
 msgid "No exceptions."
-msgstr ""
+msgstr "Brak wyjątków."
 
 #: src/Admin/ExceptionsListTable.php:116
 msgid "Global only"
-msgstr ""
+msgstr "Tylko globalne"
 
 #: src/Admin/ExceptionsListTable.php:121
 msgid "Include past"
-msgstr ""
+msgstr "Pokaż także minione"
 
 #: src/Admin/ExceptionsListTable.php:140
 #: src/Admin/ResourcesListTable.php:117
 #: src/Admin/ServicesListTable.php:109
 msgid "Edit"
-msgstr ""
+msgstr "Edytuj"
 
 #: src/Admin/ExceptionsListTable.php:144
 msgid "Delete this exception?"
-msgstr ""
+msgstr "Usunąć ten wyjątek?"
 
 #: src/Admin/ExceptionsListTable.php:145
 #: src/Admin/ResourcesListTable.php:146
 #: src/Admin/ServicesListTable.php:127
 msgid "Delete"
-msgstr ""
+msgstr "Usuń"
 
 #: src/Admin/ExceptionsListTable.php:170
 msgid "Closed"
-msgstr ""
+msgstr "Nieczynne"
 
 #: src/Admin/ExceptionsPage.php:46
 #: src/Admin/ResourcesListTable.php:119
 #: src/Admin/ResourcesPage.php:273
 msgid "Days off"
-msgstr ""
+msgstr "Dni wolne"
 
 #: src/Admin/ExceptionsPage.php:53
 #: src/Admin/ExceptionsPage.php:229
 msgid "Days off and exceptions"
-msgstr ""
+msgstr "Dni wolne i wyjątki"
 
 #: src/Admin/ExceptionsPage.php:103
 #: src/Admin/ResourcesPage.php:118
@@ -546,226 +546,227 @@ msgstr ""
 #: src/Admin/ResourcesPage.php:256
 #: src/Admin/SchedulePage.php:74
 msgid "The resource does not exist."
-msgstr ""
+msgstr "Zasób nie istnieje."
 
 #: src/Admin/ExceptionsPage.php:106
 msgid "Enter the first day."
-msgstr ""
+msgstr "Wpisz pierwszy dzień."
 
 #: src/Admin/ExceptionsPage.php:108
 msgid "The last day must not be before the first day."
-msgstr ""
+msgstr "Ostatni dzień nie może być wcześniejszy niż pierwszy."
 
 #: src/Admin/ExceptionsPage.php:114
 msgid "Enter at least one range of hours, or choose \"Closed\"."
-msgstr ""
+msgstr "Wpisz co najmniej jeden przedział godzin albo wybierz „Nieczynne”."
 
 #: src/Admin/ExceptionsPage.php:123
 msgid "The dates or hours are not valid (overlapping hours or a period longer than a year)."
-msgstr ""
+msgstr "Daty lub godziny są nieprawidłowe (nakładające się godziny lub okres dłuższy niż rok)."
 
 #. translators: %s: date range of an existing exception.
 #: src/Admin/ExceptionsPage.php:130
 #, php-format
 msgid "It overlaps an existing exception (%s) for the same resource. Edit that one instead."
-msgstr ""
+msgstr "Nakłada się na istniejący wyjątek (%s) dla tego samego zasobu. Zamiast tego edytuj tamten."
 
 #: src/Admin/ExceptionsPage.php:145
 #: src/Admin/ExceptionsPage.php:176
 #: src/Admin/ExceptionsPage.php:248
 msgid "The exception does not exist."
-msgstr ""
+msgstr "Wyjątek nie istnieje."
 
 #: src/Admin/ExceptionsPage.php:149
 msgid "Exception updated."
-msgstr ""
+msgstr "Wyjątek został zaktualizowany."
 
 #: src/Admin/ExceptionsPage.php:149
 msgid "Exception added."
-msgstr ""
+msgstr "Wyjątek został dodany."
 
 #. translators: %d: number of bookings.
 #: src/Admin/ExceptionsPage.php:155
 #, php-format
 msgid "%d active booking falls within these days. It is not changed automatically — move or cancel it if needed."
 msgid_plural "%d active bookings fall within these days. They are not changed automatically — move or cancel them if needed."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "W te dni przypada %d aktywna rezerwacja. Nie zostanie zmieniona automatycznie — w razie potrzeby przenieś ją lub anuluj."
+msgstr[1] "W te dni przypadają %d aktywne rezerwacje. Nie zostaną zmienione automatycznie — w razie potrzeby przenieś je lub anuluj."
+msgstr[2] "W te dni przypada %d aktywnych rezerwacji. Nie zostaną zmienione automatycznie — w razie potrzeby przenieś je lub anuluj."
 
 #: src/Admin/ExceptionsPage.php:180
 msgid "Exception deleted."
-msgstr ""
+msgstr "Wyjątek został usunięty."
 
 #: src/Admin/ExceptionsPage.php:229
 #: src/Admin/ExceptionsPage.php:263
 #: src/Admin/ExceptionsPage.php:307
 msgid "Add exception"
-msgstr ""
+msgstr "Dodaj wyjątek"
 
 #: src/Admin/ExceptionsPage.php:230
 msgid "Closed days (leave, public holidays) and days with different hours. A global exception applies to all resources; an exception of a single resource takes precedence over it."
-msgstr ""
+msgstr "Dni zamknięte (urlop, święta) i dni z innymi godzinami. Wyjątek globalny dotyczy wszystkich zasobów; wyjątek pojedynczego zasobu ma przed nim pierwszeństwo."
 
 #: src/Admin/ExceptionsPage.php:247
 #: src/Admin/ExceptionsPage.php:263
 msgid "Edit exception"
-msgstr ""
+msgstr "Edytuj wyjątek"
 
 #: src/Admin/ExceptionsPage.php:264
 msgid "&larr; Back to days off"
-msgstr ""
+msgstr "&larr; Powrót do dni wolnych"
 
 #: src/Admin/ExceptionsPage.php:272
 msgid "All resources (global)"
-msgstr ""
+msgstr "Wszystkie zasoby (globalny)"
 
 #: src/Admin/ExceptionsPage.php:278
 msgid "First day"
-msgstr ""
+msgstr "Pierwszy dzień"
 
 #: src/Admin/ExceptionsPage.php:280
 msgid "Last day"
-msgstr ""
+msgstr "Ostatni dzień"
 
 #: src/Admin/ExceptionsPage.php:282
 msgid "The same as the first day for a single day."
-msgstr ""
+msgstr "Dla pojedynczego dnia taki sam jak pierwszy dzień."
 
 #: src/Admin/ExceptionsPage.php:284
 #: src/Admin/ResourcesListTable.php:59
 #: src/Admin/ResourcesPage.php:285
 msgid "Type"
-msgstr ""
+msgstr "Rodzaj"
 
 #: src/Admin/ExceptionsPage.php:285
 msgid "Closed (no bookings)"
-msgstr ""
+msgstr "Nieczynne (bez rezerwacji)"
 
 #: src/Admin/ExceptionsPage.php:286
 msgid "Different hours (replace working hours and breaks):"
-msgstr ""
+msgstr "Inne godziny (zastępują godziny pracy i przerwy):"
 
 #. translators: %d: row number.
 #: src/Admin/ExceptionsPage.php:294
 #, php-format
 msgid "Hours %d: start"
-msgstr ""
+msgstr "Godziny %d: początek"
 
 #. translators: %d: row number.
 #: src/Admin/ExceptionsPage.php:297
 #, php-format
 msgid "Hours %d: end"
-msgstr ""
+msgstr "Godziny %d: koniec"
 
 #: src/Admin/ExceptionsPage.php:304
 msgid "For administrators only, e.g. \"Christmas\" or \"Training\"."
-msgstr ""
+msgstr "Widoczne tylko dla administratorów, np. „Boże Narodzenie” lub „Szkolenie”."
 
 #: src/Admin/ExceptionsPage.php:307
 #: src/Admin/ResourcesPage.php:305
 #: src/Admin/ServicesPage.php:305
 msgid "Save changes"
-msgstr ""
+msgstr "Zapisz zmiany"
 
 #: src/Admin/Labels.php:28
 msgctxt "booking status"
 msgid "Pending"
-msgstr ""
+msgstr "Oczekuje"
 
 #: src/Admin/Labels.php:29
 msgctxt "booking status"
 msgid "Awaiting payment"
-msgstr ""
+msgstr "Oczekuje na płatność"
 
 #: src/Admin/Labels.php:30
 #: src/Notifications/Placeholders.php:100
 msgctxt "booking status"
 msgid "Confirmed"
-msgstr ""
+msgstr "Potwierdzona"
 
 #: src/Admin/Labels.php:31
 msgctxt "booking status"
 msgid "Cancelled"
-msgstr ""
+msgstr "Anulowana"
 
 #: src/Admin/Labels.php:32
 msgctxt "booking status"
 msgid "Expired"
-msgstr ""
+msgstr "Wygasła"
 
 #: src/Admin/Labels.php:33
 msgctxt "booking status"
 msgid "Completed"
-msgstr ""
+msgstr "Zrealizowana"
 
 #: src/Admin/Labels.php:57
 msgctxt "resource type"
 msgid "Person"
-msgstr ""
+msgstr "Osoba"
 
 #: src/Admin/Labels.php:58
 msgctxt "resource type"
 msgid "Room"
-msgstr ""
+msgstr "Sala"
 
 #: src/Admin/Labels.php:59
 msgctxt "resource type"
 msgid "Device"
-msgstr ""
+msgstr "Urządzenie"
 
 #. translators: %s: UTC offset, e.g. +01:00.
 #: src/Admin/Labels.php:102
 #, php-format
 msgid "Times are in the site time zone: UTC%s. You can change it in Settings → General."
-msgstr ""
+msgstr "Godziny są podane w strefie czasowej witryny: UTC%s. Możesz ją zmienić w Ustawienia → Ogólne."
 
 #. translators: 1: time zone name, 2: current UTC offset, e.g. +01:00.
 #: src/Admin/Labels.php:108
 #, php-format
 msgid "Times are in the site time zone: %1$s (currently UTC%2$s). You can change it in Settings → General."
-msgstr ""
+msgstr "Godziny są podane w strefie czasowej witryny: %1$s (obecnie UTC%2$s). Możesz ją zmienić w Ustawienia → Ogólne."
 
 #: src/Admin/Money.php:98
 #: blocks/booking/app/BookingApp.js:461
 msgid "Free"
-msgstr ""
+msgstr "Bezpłatna"
 
 #: src/Admin/Privacy.php:55
 #: src/Admin/Privacy.php:70
 msgid "Terminarz bookings"
-msgstr ""
+msgstr "Rezerwacje Terminarza"
 
 #: src/Admin/Privacy.php:94
 msgid "Appointments booked with this e-mail address."
-msgstr ""
+msgstr "Wizyty zarezerwowane z użyciem tego adresu e-mail."
 
 #. translators: %s: public booking ID.
 #: src/Admin/Privacy.php:142
 #, php-format
 msgid "Booking %s could not be anonymised."
-msgstr ""
+msgstr "Nie udało się zanonimizować rezerwacji %s."
 
 #. translators: 1: public booking ID, 2: date and time of the appointment.
 #: src/Admin/Privacy.php:162
 #, php-format
 msgid "Upcoming booking %1$s (%2$s) was retained. Cancel it first if the customer data must be erased."
-msgstr ""
+msgstr "Nadchodząca rezerwacja %1$s (%2$s) została zachowana. Jeśli dane klienta muszą zostać usunięte, najpierw ją anuluj."
 
 #: src/Admin/Privacy.php:180
 msgid "Suggested text for the section about appointment bookings. Adjust it to how you use the data."
-msgstr ""
+msgstr "Proponowany tekst sekcji o rezerwacjach wizyt. Dostosuj go do sposobu, w jaki wykorzystujesz dane."
 
 #: src/Admin/Privacy.php:181
 msgid "Suggested text:"
-msgstr ""
+msgstr "Proponowany tekst:"
 
 #: src/Admin/Privacy.php:182
 msgid "When you book an appointment on this website, we collect your name, e-mail address, optional phone number and the note you enter, together with the booked service, date and time. We use this data to manage the appointment and to contact you about it. If you book while logged in, the booking is linked to your account."
-msgstr ""
+msgstr "Gdy rezerwujesz wizytę w tej witrynie, zbieramy Twoje imię i nazwisko, adres e-mail, opcjonalnie numer telefonu i wpisane uwagi, a także zarezerwowaną usługę, datę i godzinę. Wykorzystujemy te dane do obsługi wizyty i kontaktu w jej sprawie. Jeśli rezerwujesz jako zalogowany użytkownik, rezerwacja jest powiązana z Twoim kontem."
 
 #: src/Admin/Privacy.php:184
 msgid "Booking data is kept for as long as needed to provide the service and for our records. You can request an export or erasure of your personal data. On erasure, your contact details are removed from past bookings; the anonymous booking record (service, date and time) is kept for statistics. Upcoming bookings are retained until they are cancelled."
-msgstr ""
+msgstr "Dane rezerwacji przechowujemy tak długo, jak jest to potrzebne do wykonania usługi i prowadzenia dokumentacji. Możesz zażądać eksportu lub usunięcia swoich danych osobowych. Przy usunięciu Twoje dane kontaktowe są usuwane z minionych rezerwacji; anonimowy zapis rezerwacji (usługa, data i godzina) pozostaje do celów statystycznych. Nadchodzące rezerwacje są zachowywane do czasu ich anulowania."
 
 #: src/Admin/ResourcesListTable.php:60
 #: src/Admin/ServicesPage.php:41
@@ -773,11 +774,11 @@ msgstr ""
 #: src/Admin/ServicesPage.php:204
 #: blocks/booking/edit.js:77
 msgid "Services"
-msgstr ""
+msgstr "Usługi"
 
 #: src/Admin/ResourcesListTable.php:100
 msgid "No resources yet. Add the first person, room or device that can be booked."
-msgstr ""
+msgstr "Nie ma jeszcze zasobów. Dodaj pierwszą osobę, salę lub urządzenie, które można rezerwować."
 
 #: src/Admin/ResourcesListTable.php:118
 #: src/Admin/ResourcesPage.php:272
@@ -787,31 +788,31 @@ msgstr ""
 #: src/Admin/SchedulePage.php:159
 #: src/Admin/SchedulePage.php:191
 msgid "Working hours"
-msgstr ""
+msgstr "Godziny pracy"
 
 #: src/Admin/ResourcesListTable.php:131
 #: src/Admin/ServicesListTable.php:121
 msgid "Deactivate"
-msgstr ""
+msgstr "Wyłącz"
 
 #: src/Admin/ResourcesListTable.php:140
 #: src/Admin/ServicesListTable.php:121
 msgid "Activate"
-msgstr ""
+msgstr "Włącz"
 
 #: src/Admin/ResourcesListTable.php:145
 msgid "Delete this resource permanently?"
-msgstr ""
+msgstr "Trwale usunąć ten zasób?"
 
 #: src/Admin/ResourcesListTable.php:187
 #: src/Admin/ServicesListTable.php:189
 msgid "Active"
-msgstr ""
+msgstr "Aktywny"
 
 #: src/Admin/ResourcesListTable.php:188
 #: src/Admin/ServicesListTable.php:189
 msgid "Inactive"
-msgstr ""
+msgstr "Nieaktywny"
 
 #: src/Admin/ResourcesPage.php:46
 #: src/Admin/ResourcesPage.php:53
@@ -819,855 +820,856 @@ msgstr ""
 #: src/Admin/ServicesListTable.php:54
 #: src/Admin/ServicesPage.php:279
 msgid "Resources"
-msgstr ""
+msgstr "Zasoby"
 
 #: src/Admin/ResourcesPage.php:93
 #: src/Admin/ServicesPage.php:95
 msgid "Enter a name."
-msgstr ""
+msgstr "Wpisz nazwę."
 
 #: src/Admin/ResourcesPage.php:95
 #: src/Admin/ServicesPage.php:97
 msgid "The name is too long."
-msgstr ""
+msgstr "Nazwa jest za długa."
 
 #: src/Admin/ResourcesPage.php:98
 msgid "Choose a valid resource type."
-msgstr ""
+msgstr "Wybierz prawidłowy rodzaj zasobu."
 
 #: src/Admin/ResourcesPage.php:121
 msgid "The resource data is not valid."
-msgstr ""
+msgstr "Dane zasobu są nieprawidłowe."
 
 #: src/Admin/ResourcesPage.php:126
 msgid "Resource updated."
-msgstr ""
+msgstr "Zasób został zaktualizowany."
 
 #: src/Admin/ResourcesPage.php:126
 msgid "Resource added."
-msgstr ""
+msgstr "Zasób został dodany."
 
 #: src/Admin/ResourcesPage.php:153
 msgid "Resource activated."
-msgstr ""
+msgstr "Zasób został włączony."
 
 #: src/Admin/ResourcesPage.php:153
 msgid "Resource deactivated. It is no longer offered to customers."
-msgstr ""
+msgstr "Zasób został wyłączony. Nie jest już oferowany klientom."
 
 #: src/Admin/ResourcesPage.php:175
 msgid "This resource has bookings and cannot be deleted. Deactivate it instead."
-msgstr ""
+msgstr "Ten zasób ma rezerwacje i nie można go usunąć. Zamiast tego go wyłącz."
 
 #: src/Admin/ResourcesPage.php:179
 msgid "Resource deleted."
-msgstr ""
+msgstr "Zasób został usunięty."
 
 #. translators: %d: number of bookings.
 #: src/Admin/ResourcesPage.php:223
 #, php-format
 msgid "The resource still has %d upcoming booking. It stays valid until you cancel or move it."
 msgid_plural "The resource still has %d upcoming bookings. They stay valid until you cancel or move them."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Zasób ma jeszcze %d nadchodzącą rezerwację. Pozostaje ona ważna, dopóki jej nie anulujesz lub nie przeniesiesz."
+msgstr[1] "Zasób ma jeszcze %d nadchodzące rezerwacje. Pozostają one ważne, dopóki ich nie anulujesz lub nie przeniesiesz."
+msgstr[2] "Zasób ma jeszcze %d nadchodzących rezerwacji. Pozostają one ważne, dopóki ich nie anulujesz lub nie przeniesiesz."
 
 #: src/Admin/ResourcesPage.php:239
 #: src/Admin/ResourcesPage.php:269
 #: src/Admin/ResourcesPage.php:305
 msgid "Add resource"
-msgstr ""
+msgstr "Dodaj zasób"
 
 #: src/Admin/ResourcesPage.php:240
 msgid "Resources are the people, rooms or devices that can be booked. Each one has its own working hours."
-msgstr ""
+msgstr "Zasoby to osoby, sale lub urządzenia, które można rezerwować. Każdy z nich ma własne godziny pracy."
 
 #: src/Admin/ResourcesPage.php:255
 #: src/Admin/ResourcesPage.php:269
 msgid "Edit resource"
-msgstr ""
+msgstr "Edytuj zasób"
 
 #: src/Admin/ResourcesPage.php:270
 msgid "&larr; Back to resources"
-msgstr ""
+msgstr "&larr; Powrót do zasobów"
 
 #: src/Admin/ResourcesPage.php:291
 #: src/Admin/ServicesPage.php:256
 msgid "Description"
-msgstr ""
+msgstr "Opis"
 
 #: src/Admin/ResourcesPage.php:297
 msgid "Lower numbers are listed first."
-msgstr ""
+msgstr "Niższe liczby są wyświetlane wcześniej."
 
 #: src/Admin/ResourcesPage.php:302
 #: src/Admin/ServicesPage.php:302
 msgid "Active (offered to customers)"
-msgstr ""
+msgstr "Aktywny (oferowany klientom)"
 
 #. translators: 1: weekday, 2: time range, 3: time range.
 #: src/Admin/ScheduleForm.php:59
 #, php-format
 msgid "%1$s: working hours %2$s and %3$s overlap."
-msgstr ""
+msgstr "%1$s: godziny pracy %2$s i %3$s nakładają się."
 
 #. translators: 1: weekday, 2: time range, 3: time range.
 #: src/Admin/ScheduleForm.php:64
 #, php-format
 msgid "%1$s: breaks %2$s and %3$s overlap."
-msgstr ""
+msgstr "%1$s: przerwy %2$s i %3$s nakładają się."
 
 #. translators: 1: weekday, 2: time range.
 #: src/Admin/ScheduleForm.php:69
 #, php-format
 msgid "%1$s: the break %2$s must lie within working hours."
-msgstr ""
+msgstr "%1$s: przerwa %2$s musi mieścić się w godzinach pracy."
 
 #: src/Admin/ScheduleForm.php:86
 msgid "The working hours are not valid."
-msgstr ""
+msgstr "Godziny pracy są nieprawidłowe."
 
 #. translators: %s: weekday or other label.
 #: src/Admin/ScheduleForm.php:115
 #, php-format
 msgid "%s: enter both the start and the end time."
-msgstr ""
+msgstr "%s: wpisz godzinę początku i końca."
 
 #. translators: %s: weekday or other label.
 #: src/Admin/ScheduleForm.php:122
 #, php-format
 msgid "%s: use the HH:MM time format."
-msgstr ""
+msgstr "%s: użyj formatu godziny GG:MM."
 
 #. translators: 1: weekday or other label, 2: start time, 3: end time.
 #: src/Admin/ScheduleForm.php:127
 #, php-format
 msgid "%1$s: the end (%3$s) must be later than the start (%2$s)."
-msgstr ""
+msgstr "%1$s: koniec (%3$s) musi być późniejszy niż początek (%2$s)."
 
 #: src/Admin/SchedulePage.php:87
 msgid "Working hours saved."
-msgstr ""
+msgstr "Godziny pracy zostały zapisane."
 
 #: src/Admin/SchedulePage.php:101
 msgid "There are no resources yet."
-msgstr ""
+msgstr "Nie ma jeszcze zasobów."
 
 #: src/Admin/SchedulePage.php:103
 msgid "Add a resource"
-msgstr ""
+msgstr "Dodaj zasób"
 
 #: src/Admin/SchedulePage.php:138
 #: src/Admin/ServicesPage.php:290
 msgid "inactive"
-msgstr ""
+msgstr "nieaktywny"
 
 #: src/Admin/SchedulePage.php:142
 msgid "Show"
-msgstr ""
+msgstr "Pokaż"
 
 #: src/Admin/SchedulePage.php:160
 msgid "Breaks"
-msgstr ""
+msgstr "Przerwy"
 
 #: src/Admin/SchedulePage.php:175
 msgid "Leave a day empty to close it. An end time of 00:00 means midnight. Breaks must lie within working hours."
-msgstr ""
+msgstr "Pozostaw dzień pusty, aby był nieczynny. Koniec o 00:00 oznacza północ. Przerwy muszą mieścić się w godzinach pracy."
 
 #: src/Admin/SchedulePage.php:176
 msgid "Save working hours"
-msgstr ""
+msgstr "Zapisz godziny pracy"
 
 #: src/Admin/SchedulePage.php:191
 msgid "Break"
-msgstr ""
+msgstr "Przerwa"
 
 #. translators: %s: weekday and row, e.g. "Monday, Break 1".
 #: src/Admin/SchedulePage.php:202
 #, php-format
 msgid "%s: start"
-msgstr ""
+msgstr "%s: początek"
 
 #. translators: %s: weekday and row, e.g. "Monday, Break 1".
 #: src/Admin/SchedulePage.php:205
 #, php-format
 msgid "%s: end"
-msgstr ""
+msgstr "%s: koniec"
 
 #: src/Admin/Screen.php:56
 msgid "Sorry, you are not allowed to access this page."
-msgstr ""
+msgstr "Niestety, nie masz uprawnień dostępu do tej strony."
 
 #: src/Admin/Screen.php:87
 msgid "Unknown action."
-msgstr ""
+msgstr "Nieznana czynność."
 
 #: src/Admin/Screen.php:98
 msgid "The change could not be saved. Please check the data and try again."
-msgstr ""
+msgstr "Nie udało się zapisać zmiany. Sprawdź dane i spróbuj ponownie."
 
 #: src/Admin/ServicesListTable.php:51
 msgid "Duration"
-msgstr ""
+msgstr "Czas trwania"
 
 #: src/Admin/ServicesListTable.php:52
 #: src/Admin/ServicesPage.php:270
 msgid "Price"
-msgstr ""
+msgstr "Cena"
 
 #: src/Admin/ServicesListTable.php:92
 msgid "No services yet."
-msgstr ""
+msgstr "Nie ma jeszcze usług."
 
 #: src/Admin/ServicesListTable.php:126
 msgid "Delete this service permanently?"
-msgstr ""
+msgstr "Trwale usunąć tę usługę?"
 
 #: src/Admin/ServicesListTable.php:179
 msgid "None — cannot be booked"
-msgstr ""
+msgstr "Brak — nie można rezerwować"
 
 #: src/Admin/ServicesPage.php:100
 msgid "The duration must be a whole number of minutes between 1 and 1440."
-msgstr ""
+msgstr "Czas trwania musi być liczbą całkowitą minut od 1 do 1440."
 
 #: src/Admin/ServicesPage.php:103
 msgid "The buffer must be a whole number of minutes between 0 and 1440."
-msgstr ""
+msgstr "Przerwa musi być liczbą całkowitą minut od 0 do 1440."
 
 #: src/Admin/ServicesPage.php:106
 msgid "The price must be a non-negative amount, e.g. 150 or 150.00."
-msgstr ""
+msgstr "Cena musi być nieujemną kwotą, np. 150 lub 150.00."
 
 #: src/Admin/ServicesPage.php:111
 msgid "Some of the selected resources do not exist."
-msgstr ""
+msgstr "Niektóre z wybranych zasobów nie istnieją."
 
 #: src/Admin/ServicesPage.php:133
 #: src/Admin/ServicesPage.php:163
 #: src/Admin/ServicesPage.php:180
 #: src/Admin/ServicesPage.php:228
 msgid "The service does not exist."
-msgstr ""
+msgstr "Usługa nie istnieje."
 
 #: src/Admin/ServicesPage.php:136
 msgid "The service data is not valid."
-msgstr ""
+msgstr "Dane usługi są nieprawidłowe."
 
 #: src/Admin/ServicesPage.php:141
 msgid "Service updated."
-msgstr ""
+msgstr "Usługa została zaktualizowana."
 
 #: src/Admin/ServicesPage.php:141
 msgid "Service added."
-msgstr ""
+msgstr "Usługa została dodana."
 
 #: src/Admin/ServicesPage.php:143
 msgid "No resource performs this service yet, so customers cannot book it."
-msgstr ""
+msgstr "Żaden zasób nie wykonuje jeszcze tej usługi, więc klienci nie mogą jej zarezerwować."
 
 #: src/Admin/ServicesPage.php:168
 msgid "Service activated."
-msgstr ""
+msgstr "Usługa została włączona."
 
 #: src/Admin/ServicesPage.php:168
 msgid "Service deactivated. It is no longer offered to customers; existing bookings stay valid."
-msgstr ""
+msgstr "Usługa została wyłączona. Nie jest już oferowana klientom; istniejące rezerwacje pozostają ważne."
 
 #: src/Admin/ServicesPage.php:187
 msgid "This service has bookings and cannot be deleted. Deactivate it instead."
-msgstr ""
+msgstr "Ta usługa ma rezerwacje i nie można jej usunąć. Zamiast tego ją wyłącz."
 
 #: src/Admin/ServicesPage.php:191
 msgid "Service deleted."
-msgstr ""
+msgstr "Usługa została usunięta."
 
 #: src/Admin/ServicesPage.php:204
 #: src/Admin/ServicesPage.php:245
 #: src/Admin/ServicesPage.php:305
 msgid "Add service"
-msgstr ""
+msgstr "Dodaj usługę"
 
 #: src/Admin/ServicesPage.php:227
 #: src/Admin/ServicesPage.php:245
 msgid "Edit service"
-msgstr ""
+msgstr "Edytuj usługę"
 
 #: src/Admin/ServicesPage.php:246
 msgid "&larr; Back to services"
-msgstr ""
+msgstr "&larr; Powrót do usług"
 
 #: src/Admin/ServicesPage.php:260
 msgid "Duration (minutes)"
-msgstr ""
+msgstr "Czas trwania (minuty)"
 
 #: src/Admin/ServicesPage.php:264
 msgid "Buffer after (minutes)"
-msgstr ""
+msgstr "Przerwa po wizycie (minuty)"
 
 #: src/Admin/ServicesPage.php:266
 msgid "Time blocked after each appointment (cleaning, travel). Not shown to customers."
-msgstr ""
+msgstr "Czas blokowany po każdej wizycie (sprzątanie, dojazd). Niewidoczny dla klientów."
 
 #: src/Admin/ServicesPage.php:274
 msgid "In the WooCommerce shop currency. 0 = free."
-msgstr ""
+msgstr "W walucie sklepu WooCommerce. 0 = bezpłatna."
 
 #: src/Admin/ServicesPage.php:275
 msgid "Informational without WooCommerce (no online payments). 0 = free."
-msgstr ""
+msgstr "Bez WooCommerce tylko informacyjnie (bez płatności online). 0 = bezpłatna."
 
 #: src/Admin/ServicesPage.php:282
 msgid "Add resources first."
-msgstr ""
+msgstr "Najpierw dodaj zasoby."
 
 #: src/Admin/ServicesPage.php:293
 msgid "Who or what performs the service. With \"any resource\", the first free one in the resource order is chosen."
-msgstr ""
+msgstr "Kto lub co wykonuje usługę. Przy wyborze „dowolny” przydzielany jest pierwszy wolny zasób według kolejności zasobów."
 
 #: src/Admin/SettingsPage.php:44
 msgid "Settings"
-msgstr ""
+msgstr "Ustawienia"
 
 #: src/Admin/SettingsPage.php:51
 msgid "Terminarz settings"
-msgstr ""
+msgstr "Ustawienia Terminarza"
 
 #: src/Admin/SettingsPage.php:86
 msgid "Terminarz settings."
-msgstr ""
+msgstr "Ustawienia Terminarza."
 
 #: src/Admin/SettingsPage.php:99
 msgid "Booking rules"
-msgstr ""
+msgstr "Zasady rezerwacji"
 
 #: src/Admin/SettingsPage.php:100
 msgid "Payments"
-msgstr ""
+msgstr "Płatności"
 
 #: src/Admin/SettingsPage.php:101
 msgid "Notifications"
-msgstr ""
+msgstr "Powiadomienia"
 
 #: src/Admin/SettingsPage.php:102
 msgid "Privacy and data"
-msgstr ""
+msgstr "Prywatność i dane"
 
 #: src/Admin/SettingsPage.php:133
 msgid "Start times are offered every N minutes from the beginning of working hours."
-msgstr ""
+msgstr "Godziny rozpoczęcia są proponowane co N minut od początku godzin pracy."
 
 #: src/Admin/SettingsPage.php:138
 msgid "How long before the start a slot can still be booked (e.g. 60 = one hour, 1440 = one day)."
-msgstr ""
+msgstr "Jak długo przed rozpoczęciem można jeszcze zarezerwować termin (np. 60 = godzina, 1440 = doba)."
 
 #: src/Admin/SettingsPage.php:143
 msgid "How many days ahead customers can book (0 = today only)."
-msgstr ""
+msgstr "Na ile dni naprzód klienci mogą rezerwować (0 = tylko dziś)."
 
 #: src/Admin/SettingsPage.php:148
 msgid "Customers can cancel on their own up to this many hours before the start (0 = until the start)."
-msgstr ""
+msgstr "Klienci mogą samodzielnie anulować rezerwację najpóźniej tyle godzin przed rozpoczęciem (0 = do rozpoczęcia)."
 
 #: src/Admin/SettingsPage.php:153
 msgid "Confirm new bookings automatically. When off, bookings wait for confirmation by staff."
-msgstr ""
+msgstr "Automatycznie potwierdzaj nowe rezerwacje. Po wyłączeniu rezerwacje czekają na potwierdzenie przez obsługę."
 
 #: src/Admin/SettingsPage.php:158
 msgid "How a resource is chosen when the customer books \"any available\"."
-msgstr ""
+msgstr "Jak wybierany jest zasób, gdy klient rezerwuje „dowolny dostępny”."
 
 #: src/Admin/SettingsPage.php:160
 msgid "First free resource in the service order"
-msgstr ""
+msgstr "Pierwszy wolny zasób według kolejności w usłudze"
 
 #: src/Admin/SettingsPage.php:161
 msgid "Least busy resource that day"
-msgstr ""
+msgstr "Najmniej obciążony zasób tego dnia"
 
 #: src/Admin/SettingsPage.php:167
 msgid "Takes effect only while WooCommerce is active."
-msgstr ""
+msgstr "Działa tylko przy aktywnym WooCommerce."
 
 #: src/Admin/SettingsPage.php:169
 msgid "No payment"
-msgstr ""
+msgstr "Bez płatności"
 
 #: src/Admin/SettingsPage.php:170
 msgid "Deposit (percentage of the price)"
-msgstr ""
+msgstr "Zaliczka (procent ceny)"
 
 #: src/Admin/SettingsPage.php:171
 msgid "Full price"
-msgstr ""
+msgstr "Pełna cena"
 
 #: src/Admin/SettingsPage.php:177
 msgid "Used when the payment mode is \"Deposit\"."
-msgstr ""
+msgstr "Używane, gdy tryb płatności to „Zaliczka”."
 
 #: src/Admin/SettingsPage.php:182
 msgid "How long a slot is reserved while waiting for payment."
-msgstr ""
+msgstr "Jak długo termin jest zarezerwowany w oczekiwaniu na płatność."
 
 #: src/Admin/SettingsPage.php:187
 msgid "Where notifications about new bookings are sent. Leave empty to use the site administration e-mail."
-msgstr ""
+msgstr "Adres, na który wysyłane są powiadomienia o nowych rezerwacjach. Pozostaw puste, aby używać e-maila administracyjnego witryny."
 
 #: src/Admin/SettingsPage.php:192
 msgid "Customers of confirmed bookings get a reminder e-mail this many hours before the appointment (0 = no reminders). Bookings made later than that get no reminder."
-msgstr ""
+msgstr "Klienci z potwierdzonymi rezerwacjami dostają e-mail z przypomnieniem tyle godzin przed wizytą (0 = bez przypomnień). Rezerwacje złożone później nie dostają przypomnienia."
 
 #: src/Admin/SettingsPage.php:197
 msgid "Shown next to the consent checkbox in the booking form. Basic HTML (links) is allowed. Leave empty to hide the checkbox."
-msgstr ""
+msgstr "Wyświetlany przy polu zgody w formularzu rezerwacji. Dozwolony jest podstawowy HTML (linki). Pozostaw puste, aby ukryć pole."
 
 #: src/Admin/SettingsPage.php:202
 msgid "When the plugin is deleted, also delete all bookings, resources, services and settings. This cannot be undone."
-msgstr ""
+msgstr "Przy usuwaniu wtyczki usuń również wszystkie rezerwacje, zasoby, usługi i ustawienia. Tej operacji nie można cofnąć."
 
 #: src/Admin/SettingsPage.php:212
 msgid "Payments are processed by WooCommerce."
-msgstr ""
+msgstr "Płatności obsługuje WooCommerce."
 
 #. translators: 1: required WooCommerce version, 2: installed WooCommerce version.
 #: src/Admin/SettingsPage.php:217
 #, php-format
 msgid "Payments require WooCommerce %1$s or newer (installed: %2$s), so bookings are accepted without payment regardless of the mode below."
-msgstr ""
+msgstr "Płatności wymagają WooCommerce %1$s lub nowszego (zainstalowany: %2$s), dlatego rezerwacje są przyjmowane bez płatności niezależnie od poniższego trybu."
 
 #: src/Admin/SettingsPage.php:223
 msgid "Payments require an active WooCommerce plugin. WooCommerce is not active, so bookings are accepted without payment regardless of the mode below."
-msgstr ""
+msgstr "Płatności wymagają aktywnej wtyczki WooCommerce. WooCommerce nie jest aktywny, dlatego rezerwacje są przyjmowane bez płatności niezależnie od poniższego trybu."
 
 #: src/Admin/SettingsPage.php:314
 msgid "Sorry, you are not allowed to manage Terminarz settings."
-msgstr ""
+msgstr "Niestety, nie masz uprawnień do zarządzania ustawieniami Terminarza."
 
 #: src/Blocks/BookingBlock.php:105
 msgid "Please enable JavaScript in your browser to book an appointment."
-msgstr ""
+msgstr "Aby zarezerwować wizytę, włącz obsługę JavaScriptu w przeglądarce."
 
 #: src/Blocks/BookingBlock.php:164
 msgid "I agree to the processing of my personal data for the purpose of handling this booking."
-msgstr ""
+msgstr "Wyrażam zgodę na przetwarzanie moich danych osobowych w celu obsługi tej rezerwacji."
 
 #: src/Frontend/CancellationPage.php:130
 msgid "Booking cancelled"
-msgstr ""
+msgstr "Rezerwacja anulowana"
 
 #: src/Frontend/CancellationPage.php:131
 msgid "Your booking has been cancelled. The time slot is now available to others."
-msgstr ""
+msgstr "Twoja rezerwacja została anulowana. Termin jest teraz dostępny dla innych."
 
 #: src/Frontend/CancellationPage.php:134
 msgid "A confirmation has been sent to your e-mail address."
-msgstr ""
+msgstr "Potwierdzenie zostało wysłane na Twój adres e-mail."
 
 #: src/Frontend/CancellationPage.php:165
 msgid "Cancel your booking"
-msgstr ""
+msgstr "Anuluj rezerwację"
 
 #: src/Frontend/CancellationPage.php:166
 msgid "Do you want to cancel this booking?"
-msgstr ""
+msgstr "Czy chcesz anulować tę rezerwację?"
 
 #. translators: %s: date and time.
 #: src/Frontend/CancellationPage.php:171
 #, php-format
 msgid "You can cancel online until %s."
-msgstr ""
+msgstr "Możesz anulować online do %s."
 
 #: src/Frontend/CancellationPage.php:176
 msgid "Keep my booking and go to the website"
-msgstr ""
+msgstr "Zachowaj rezerwację i przejdź do witryny"
 
 #: src/Frontend/CancellationPage.php:188
 msgid "Go to the website"
-msgstr ""
+msgstr "Przejdź do witryny"
 
 #: src/Frontend/CancellationPage.php:194
 msgid "Booking not active"
-msgstr ""
+msgstr "Rezerwacja nieaktywna"
 
 #: src/Frontend/CancellationPage.php:195
 msgid "This booking is already cancelled or no longer active, so there is nothing to cancel."
-msgstr ""
+msgstr "Ta rezerwacja jest już anulowana lub nieaktywna, więc nie ma czego anulować."
 
 #: src/Frontend/CancellationPage.php:203
 msgid "Too late to cancel online"
-msgstr ""
+msgstr "Za późno na anulowanie online"
 
 #: src/Frontend/CancellationPage.php:204
 msgid "The time for cancelling this booking online has passed. Please contact us directly."
-msgstr ""
+msgstr "Minął czas na anulowanie tej rezerwacji online. Skontaktuj się z nami bezpośrednio."
 
 #: src/Frontend/CancellationPage.php:212
 msgid "Invalid link"
-msgstr ""
+msgstr "Nieprawidłowy link"
 
 #: src/Frontend/CancellationPage.php:213
 msgid "This cancellation link is not valid. Please use the link from your latest e-mail exactly as it was sent, or contact us."
-msgstr ""
+msgstr "Ten link do anulowania jest nieprawidłowy. Użyj linku z ostatniego e-maila dokładnie w takiej postaci, w jakiej został wysłany, lub skontaktuj się z nami."
 
 #: src/Frontend/CancellationPage.php:226
 msgid "Too many attempts"
-msgstr ""
+msgstr "Zbyt wiele prób"
 
 #: src/Frontend/CancellationPage.php:262
 #: blocks/booking/app/Summary.js:26
 msgid "With"
-msgstr ""
+msgstr "Osoba lub miejsce"
 
 #: src/Frontend/CancellationPage.php:264
 #: blocks/booking/app/Summary.js:35
 #: blocks/booking/edit.js:179
 msgid "Time"
-msgstr ""
+msgstr "Godzina"
 
 #: src/Infrastructure/HoldExpiryScheduler.php:67
 msgid "Every 5 minutes (Terminarz)"
-msgstr ""
+msgstr "Co 5 minut (Terminarz)"
 
 #. translators: 1: field label, 2: minimum value, 3: maximum value.
 #: src/Infrastructure/Settings.php:238
 #, php-format
 msgid "%1$s: enter a whole number from %2$d to %3$d. The previous value was kept."
-msgstr ""
+msgstr "%1$s: wpisz liczbę całkowitą od %2$d do %3$d. Zachowano poprzednią wartość."
 
 #: src/Infrastructure/Settings.php:244
 msgid "Notification e-mail: enter a valid e-mail address. The previous value was kept."
-msgstr ""
+msgstr "E-mail do powiadomień: wpisz prawidłowy adres e-mail. Zachowano poprzednią wartość."
 
 #. translators: %s: field label.
 #: src/Infrastructure/Settings.php:248
 #, php-format
 msgid "%s: invalid value. The previous value was kept."
-msgstr ""
+msgstr "%s: nieprawidłowa wartość. Zachowano poprzednią wartość."
 
 #: src/Infrastructure/Settings.php:263
 msgid "Slot grid step (minutes)"
-msgstr ""
+msgstr "Odstęp między terminami (minuty)"
 
 #: src/Infrastructure/Settings.php:264
 msgid "Minimum lead time (minutes)"
-msgstr ""
+msgstr "Minimalne wyprzedzenie (minuty)"
 
 #: src/Infrastructure/Settings.php:265
 msgid "Booking horizon (days)"
-msgstr ""
+msgstr "Horyzont rezerwacji (dni)"
 
 #: src/Infrastructure/Settings.php:266
 msgid "Customer cancellation limit (hours)"
-msgstr ""
+msgstr "Limit anulowania przez klienta (godziny)"
 
 #: src/Infrastructure/Settings.php:267
 msgid "Automatic confirmation"
-msgstr ""
+msgstr "Automatyczne potwierdzanie"
 
 #: src/Infrastructure/Settings.php:268
 msgid "\"Any resource\" selection"
-msgstr ""
+msgstr "Wybór „dowolnego zasobu”"
 
 #: src/Infrastructure/Settings.php:269
 msgid "Payment mode"
-msgstr ""
+msgstr "Tryb płatności"
 
 #: src/Infrastructure/Settings.php:270
 msgid "Deposit (%)"
-msgstr ""
+msgstr "Zaliczka (%)"
 
 #: src/Infrastructure/Settings.php:271
 msgid "Slot hold for payment (minutes)"
-msgstr ""
+msgstr "Wstrzymanie terminu na płatność (minuty)"
 
 #: src/Infrastructure/Settings.php:272
 msgid "Notification e-mail"
-msgstr ""
+msgstr "E-mail do powiadomień"
 
 #: src/Infrastructure/Settings.php:273
 msgid "Reminder (hours before)"
-msgstr ""
+msgstr "Przypomnienie (godziny przed)"
 
 #: src/Infrastructure/Settings.php:274
 msgid "Consent text"
-msgstr ""
+msgstr "Treść zgody"
 
 #: src/Infrastructure/Settings.php:275
 msgid "Delete data on uninstall"
-msgstr ""
+msgstr "Usuń dane przy odinstalowaniu"
 
 #: src/Integrations/WooCommerce/OrderAdmin.php:83
 msgid "The booking of this order no longer exists or is linked to another order."
-msgstr ""
+msgstr "Rezerwacja tego zamówienia już nie istnieje lub jest powiązana z innym zamówieniem."
 
 #: src/Integrations/WooCommerce/OrderAdmin.php:90
 msgid "Status:"
-msgstr ""
+msgstr "Status:"
 
 #: src/Integrations/WooCommerce/OrderAdmin.php:91
 msgid "Booking ID:"
-msgstr ""
+msgstr "Numer rezerwacji:"
 
 #: src/Integrations/WooCommerce/OrderAdmin.php:92
 msgid "View booking"
-msgstr ""
+msgstr "Zobacz rezerwację"
 
 #. translators: %d: order ID.
 #: src/Integrations/WooCommerce/OrderAdmin.php:112
 #, php-format
 msgid "#%d (deleted)"
-msgstr ""
+msgstr "#%d (usunięte)"
 
 #. translators: 1: public booking ID, 2: date and time the slot is held until.
 #: src/Integrations/WooCommerce/OrderPayments.php:100
 #, php-format
 msgid "Order created for booking %1$s. The slot is held until %2$s."
-msgstr ""
+msgstr "Utworzono zamówienie dla rezerwacji %1$s. Termin jest wstrzymany do %2$s."
 
 #: src/Integrations/WooCommerce/OrderPayments.php:109
 msgid "The booking could not be linked to this order."
-msgstr ""
+msgstr "Nie udało się powiązać rezerwacji z tym zamówieniem."
 
 #: src/Integrations/WooCommerce/OrderPayments.php:134
 msgid "Appointment"
-msgstr ""
+msgstr "Wizyta"
 
 #: src/Integrations/WooCommerce/OrderPayments.php:141
 msgid "Payment"
-msgstr ""
+msgstr "Płatność"
 
 #. translators: 1: deposit percentage, 2: full price with currency.
 #: src/Integrations/WooCommerce/OrderPayments.php:144
 #, php-format
 msgid "Deposit %1$d%% of %2$s"
-msgstr ""
+msgstr "Zaliczka %1$d%% z %2$s"
 
 #. translators: 1: public booking ID, 2: order status name.
 #: src/Integrations/WooCommerce/OrderStatusSync.php:158
 #, php-format
 msgid "Booking %1$s was cancelled and its slot released because the order is now \"%2$s\"."
-msgstr ""
+msgstr "Rezerwacja %1$s została anulowana, a jej termin zwolniony, ponieważ zamówienie ma teraz status „%2$s”."
 
 #. translators: %s: public booking ID.
 #: src/Integrations/WooCommerce/OrderStatusSync.php:178
 #, php-format
 msgid "Booking %s was cancelled, so this unpaid order was cancelled too."
-msgstr ""
+msgstr "Rezerwacja %s została anulowana, więc to nieopłacone zamówienie również zostało anulowane."
 
 #. translators: %s: public booking ID.
 #: src/Integrations/WooCommerce/OrderStatusSync.php:191
 #, php-format
 msgid "Booking %s was cancelled. The payment was NOT refunded automatically — decide whether to refund it."
-msgstr ""
+msgstr "Rezerwacja %s została anulowana. Płatność NIE została zwrócona automatycznie — zdecyduj, czy ją zwrócić."
 
 #. translators: %s: public booking ID.
 #: src/Integrations/WooCommerce/OrderStatusSync.php:207
 #, php-format
 msgid "Booking %s was confirmed in the booking panel although this order is not paid."
-msgstr ""
+msgstr "Rezerwacja %s została potwierdzona w panelu rezerwacji, chociaż to zamówienie nie jest opłacone."
 
 #. translators: %s: public booking ID.
 #: src/Integrations/WooCommerce/OrderStatusSync.php:238
 #, php-format
 msgid "Payment received: booking %s confirmed."
-msgstr ""
+msgstr "Płatność otrzymana: rezerwacja %s potwierdzona."
 
 #: src/Integrations/WooCommerce/OrderStatusSync.php:252
 msgid "Payment received for a booking that was cancelled in the booking panel. Contact the customer: refund the payment or arrange another appointment."
-msgstr ""
+msgstr "Otrzymano płatność za rezerwację anulowaną w panelu rezerwacji. Skontaktuj się z klientem: zwróć płatność lub umów inny termin."
 
 #: src/Integrations/WooCommerce/OrderStatusSync.php:271
 msgid "Payment received after the slot hold had expired, and the slot is no longer available. Contact the customer: refund the payment or arrange another appointment."
-msgstr ""
+msgstr "Płatność wpłynęła po upływie czasu wstrzymania terminu, a termin nie jest już dostępny. Skontaktuj się z klientem: zwróć płatność lub umów inny termin."
 
 #. translators: 1: previous public booking ID, 2: new public booking ID.
 #: src/Integrations/WooCommerce/OrderStatusSync.php:281
 #, php-format
 msgid "Payment received after booking %1$s had been released. The slot was still free, so it was booked again and confirmed as booking %2$s."
-msgstr ""
+msgstr "Płatność wpłynęła po zwolnieniu rezerwacji %1$s. Termin był nadal wolny, więc zarezerwowano go ponownie i potwierdzono jako rezerwację %2$s."
 
 #. translators: %s: public booking ID.
 #: src/Integrations/WooCommerce/OrderStatusSync.php:298
 #, php-format
 msgid "The payment time of booking %s ran out and its slot was released."
-msgstr ""
+msgstr "Minął czas na płatność za rezerwację %s i jej termin został zwolniony."
 
 #. translators: 1: required WooCommerce version, 2: installed WooCommerce version.
 #: src/Integrations/WooCommerce/WooCommerceModule.php:143
 #, php-format
 msgid "Terminarz online payments require WooCommerce %1$s or newer (installed: %2$s). Bookings are accepted without payment until WooCommerce is updated."
-msgstr ""
+msgstr "Płatności online Terminarza wymagają WooCommerce %1$s lub nowszego (zainstalowany: %2$s). Do czasu aktualizacji WooCommerce rezerwacje są przyjmowane bez płatności."
 
 #: src/Notifications/MessageType.php:37
 msgid "Booking request received (customer)"
-msgstr ""
+msgstr "Przyjęcie zgłoszenia rezerwacji (klient)"
 
 #: src/Notifications/MessageType.php:38
 msgid "Booking confirmed (customer)"
-msgstr ""
+msgstr "Potwierdzenie rezerwacji (klient)"
 
 #: src/Notifications/MessageType.php:39
 msgid "Booking cancelled (customer)"
-msgstr ""
+msgstr "Anulowanie rezerwacji (klient)"
 
 #: src/Notifications/MessageType.php:40
 msgid "Appointment reminder (customer)"
-msgstr ""
+msgstr "Przypomnienie o wizycie (klient)"
 
 #: src/Notifications/MessageType.php:41
 msgid "New booking (business)"
-msgstr ""
+msgstr "Nowa rezerwacja (firma)"
 
 #: src/Notifications/MessageType.php:42
 msgid "Booking cancelled (business)"
-msgstr ""
+msgstr "Anulowanie rezerwacji (firma)"
 
 #: src/Notifications/MessageType.php:43
 msgid "Payment needs attention (business)"
-msgstr ""
+msgstr "Płatność wymaga uwagi (firma)"
 
 #: src/Notifications/MessageType.php:52
 msgid "Sent to the customer when a booking waits for confirmation by staff."
-msgstr ""
+msgstr "Wysyłany do klienta, gdy rezerwacja czeka na potwierdzenie przez obsługę."
 
 #: src/Notifications/MessageType.php:53
 msgid "Sent to the customer when a booking is confirmed (automatically, by staff or after payment)."
-msgstr ""
+msgstr "Wysyłany do klienta po potwierdzeniu rezerwacji (automatycznie, przez obsługę lub po płatności)."
 
 #: src/Notifications/MessageType.php:54
 msgid "Sent to the customer when a confirmed or pending booking is cancelled."
-msgstr ""
+msgstr "Wysyłany do klienta po anulowaniu potwierdzonej lub oczekującej rezerwacji."
 
 #: src/Notifications/MessageType.php:55
 msgid "Sent to the customer before a confirmed appointment (see the reminder setting)."
-msgstr ""
+msgstr "Wysyłany do klienta przed potwierdzoną wizytą (patrz ustawienie przypomnień)."
 
 #: src/Notifications/MessageType.php:56
 msgid "Sent to the notification e-mail when a new booking is placed (after payment for paid services)."
-msgstr ""
+msgstr "Wysyłany na e-mail do powiadomień po złożeniu nowej rezerwacji (w przypadku usług płatnych — po płatności)."
 
 #: src/Notifications/MessageType.php:57
 msgid "Sent to the notification e-mail when a confirmed or pending booking is cancelled."
-msgstr ""
+msgstr "Wysyłany na e-mail do powiadomień po anulowaniu potwierdzonej lub oczekującej rezerwacji."
 
 #: src/Notifications/MessageType.php:58
 msgid "Sent to the notification e-mail when a payment arrives for a slot that is no longer available."
-msgstr ""
+msgstr "Wysyłany na e-mail do powiadomień, gdy wpłynie płatność za termin, który nie jest już dostępny."
 
 #: src/Notifications/Placeholders.php:35
 msgid "Customer name"
-msgstr ""
+msgstr "Imię i nazwisko klienta"
 
 #: src/Notifications/Placeholders.php:36
 msgid "Customer e-mail"
-msgstr ""
+msgstr "E-mail klienta"
 
 #: src/Notifications/Placeholders.php:37
 msgid "Customer phone"
-msgstr ""
+msgstr "Telefon klienta"
 
 #: src/Notifications/Placeholders.php:38
 msgid "Note from the customer"
-msgstr ""
+msgstr "Uwagi klienta"
 
 #: src/Notifications/Placeholders.php:40
 msgid "Resource (person, room, device)"
-msgstr ""
+msgstr "Zasób (osoba, sala, urządzenie)"
 
 #: src/Notifications/Placeholders.php:41
 msgid "Appointment date (site time zone)"
-msgstr ""
+msgstr "Data wizyty (strefa czasowa witryny)"
 
 #: src/Notifications/Placeholders.php:42
 msgid "Appointment start time"
-msgstr ""
+msgstr "Godzina rozpoczęcia wizyty"
 
 #: src/Notifications/Placeholders.php:43
 msgid "Appointment end time"
-msgstr ""
+msgstr "Godzina zakończenia wizyty"
 
 #: src/Notifications/Placeholders.php:44
 msgid "Service price"
-msgstr ""
+msgstr "Cena usługi"
 
 #: src/Notifications/Placeholders.php:45
 msgid "Booking status"
-msgstr ""
+msgstr "Status rezerwacji"
 
 #: src/Notifications/Placeholders.php:46
 msgid "Booking number (public ID)"
-msgstr ""
+msgstr "Numer rezerwacji (publiczny identyfikator)"
 
 #: src/Notifications/Placeholders.php:47
 msgid "Cancellation sentence: the deadline with a cancellation link, or — when online cancellation is no longer possible — a request to contact you"
-msgstr ""
+msgstr "Zdanie o anulowaniu: termin z linkiem do anulowania lub — gdy anulowanie online nie jest już możliwe — prośba o kontakt"
 
 #: src/Notifications/Placeholders.php:48
 msgid "Link the customer can use to cancel the booking (empty when online cancellation is no longer possible)"
-msgstr ""
+msgstr "Link, którym klient może anulować rezerwację (pusty, gdy anulowanie online nie jest już możliwe)"
 
 #: src/Notifications/Placeholders.php:49
 msgid "Last moment the customer can cancel online, see the cancellation limit (empty when it has passed)"
-msgstr ""
+msgstr "Ostatni moment, w którym klient może anulować online, patrz limit anulowania (pusty, gdy już minął)"
 
 #: src/Notifications/Placeholders.php:50
 msgid "Site name"
-msgstr ""
+msgstr "Nazwa witryny"
 
 #: src/Notifications/Placeholders.php:51
 msgid "Site address"
-msgstr ""
+msgstr "Adres witryny"
 
 #: src/Notifications/Placeholders.php:52
 msgid "Link to the booking in the admin panel (business e-mails)"
-msgstr ""
+msgstr "Link do rezerwacji w panelu administracyjnym (e-maile dla firmy)"
 
 #: src/Notifications/Placeholders.php:53
 msgid "WooCommerce order number (payment e-mails)"
-msgstr ""
+msgstr "Numer zamówienia WooCommerce (e-maile o płatności)"
 
 #: src/Notifications/Placeholders.php:54
 msgid "Link to the WooCommerce order (payment e-mails)"
-msgstr ""
+msgstr "Link do zamówienia WooCommerce (e-maile o płatności)"
 
 #: src/Notifications/Placeholders.php:55
 msgid "Explanation of what needs attention (payment e-mails)"
-msgstr ""
+msgstr "Wyjaśnienie, co wymaga uwagi (e-maile o płatności)"
 
 #: src/Notifications/Placeholders.php:90
 msgid "Jane Doe"
-msgstr ""
+msgstr "Jan Kowalski"
 
 #: src/Notifications/Placeholders.php:93
 msgid "This is an example note."
-msgstr ""
+msgstr "To są przykładowe uwagi."
 
 #: src/Notifications/Placeholders.php:94
 msgid "Example service"
-msgstr ""
+msgstr "Przykładowa usługa"
 
 #: src/Notifications/Placeholders.php:95
 msgid "Example resource"
-msgstr ""
+msgstr "Przykładowy zasób"
 
 #: src/Notifications/Placeholders.php:110
 msgid "This is an example explanation."
-msgstr ""
+msgstr "To jest przykładowe wyjaśnienie."
 
 #. translators: Sentence in customer e-mails when the booking can no longer be cancelled online.
 #: src/Notifications/Placeholders.php:125
 msgid "To change or cancel your booking, please contact us."
-msgstr ""
+msgstr "Aby zmienić lub anulować rezerwację, skontaktuj się z nami."
 
 #. translators: %s: date and time (cancellation deadline).
 #: src/Notifications/Placeholders.php:130
 #, php-format
 msgid "If you cannot come, please cancel your booking by %s:"
-msgstr ""
+msgstr "Jeśli nie możesz przyjść, anuluj rezerwację do %s:"
 
 #. translators: Default e-mail subject. Keep the {placeholders} unchanged.
 #: src/Notifications/Templates.php:147
 msgid "[{site_name}] We have received your booking request"
-msgstr ""
+msgstr "[{site_name}] Otrzymaliśmy Twoje zgłoszenie rezerwacji"
 
 #. translators: Default e-mail text. Keep the {placeholders} unchanged.
 #: src/Notifications/Templates.php:149
@@ -1675,224 +1677,224 @@ msgstr ""
 #: src/Notifications/Templates.php:171
 #: src/Notifications/Templates.php:181
 msgid "Hello {customer_name},"
-msgstr ""
+msgstr "Dzień dobry, {customer_name},"
 
 #. translators: Default e-mail text. Keep the {placeholders} unchanged.
 #: src/Notifications/Templates.php:151
 msgid "Thank you for your booking request. We will confirm it by e-mail shortly."
-msgstr ""
+msgstr "Dziękujemy za zgłoszenie rezerwacji. Wkrótce potwierdzimy ją e-mailem."
 
 #. translators: Default e-mail subject. Keep the {placeholders} unchanged.
 #: src/Notifications/Templates.php:158
 msgid "[{site_name}] Your booking is confirmed: {start_date} {start_time}"
-msgstr ""
+msgstr "[{site_name}] Twoja rezerwacja jest potwierdzona: {start_date} {start_time}"
 
 #. translators: Default e-mail text. Keep the {placeholders} unchanged.
 #: src/Notifications/Templates.php:162
 msgid "Your booking is confirmed. We look forward to seeing you."
-msgstr ""
+msgstr "Twoja rezerwacja jest potwierdzona. Do zobaczenia!"
 
 #. translators: Default e-mail subject. Keep the {placeholders} unchanged.
 #: src/Notifications/Templates.php:169
 msgid "[{site_name}] Your booking has been cancelled"
-msgstr ""
+msgstr "[{site_name}] Twoja rezerwacja została anulowana"
 
 #. translators: Default e-mail text. Keep the {placeholders} unchanged.
 #: src/Notifications/Templates.php:173
 msgid "Your booking has been cancelled. If this is a mistake, please make a new booking or contact us."
-msgstr ""
+msgstr "Twoja rezerwacja została anulowana. Jeśli to pomyłka, zarezerwuj ponownie lub skontaktuj się z nami."
 
 #. translators: Default e-mail subject. Keep the {placeholders} unchanged.
 #: src/Notifications/Templates.php:179
 msgid "[{site_name}] Reminder: {service_name} on {start_date} at {start_time}"
-msgstr ""
+msgstr "[{site_name}] Przypomnienie: {service_name}, {start_date} o {start_time}"
 
 #. translators: Default e-mail text. Keep the {placeholders} unchanged.
 #: src/Notifications/Templates.php:183
 msgid "This is a reminder of your upcoming appointment."
-msgstr ""
+msgstr "Przypominamy o nadchodzącej wizycie."
 
 #. translators: Default e-mail subject. Keep the {placeholders} unchanged.
 #: src/Notifications/Templates.php:190
 msgid "[{site_name}] New booking: {service_name}, {start_date} {start_time}"
-msgstr ""
+msgstr "[{site_name}] Nowa rezerwacja: {service_name}, {start_date} {start_time}"
 
 #. translators: Default e-mail text. Keep the {placeholders} unchanged.
 #: src/Notifications/Templates.php:192
 msgid "A new booking has been placed ({status})."
-msgstr ""
+msgstr "Złożono nową rezerwację ({status})."
 
 #. translators: Default e-mail text. Keep the {placeholders} unchanged.
 #: src/Notifications/Templates.php:196
 #: src/Notifications/Templates.php:207
 msgid "View the booking in the admin panel"
-msgstr ""
+msgstr "Zobacz rezerwację w panelu administracyjnym"
 
 #. translators: Default e-mail subject. Keep the {placeholders} unchanged.
 #: src/Notifications/Templates.php:201
 msgid "[{site_name}] Booking cancelled: {service_name}, {start_date} {start_time}"
-msgstr ""
+msgstr "[{site_name}] Anulowana rezerwacja: {service_name}, {start_date} {start_time}"
 
 #. translators: Default e-mail text. Keep the {placeholders} unchanged.
 #: src/Notifications/Templates.php:203
 msgid "A booking has been cancelled and its slot is free again."
-msgstr ""
+msgstr "Rezerwacja została anulowana, a jej termin jest znów wolny."
 
 #. translators: Default e-mail subject. Keep the {placeholders} unchanged.
 #: src/Notifications/Templates.php:212
 msgid "[{site_name}] Order #{order_number} needs attention"
-msgstr ""
+msgstr "[{site_name}] Zamówienie nr {order_number} wymaga uwagi"
 
 #. translators: Default e-mail text. Keep the {placeholders} unchanged.
 #: src/Notifications/Templates.php:215
 msgid "Order: #{order_number}"
-msgstr ""
+msgstr "Zamówienie: nr {order_number}"
 
 #. translators: Default e-mail text. Keep the {placeholders} unchanged.
 #: src/Notifications/Templates.php:217
 msgid "Booking: {booking_id}"
-msgstr ""
+msgstr "Rezerwacja: {booking_id}"
 
 #. translators: Default e-mail text. Keep the {placeholders} unchanged.
 #: src/Notifications/Templates.php:221
 msgid "Open the order"
-msgstr ""
+msgstr "Otwórz zamówienie"
 
 #. translators: Default e-mail text. Keep the {placeholders} unchanged.
 #: src/Notifications/Templates.php:232
 msgid "Service: {service_name}"
-msgstr ""
+msgstr "Usługa: {service_name}"
 
 #. translators: Default e-mail text. Keep the {placeholders} unchanged.
 #: src/Notifications/Templates.php:234
 msgid "With: {resource_name}"
-msgstr ""
+msgstr "Osoba lub miejsce: {resource_name}"
 
 #. translators: Default e-mail text. Keep the {placeholders} unchanged.
 #: src/Notifications/Templates.php:236
 msgid "Date: {start_date}, {start_time}–{end_time}"
-msgstr ""
+msgstr "Termin: {start_date}, {start_time}–{end_time}"
 
 #. translators: Default e-mail text. Keep the {placeholders} unchanged.
 #: src/Notifications/Templates.php:238
 msgid "Booking number: {booking_id}"
-msgstr ""
+msgstr "Numer rezerwacji: {booking_id}"
 
 #. translators: Default e-mail text. Keep the {placeholders} unchanged.
 #: src/Notifications/Templates.php:256
 msgid "If you cannot come, please cancel your booking by {cancel_deadline}:"
-msgstr ""
+msgstr "Jeśli nie możesz przyjść, anuluj rezerwację do {cancel_deadline}:"
 
 #. translators: Default e-mail text. Keep the {placeholders} unchanged.
 #: src/Notifications/Templates.php:268
 msgid "Customer: {customer_name}"
-msgstr ""
+msgstr "Klient: {customer_name}"
 
 #. translators: Default e-mail text. Keep the {placeholders} unchanged.
 #: src/Notifications/Templates.php:270
 msgid "E-mail: {customer_email}"
-msgstr ""
+msgstr "E-mail: {customer_email}"
 
 #. translators: Default e-mail text. Keep the {placeholders} unchanged.
 #: src/Notifications/Templates.php:272
 msgid "Phone: {customer_phone}"
-msgstr ""
+msgstr "Telefon: {customer_phone}"
 
 #. translators: Default e-mail text. Keep the {placeholders} unchanged.
 #: src/Notifications/Templates.php:274
 msgid "Note: {customer_note}"
-msgstr ""
+msgstr "Uwagi: {customer_note}"
 
 #: src/Rest/AdminBookingsController.php:54
 #: src/Rest/AdminBookingsController.php:435
 msgid "Booking ID."
-msgstr ""
+msgstr "Identyfikator rezerwacji."
 
 #: src/Rest/AdminBookingsController.php:114
 msgid "New start, ISO 8601 with a time zone offset."
-msgstr ""
+msgstr "Nowy początek, ISO 8601 z przesunięciem strefy czasowej."
 
 #: src/Rest/AdminBookingsController.php:120
 msgid "New resource (must provide the service); omitted = keep."
-msgstr ""
+msgstr "Nowy zasób (musi wykonywać usługę); pominięty = bez zmian."
 
 #: src/Rest/AdminBookingsController.php:234
 #: src/Rest/BookingsController.php:103
 msgid "Please provide a valid date and time."
-msgstr ""
+msgstr "Podaj prawidłową datę i godzinę."
 
 #: src/Rest/AdminBookingsController.php:245
 msgid "The booking cannot be moved to this time."
-msgstr ""
+msgstr "Nie można przenieść rezerwacji na ten termin."
 
 #: src/Rest/AdminBookingsController.php:294
 #: src/Rest/AvailabilityController.php:132
 msgid "Please provide valid dates."
-msgstr ""
+msgstr "Podaj prawidłowe daty."
 
 #: src/Rest/AdminBookingsController.php:298
 #: src/Rest/AvailabilityController.php:135
 msgid "The end date must not be earlier than the start date."
-msgstr ""
+msgstr "Data końcowa nie może być wcześniejsza niż początkowa."
 
 #: src/Rest/AdminBookingsController.php:355
 msgid "Page of the listing."
-msgstr ""
+msgstr "Strona listy."
 
 #: src/Rest/AdminBookingsController.php:361
 msgid "Bookings per page."
-msgstr ""
+msgstr "Liczba rezerwacji na stronie."
 
 #: src/Rest/AdminBookingsController.php:368
 msgid "Only these statuses."
-msgstr ""
+msgstr "Tylko te statusy."
 
 #: src/Rest/AdminBookingsController.php:376
 msgid "Only this service."
-msgstr ""
+msgstr "Tylko ta usługa."
 
 #: src/Rest/AdminBookingsController.php:381
 msgid "Only this resource."
-msgstr ""
+msgstr "Tylko ten zasób."
 
 #: src/Rest/AdminBookingsController.php:386
 msgid "Only bookings starting on or after this day (site time zone), Y-m-d."
-msgstr ""
+msgstr "Tylko rezerwacje rozpoczynające się tego dnia lub później (strefa czasowa witryny), R-m-d."
 
 #: src/Rest/AdminBookingsController.php:391
 msgid "Only bookings starting on or before this day (site time zone), Y-m-d."
-msgstr ""
+msgstr "Tylko rezerwacje rozpoczynające się tego dnia lub wcześniej (strefa czasowa witryny), R-m-d."
 
 #: src/Rest/AdminBookingsController.php:396
 msgid "Part of the customer name or e-mail, or the public booking ID."
-msgstr ""
+msgstr "Fragment imienia i nazwiska lub e-maila klienta albo publiczny identyfikator rezerwacji."
 
 #: src/Rest/AdminBookingsController.php:404
 msgid "Sort by start time or creation time."
-msgstr ""
+msgstr "Sortuj według czasu rozpoczęcia lub utworzenia."
 
 #: src/Rest/AdminBookingsController.php:410
 msgid "Sort direction."
-msgstr ""
+msgstr "Kierunek sortowania."
 
 #: src/Rest/AdminBookingsController.php:440
 #: src/Rest/BookingsController.php:372
 msgid "Public booking identifier."
-msgstr ""
+msgstr "Publiczny identyfikator rezerwacji."
 
 #: src/Rest/AdminBookingsController.php:450
 msgid "Statuses the booking can be moved to."
-msgstr ""
+msgstr "Statusy, na które można zmienić rezerwację."
 
 #: src/Rest/AvailabilityController.php:117
 msgid "The selected person or resource does not provide this service."
-msgstr ""
+msgstr "Wybrana osoba lub zasób nie wykonuje tej usługi."
 
 #. translators: %d: maximum number of days.
 #: src/Rest/AvailabilityController.php:141
 #, php-format
 msgid "The date range may cover at most %d days."
-msgstr ""
+msgstr "Zakres dat może obejmować najwyżej %d dni."
 
 #: src/Rest/AvailabilityController.php:222
 #: src/Rest/AvailabilityController.php:264
@@ -1900,542 +1902,544 @@ msgstr ""
 #: src/Rest/ServicesController.php:59
 #: src/Rest/ServicesController.php:157
 msgid "Service ID."
-msgstr ""
+msgstr "Identyfikator usługi."
 
 #: src/Rest/AvailabilityController.php:228
 #: src/Rest/AvailabilityController.php:269
 #: src/Rest/BookingsController.php:286
 msgid "Resource ID or \"any\"."
-msgstr ""
+msgstr "Identyfikator zasobu lub „any”."
 
 #: src/Rest/AvailabilityController.php:234
 msgid "First day (site time zone), Y-m-d."
-msgstr ""
+msgstr "Pierwszy dzień (strefa czasowa witryny), R-m-d."
 
 #: src/Rest/AvailabilityController.php:240
 msgid "Last day (site time zone, inclusive), Y-m-d. At most 31 days after the first one."
-msgstr ""
+msgstr "Ostatni dzień (strefa czasowa witryny, włącznie), R-m-d. Najwyżej 31 dni po pierwszym."
 
 #: src/Rest/AvailabilityController.php:274
 msgid "Site time zone."
-msgstr ""
+msgstr "Strefa czasowa witryny."
 
 #: src/Rest/AvailabilityController.php:289
 msgid "Every day of the range with its free slots."
-msgstr ""
+msgstr "Każdy dzień zakresu z jego wolnymi terminami."
 
 #: src/Rest/AvailabilityController.php:305
 msgid "Start, ISO 8601 with the site offset."
-msgstr ""
+msgstr "Początek, ISO 8601 z przesunięciem strefy witryny."
 
 #: src/Rest/AvailabilityController.php:310
 msgid "End, ISO 8601 with the site offset."
-msgstr ""
+msgstr "Koniec, ISO 8601 z przesunięciem strefy witryny."
 
 #: src/Rest/AvailabilityController.php:315
 msgid "Start in UTC, ISO 8601."
-msgstr ""
+msgstr "Początek w UTC, ISO 8601."
 
 #: src/Rest/AvailabilityController.php:320
 msgid "Resource ID; null when any resource was requested."
-msgstr ""
+msgstr "Identyfikator zasobu; null, gdy wybrano dowolny zasób."
 
 #: src/Rest/BookingsController.php:78
 #: blocks/booking/app/DetailsStep.js:86
 msgid "Your session has expired. Please reload the page and try again."
-msgstr ""
+msgstr "Twoja sesja wygasła. Odśwież stronę i spróbuj ponownie."
 
 #: src/Rest/BookingsController.php:95
 msgid "The booking could not be processed."
-msgstr ""
+msgstr "Nie udało się przetworzyć rezerwacji."
 
 #: src/Rest/BookingsController.php:98
 #: blocks/booking/app/DetailsStep.js:47
 msgid "Please accept the terms to book an appointment."
-msgstr ""
+msgstr "Aby zarezerwować wizytę, zaakceptuj warunki."
 
 #: src/Rest/BookingsController.php:121
 msgid "Please provide your name and a valid e-mail address."
-msgstr ""
+msgstr "Podaj imię i nazwisko oraz prawidłowy adres e-mail."
 
 #: src/Rest/BookingsController.php:135
 msgid "The booking data is not valid."
-msgstr ""
+msgstr "Dane rezerwacji są nieprawidłowe."
 
 #: src/Rest/BookingsController.php:206
 msgid "The online payment could not be started, so the appointment was not booked. Please try again later."
-msgstr ""
+msgstr "Nie udało się rozpocząć płatności online, dlatego wizyta nie została zarezerwowana. Spróbuj ponownie później."
 
 #: src/Rest/BookingsController.php:292
 msgid "Start of the appointment, ISO 8601 with a time zone offset (e.g. the start_utc of a slot)."
-msgstr ""
+msgstr "Początek wizyty, ISO 8601 z przesunięciem strefy czasowej (np. start_utc terminu)."
 
 #: src/Rest/BookingsController.php:297
 msgid "Full name."
-msgstr ""
+msgstr "Imię i nazwisko."
 
 #: src/Rest/BookingsController.php:299
 msgid "E-mail address."
-msgstr ""
+msgstr "Adres e-mail."
 
 #: src/Rest/BookingsController.php:307
 msgid "Phone number."
-msgstr ""
+msgstr "Numer telefonu."
 
 #: src/Rest/BookingsController.php:309
 msgid "Note for the business."
-msgstr ""
+msgstr "Uwagi dla firmy."
 
 #: src/Rest/BookingsController.php:317
 msgid "Consent to the processing of personal data for the booking; must be true."
-msgstr ""
+msgstr "Zgoda na przetwarzanie danych osobowych w celu rezerwacji; musi mieć wartość true."
 
 #: src/Rest/BookingsController.php:322
 msgid "Leave empty (anti-spam field)."
-msgstr ""
+msgstr "Pozostaw puste (pole antyspamowe)."
 
 #: src/Rest/BookingsController.php:377
 msgid "Booking status."
-msgstr ""
+msgstr "Status rezerwacji."
 
 #: src/Rest/BookingsController.php:387
 msgid "Resource assigned to the booking."
-msgstr ""
+msgstr "Zasób przypisany do rezerwacji."
 
 #: src/Rest/BookingsController.php:407
 msgid "Where the customer pays for the booking; present only for bookings awaiting online payment."
-msgstr ""
+msgstr "Adres, pod którym klient płaci za rezerwację; tylko dla rezerwacji oczekujących na płatność online."
 
 #: src/Rest/Controller.php:63
 msgid "Sorry, you are not allowed to manage bookings."
-msgstr ""
+msgstr "Niestety, nie masz uprawnień do zarządzania rezerwacjami."
 
 #: src/Rest/ErrorMapper.php:52
 msgid "This item is in use and cannot be changed this way."
-msgstr ""
+msgstr "Ten element jest w użyciu i nie można go zmienić w ten sposób."
 
 #: src/Rest/ErrorMapper.php:57
 msgid "The requested item does not exist."
-msgstr ""
+msgstr "Żądany element nie istnieje."
 
 #: src/Rest/ErrorMapper.php:67
 msgid "The request contains invalid data."
-msgstr ""
+msgstr "Żądanie zawiera nieprawidłowe dane."
 
 #: src/Rest/ErrorMapper.php:72
 msgid "Something went wrong. Please try again later."
-msgstr ""
+msgstr "Coś poszło nie tak. Spróbuj ponownie później."
 
 #: src/Rest/RequestLimit.php:75
 msgid "Too many attempts. Please wait a few minutes and try again."
-msgstr ""
+msgstr "Zbyt wiele prób. Odczekaj kilka minut i spróbuj ponownie."
 
 #: src/Rest/ResourcesController.php:114
 msgid "Only resources performing this service."
-msgstr ""
+msgstr "Tylko zasoby wykonujące tę usługę."
 
 #: src/Rest/ResourcesController.php:137
 msgid "Resource ID."
-msgstr ""
+msgstr "Identyfikator zasobu."
 
 #: src/Rest/ResourcesController.php:143
 msgid "Resource name."
-msgstr ""
+msgstr "Nazwa zasobu."
 
 #: src/Rest/ServicesController.php:104
 msgid "The service does not exist or is not available."
-msgstr ""
+msgstr "Usługa nie istnieje lub jest niedostępna."
 
 #: src/Rest/ServicesController.php:163
 msgid "Service name."
-msgstr ""
+msgstr "Nazwa usługi."
 
 #: src/Rest/ServicesController.php:169
 msgid "Duration of the appointment in minutes."
-msgstr ""
+msgstr "Czas trwania wizyty w minutach."
 
 #: src/Rest/ServicesController.php:175
 msgid "Price in the smallest currency unit (e.g. cents)."
-msgstr ""
+msgstr "Cena w najmniejszej jednostce waluty (np. groszach)."
 
 #: src/Rest/ServicesController.php:181
 msgid "Whether the service is free of charge."
-msgstr ""
+msgstr "Czy usługa jest bezpłatna."
 
 #. translators: 1: required PHP version, 2: current PHP version.
 #: terminarz.php:42
 #, php-format
 msgid "Terminarz requires PHP %1$s or newer. You are running PHP %2$s."
-msgstr ""
+msgstr "Terminarz wymaga PHP %1$s lub nowszego. Używasz PHP %2$s."
 
 #. translators: 1: required WordPress version, 2: current WordPress version.
 #: terminarz.php:52
 #, php-format
 msgid "Terminarz requires WordPress %1$s or newer. You are running WordPress %2$s."
-msgstr ""
+msgstr "Terminarz wymaga WordPressa %1$s lub nowszego. Używasz WordPressa %2$s."
 
 #: terminarz.php:59
 msgid "Terminarz is missing its Composer autoloader. Run \"composer install\" in the plugin directory or install a release package."
-msgstr ""
+msgstr "Brakuje autoloadera Composera Terminarza. Uruchom „composer install” w katalogu wtyczki lub zainstaluj paczkę wydania."
 
 #: blocks/booking/app/BookingApp.js:120
 msgid "Loading services…"
-msgstr ""
+msgstr "Wczytywanie usług…"
 
 #: blocks/booking/app/BookingApp.js:164
 #: blocks/booking/app/BookingApp.js:429
 #: blocks/booking/app/BookingApp.js:511
 #: blocks/booking/app/BookingApp.js:660
 msgid "Loading…"
-msgstr ""
+msgstr "Wczytywanie…"
 
 #: blocks/booking/app/BookingApp.js:234
 msgid "Loading available dates…"
-msgstr ""
+msgstr "Wczytywanie dostępnych dat…"
 
 #. translators: 1: month and year, 2: number of days.
 #: blocks/booking/app/BookingApp.js:303
 #, js-format
 msgid "%1$s: %2$d day with free times."
 msgid_plural "%1$s: %2$d days with free times."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%1$s: %2$d dzień z wolnymi terminami."
+msgstr[1] "%1$s: %2$d dni z wolnymi terminami."
+msgstr[2] "%1$s: %2$d dni z wolnymi terminami."
 
 #. translators: %s: month and year.
 #: blocks/booking/app/BookingApp.js:314
 #, js-format
 msgid "%s: no free times."
-msgstr ""
+msgstr "%s: brak wolnych terminów."
 
 #: blocks/booking/app/BookingApp.js:381
 msgid "Back"
-msgstr ""
+msgstr "Wstecz"
 
 #. translators: %s: time zone name, e.g. "Europe/Warsaw".
 #: blocks/booking/app/BookingApp.js:389
 #, js-format
 msgid "Times are shown in the %s time zone."
-msgstr ""
+msgstr "Godziny są podane w strefie czasowej %s."
 
 #: blocks/booking/app/BookingApp.js:412
 msgid "The booking form could not be loaded."
-msgstr ""
+msgstr "Nie udało się wczytać formularza rezerwacji."
 
 #: blocks/booking/app/BookingApp.js:422
 #: blocks/booking/app/BookingApp.js:622
 msgid "Try again"
-msgstr ""
+msgstr "Spróbuj ponownie"
 
 #: blocks/booking/app/BookingApp.js:435
 msgid "No services are available for booking at the moment."
-msgstr ""
+msgstr "Obecnie żadne usługi nie są dostępne do rezerwacji."
 
 #: blocks/booking/app/BookingApp.js:444
 msgid "Choose a service"
-msgstr ""
+msgstr "Wybierz usługę"
 
 #. translators: %d: duration in minutes.
 #: blocks/booking/app/BookingApp.js:457
 #, js-format
 msgid "%d min"
-msgstr ""
+msgstr "%d min"
 
 #: blocks/booking/app/BookingApp.js:483
 #: blocks/booking/app/DetailsStep.js:100
 msgid "Something went wrong. Please try again."
-msgstr ""
+msgstr "Coś poszło nie tak. Spróbuj ponownie."
 
 #: blocks/booking/app/BookingApp.js:500
 msgid "Please choose a service."
-msgstr ""
+msgstr "Wybierz usługę."
 
 #: blocks/booking/app/BookingApp.js:512
 #: blocks/booking/app/BookingApp.js:573
 #: blocks/booking/app/BookingApp.js:754
 msgid "Continue"
-msgstr ""
+msgstr "Dalej"
 
 #: blocks/booking/app/BookingApp.js:522
 msgid "Choose a person or resource"
-msgstr ""
+msgstr "Wybierz osobę lub zasób"
 
 #: blocks/booking/app/BookingApp.js:534
 msgid "Any available"
-msgstr ""
+msgstr "Dowolny dostępny"
 
 #: blocks/booking/app/BookingApp.js:535
 msgid "The first free person or resource is assigned."
-msgstr ""
+msgstr "Zostanie przydzielona pierwsza wolna osoba lub zasób."
 
 #: blocks/booking/app/BookingApp.js:563
 msgid "Please choose a person or resource."
-msgstr ""
+msgstr "Wybierz osobę lub zasób."
 
 #: blocks/booking/app/BookingApp.js:581
 msgid "Choose a day"
-msgstr ""
+msgstr "Wybierz dzień"
 
 #: blocks/booking/app/BookingApp.js:612
 msgid "Available dates could not be loaded."
-msgstr ""
+msgstr "Nie udało się wczytać dostępnych dat."
 
 #: blocks/booking/app/BookingApp.js:628
 msgid "There are no free times in this month. Please choose another month."
-msgstr ""
+msgstr "W tym miesiącu nie ma wolnych terminów. Wybierz inny miesiąc."
 
 #: blocks/booking/app/BookingApp.js:644
 msgid "Morning"
-msgstr ""
+msgstr "Rano"
 
 #: blocks/booking/app/BookingApp.js:645
 msgid "Afternoon"
-msgstr ""
+msgstr "Po południu"
 
 #: blocks/booking/app/BookingApp.js:646
 msgid "Evening"
-msgstr ""
+msgstr "Wieczorem"
 
 #: blocks/booking/app/BookingApp.js:649
 msgid "Choose a time"
-msgstr ""
+msgstr "Wybierz godzinę"
 
 #: blocks/booking/app/BookingApp.js:665
 msgid "There are no free times on this day any more. Please choose another day."
-msgstr ""
+msgstr "Tego dnia nie ma już wolnych terminów. Wybierz inny dzień."
 
 #: blocks/booking/app/BookingApp.js:744
 msgid "Please choose a time."
-msgstr ""
+msgstr "Wybierz godzinę."
 
 #: blocks/booking/app/BookingApp.js:767
 #: blocks/booking/edit.js:180
 msgid "Your details"
-msgstr ""
+msgstr "Twoje dane"
 
 #: blocks/booking/app/BookingApp.js:813
 msgid "Thank you for your booking"
-msgstr ""
+msgstr "Dziękujemy za rezerwację"
 
 #: blocks/booking/app/Calendar.js:107
 msgid "Previous month"
-msgstr ""
+msgstr "Poprzedni miesiąc"
 
 #: blocks/booking/app/Calendar.js:119
 msgid "Next month"
-msgstr ""
+msgstr "Następny miesiąc"
 
 #. translators: %s: date, e.g. "Thursday, 1 October 2026".
 #: blocks/booking/app/Calendar.js:168
 #, js-format
 msgid "%s, free times available"
-msgstr ""
+msgstr "%s, są wolne terminy"
 
 #. translators: %s: date, e.g. "Thursday, 1 October 2026".
 #: blocks/booking/app/Calendar.js:176
 #, js-format
 msgid "%s, no free times"
-msgstr ""
+msgstr "%s, brak wolnych terminów"
 
 #: blocks/booking/app/Confirmation.js:19
 msgid "Your booking is confirmed."
-msgstr ""
+msgstr "Twoja rezerwacja jest potwierdzona."
 
 #: blocks/booking/app/Confirmation.js:21
 msgid "Your booking is waiting for payment."
-msgstr ""
+msgstr "Twoja rezerwacja czeka na płatność."
 
 #: blocks/booking/app/Confirmation.js:23
 msgid "Your booking is awaiting confirmation. We will get back to you soon."
-msgstr ""
+msgstr "Twoja rezerwacja czeka na potwierdzenie. Wkrótce się odezwiemy."
 
 #: blocks/booking/app/Confirmation.js:48
 msgid "We have sent the details to your e-mail address, together with a link to cancel the booking if you cannot come."
-msgstr ""
+msgstr "Szczegóły wysłaliśmy na Twój adres e-mail wraz z linkiem do anulowania rezerwacji, jeśli nie możesz przyjść."
 
 #: blocks/booking/app/Confirmation.js:70
 msgid "Book another appointment"
-msgstr ""
+msgstr "Zarezerwuj kolejną wizytę"
 
 #: blocks/booking/app/DetailsStep.js:32
 msgid "Please enter your e-mail address."
-msgstr ""
+msgstr "Wpisz adres e-mail."
 
 #: blocks/booking/app/DetailsStep.js:33
 msgid "Please enter your name."
-msgstr ""
+msgstr "Wpisz imię i nazwisko."
 
 #: blocks/booking/app/DetailsStep.js:35
 msgid "Please enter a valid e-mail address, e.g. name@example.com."
-msgstr ""
+msgstr "Wpisz prawidłowy adres e-mail, np. imie@example.com."
 
 #: blocks/booking/app/DetailsStep.js:40
 msgid "The phone number may contain only digits, spaces and + ( ) - . /"
-msgstr ""
+msgstr "Numer telefonu może zawierać tylko cyfry, spacje i znaki + ( ) - . /"
 
 #: blocks/booking/app/DetailsStep.js:45
 msgid "This text is too long."
-msgstr ""
+msgstr "Ten tekst jest za długi."
 
 #: blocks/booking/app/DetailsStep.js:52
 msgid "Please check this field."
-msgstr ""
+msgstr "Sprawdź to pole."
 
 #. translators: %d: number of minutes.
 #: blocks/booking/app/DetailsStep.js:72
 #, js-format
 msgid "Too many booking attempts. Please try again in %d minute."
 msgid_plural "Too many booking attempts. Please try again in %d minutes."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Zbyt wiele prób rezerwacji. Spróbuj ponownie za %d minutę."
+msgstr[1] "Zbyt wiele prób rezerwacji. Spróbuj ponownie za %d minuty."
+msgstr[2] "Zbyt wiele prób rezerwacji. Spróbuj ponownie za %d minut."
 
 #: blocks/booking/app/DetailsStep.js:81
 msgid "Too many booking attempts. Please try again later."
-msgstr ""
+msgstr "Zbyt wiele prób rezerwacji. Spróbuj ponownie później."
 
 #: blocks/booking/app/DetailsStep.js:91
 msgid "The booking could not be sent. Please check your connection and try again."
-msgstr ""
+msgstr "Nie udało się wysłać rezerwacji. Sprawdź połączenie i spróbuj ponownie."
 
 #: blocks/booking/app/DetailsStep.js:96
 msgid "Please correct the marked fields."
-msgstr ""
+msgstr "Popraw zaznaczone pola."
 
 #: blocks/booking/app/DetailsStep.js:164
 msgid "Sending your booking…"
-msgstr ""
+msgstr "Wysyłanie rezerwacji…"
 
 #: blocks/booking/app/DetailsStep.js:182
 msgid "Sorry, this time has just been booked by someone else. Please choose another time — your details are kept."
-msgstr ""
+msgstr "Niestety, ktoś właśnie zarezerwował ten termin. Wybierz inny — Twoje dane zostały zachowane."
 
 #: blocks/booking/app/DetailsStep.js:220
 #: blocks/booking/app/DetailsStep.js:328
 msgid "(required)"
-msgstr ""
+msgstr "(wymagane)"
 
 #: blocks/booking/app/DetailsStep.js:265
 msgid "Full name"
-msgstr ""
+msgstr "Imię i nazwisko"
 
 #: blocks/booking/app/DetailsStep.js:279
 #: blocks/booking/app/DetailsStep.js:289
 msgid "Optional."
-msgstr ""
+msgstr "Opcjonalnie."
 
 #: blocks/booking/app/DetailsStep.js:286
 msgid "Note for us"
-msgstr ""
+msgstr "Uwagi dla nas"
 
 #: blocks/booking/app/DetailsStep.js:336
 msgid "Leave this field empty"
-msgstr ""
+msgstr "Pozostaw to pole puste"
 
 #: blocks/booking/app/DetailsStep.js:365
 msgid "Sending…"
-msgstr ""
+msgstr "Wysyłanie…"
 
 #: blocks/booking/app/DetailsStep.js:366
 msgid "Book appointment"
-msgstr ""
+msgstr "Zarezerwuj wizytę"
 
 #. translators: 1: current step number, 2: number of steps.
 #: blocks/booking/app/Step.js:32
 #, js-format
 msgid "Step %1$d of %2$d"
-msgstr ""
+msgstr "Krok %1$d z %2$d"
 
 #: blocks/booking/edit.js:81
 msgid "Could not load services."
-msgstr ""
+msgstr "Nie udało się wczytać usług."
 
 #: blocks/booking/edit.js:86
 msgid "There are no active services yet. Add them under Terminarz → Services."
-msgstr ""
+msgstr "Nie ma jeszcze aktywnych usług. Dodaj je w Terminarz → Usługi."
 
 #: blocks/booking/edit.js:95
 msgid "Offer only the selected services (none selected = all services)."
-msgstr ""
+msgstr "Oferuj tylko wybrane usługi (brak wyboru = wszystkie usługi)."
 
 #: blocks/booking/edit.js:116
 msgid "Preselected service"
-msgstr ""
+msgstr "Domyślnie wybrana usługa"
 
 #: blocks/booking/edit.js:124
 msgid "None"
-msgstr ""
+msgstr "Brak"
 
 #: blocks/booking/edit.js:140
 msgid "Booking steps"
-msgstr ""
+msgstr "Kroki rezerwacji"
 
 #: blocks/booking/edit.js:143
 msgid "Let customers choose the person or resource"
-msgstr ""
+msgstr "Pozwól klientom wybrać osobę lub zasób"
 
 #: blocks/booking/edit.js:147
 msgid "When off, the first available person or resource is assigned."
-msgstr ""
+msgstr "Po wyłączeniu przydzielana jest pierwsza dostępna osoba lub zasób."
 
 #: blocks/booking/edit.js:159
 msgid "First day of the week"
-msgstr ""
+msgstr "Pierwszy dzień tygodnia"
 
 #: blocks/booking/edit.js:171
 msgid "Book an appointment"
-msgstr ""
+msgstr "Zarezerwuj wizytę"
 
 #: blocks/booking/edit.js:176
 msgid "Person or resource"
-msgstr ""
+msgstr "Osoba lub zasób"
 
 #. translators: %s: comma-separated list of service names.
 #: blocks/booking/edit.js:186
 #, js-format
 msgid "Services: %s"
-msgstr ""
+msgstr "Usługi: %s"
 
 #: blocks/booking/lib/editor.js:28
 msgid "Site default"
-msgstr ""
+msgstr "Domyślny witryny"
 
 #: blocks/booking/lib/editor.js:29
 msgid "Monday"
-msgstr ""
+msgstr "Poniedziałek"
 
 #: blocks/booking/lib/editor.js:30
 msgid "Sunday"
-msgstr ""
+msgstr "Niedziela"
 
 #: blocks/booking/lib/editor.js:31
 msgid "Saturday"
-msgstr ""
+msgstr "Sobota"
 
 #: blocks/booking/block.json
 msgctxt "block title"
 msgid "Booking"
-msgstr ""
+msgstr "Rezerwacja"
 
 #: blocks/booking/block.json
 msgctxt "block description"
 msgid "Lets visitors book an appointment: service, person or resource, day, time and contact details."
-msgstr ""
+msgstr "Pozwala odwiedzającym zarezerwować wizytę: usługa, osoba lub zasób, dzień, godzina i dane kontaktowe."
 
 #: blocks/booking/block.json
 msgctxt "block keyword"
 msgid "appointment"
-msgstr ""
+msgstr "wizyta"
 
 #: blocks/booking/block.json
 msgctxt "block keyword"
 msgid "reservation"
-msgstr ""
+msgstr "rezerwacja"
 
 #: blocks/booking/block.json
 msgctxt "block keyword"
 msgid "calendar"
-msgstr ""
+msgstr "kalendarz"
 
 #: blocks/booking/block.json
 msgctxt "block keyword"
 msgid "schedule"
-msgstr ""
+msgstr "terminarz"

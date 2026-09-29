@@ -41,6 +41,7 @@ Przydatne komendy:
 | Analiza statyczna (PHPStan, poziom 6) | `composer phpstan` |
 | Lint JS/CSS (ESLint + stylelint) | `npm run lint` / `npm run lint:fix` |
 | Plik `.pot` | `npm run i18n` (WP-CLI i18n z Composera, bez Dockera) |
+| Tłumaczenia | `npm run i18n:update-po` (nowe stringi do `.po`), `npm run i18n:compile` (`.mo`/`.l10n.php`/JSON, po `npm run build`), `composer i18n:check` (ADR-047) |
 | Testy PHP (unit + integration) | `composer test` (unit bez Dockera: `composer test:unit`; integration: `composer test:integration`, wymaga `npm run env:start:tests`; tylko test współbieżności: `composer test:integration -- --group concurrency`; multisite: `composer test:integration:multisite`) |
 | Testy E2E (Playwright, środowisko tests :8889) | `npm run test:e2e` (pierwszy raz: `npx playwright install chromium`; raport: `playwright-report/`) |
 
@@ -56,7 +57,7 @@ Workflow [`.github/workflows/ci.yml`](.github/workflows/ci.yml) uruchamia się d
 | `Lint (PHP + JS/CSS)` | `composer lint` (WPCS 3 + PHPCompatibilityWP) i `npm run lint` (ESLint + stylelint) |
 | `PHPStan (level 6)` | `composer phpstan` — zero błędów, bez baseline'u |
 | `PHPUnit unit (PHP 8.1)`, `PHPUnit unit (PHP 8.3)` | `composer test:unit` na minimalnej i nowszej wersji PHP |
-| `Build` | `npm run build` i generowanie `.pot` (`npm run i18n`) |
+| `Build` | `npm run build`, testy JS, kontrola tłumaczeń (`composer i18n:check`, aktualność plików skompilowanych) |
 | `PHPUnit integration (wp-env)` | `composer test:integration` w środowisku testowym wp-env (PHP 8.1, najnowszy WordPress); osobny krok: test współbieżności `--group concurrency` (równoległe procesy WP-CLI, brak podwójnych rezerwacji) |
 | `E2E (Playwright)` | `npm run test:e2e` na wp-env; raport HTML i ślady jako artefakt `playwright-report` (14 dni) |
 

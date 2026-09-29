@@ -49,9 +49,10 @@ async function expectNoAxeViolations( page, step ) {
  *
  * @param {import('@playwright/test').Page}    page    Page.
  * @param {import('@playwright/test').Locator} locator Target.
- * @param {number}                             [max]   Maximum number of Tab presses.
+ * @param {number}                             [max]   Maximum number of Tab presses (a long-lived local site lists
+ *                                                     many pages in the theme navigation before the block).
  */
-async function tabTo( page, locator, max = 60 ) {
+async function tabTo( page, locator, max = 400 ) {
 	for ( let i = 0; i < max; i++ ) {
 		if (
 			await locator.evaluate(
