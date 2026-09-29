@@ -423,3 +423,13 @@ Jeden wpis na zamknięte issue: data, numer issue, co zrobione, decyzje, znane r
 - **Decyzje:** ADR-040 (przechwytywanie maili: MockPHPMailer w PHPUnit, mu-plugin w E2E, bez Mailpit).
 - **Ryzyka:** `{cancel_url}` jest pusty do czasu #41; e-maile są wysyłane synchronicznie w żądaniu (wolny SMTP spowalnia
   rezerwację) — kolejka do rozważenia później.
+
+## 2026-09-29 — #40 e-mail potwierdzenia rezerwacji
+
+- **Zrobione:** `Notifications\BookingNotifier` (przyjęcie zgłoszenia / potwierdzenie do klienta, nowa rezerwacja do
+  firmy; nic dla `pending_payment` do czasu płatności), tabela `trmz_notification_log` (schemat v3) +
+  `WpdbNotificationLog` (atomowe `INSERT IGNORE`), `Services::notification_log()`. Testy integracyjne: pending,
+  potwierdzenie przez admina (raz), auto-potwierdzenie, powtórzone zdarzenia, wyłączony szablon, błąd wysyłki,
+  płatność w czasie / po czasie / wygaśnięcie (WooCommerce), strefa czasowa witryny, schemat.
+- **Decyzje:** ADR-041.
+- **Ryzyka:** wysyłka synchroniczna (czas odpowiedzi przy wolnym SMTP).

@@ -66,6 +66,24 @@ final class SchemaTest extends WP_UnitTestCase {
 		}
 	}
 
+	public function test_notification_log_key_is_unique_per_booking(): void {
+		global $wpdb;
+		$schema = new Schema( $wpdb, self::FRESH_PREFIX );
+		$schema->install();
+		$table = $schema->table( Schema::NOTIFICATIONS );
+		$row   = array(
+			'booking_id' => 1,
+			'message'    => 'customer_confirmed',
+			'sent_at'    => '2030-01-01 10:00:00',
+		);
+
+		$this->assertSame( 1, $wpdb->insert( $table, $row ) );
+		$suppress = $wpdb->suppress_errors();
+		$this->assertFalse( $wpdb->insert( $table, $row ) );
+		$wpdb->suppress_errors( $suppress );
+		$this->assertSame( 1, $wpdb->insert( $table, array_merge( $row, array( 'booking_id' => 2 ) ) ) );
+	}
+
 	public function test_active_start_is_unique_per_resource_but_nulls_are_not(): void {
 		global $wpdb;
 		$schema = new Schema( $wpdb, self::FRESH_PREFIX );

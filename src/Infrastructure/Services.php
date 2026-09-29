@@ -23,6 +23,7 @@ use Terminarz\Domain\Repository\ScheduleExceptionRepository;
 use Terminarz\Domain\Repository\ScheduleRepository;
 use Terminarz\Domain\Repository\ServiceRepository;
 use Terminarz\Infrastructure\Persistence\WpdbBookingRepository;
+use Terminarz\Infrastructure\Persistence\WpdbNotificationLog;
 use Terminarz\Infrastructure\Persistence\WpdbResourceRepository;
 use Terminarz\Infrastructure\Persistence\WpdbScheduleExceptionRepository;
 use Terminarz\Infrastructure\Persistence\WpdbScheduleRepository;
@@ -105,6 +106,13 @@ final class Services {
 	 * @var Mailer|null
 	 */
 	private ?Mailer $mailer = null;
+
+	/**
+	 * Notification log.
+	 *
+	 * @var WpdbNotificationLog|null
+	 */
+	private ?WpdbNotificationLog $notification_log = null;
 
 	/**
 	 * Constructor.
@@ -235,6 +243,13 @@ final class Services {
 	 */
 	public function mailer(): Mailer {
 		return $this->mailer ??= new Mailer( $this );
+	}
+
+	/**
+	 * Log of e-mails sent about bookings (deduplication).
+	 */
+	public function notification_log(): WpdbNotificationLog {
+		return $this->notification_log ??= new WpdbNotificationLog( $this->db );
 	}
 
 	/**
