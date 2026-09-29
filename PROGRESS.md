@@ -150,6 +150,7 @@ Jeden wpis na zamknięte issue: data, numer issue, co zrobione, decyzje, znane r
 - **Ryzyka:** domyślne ustawienia bez minimalnego wyprzedzenia i horyzontu — do ustalenia w M4 (ustawienia).
   Strategia `least_busy` liczy obciążenie tylko z pobranego zakresu zajętości.
 
+<<<<<<< HEAD
 ## 2026-09-29 — #21 menu admina i strona ustawień
 
 - **Zrobione:** `Infrastructure\Settings` (opcja `trmz_settings`: domyślne, zakresy, sanitizacja, typowane gettery),
@@ -163,3 +164,15 @@ Jeden wpis na zamknięte issue: data, numer issue, co zrobione, decyzje, znane r
 - **Ryzyka:** zmiana domyślnych wyprzedzenia/horyzontu wpływa na testy używające `Services` bez jawnych ustawień dostępności
   (np. przyszłe testy REST z datami > 90 dni od „teraz”). `consent_text` i `customer_cancel_limit_hours` nie są jeszcze
   używane (blok rezerwacji / anulowanie przez klienta), `delete_data_on_uninstall` czeka na `uninstall.php` (#45).
+=======
+## 2026-09-29 — #16 publiczne endpointy katalogu usług i zasobów
+
+- **Zrobione:** warstwa `src/Rest`: `RestModule` (rejestracja na `rest_api_init`), bazowy `Controller` (namespace
+  `terminarz/v1`, publiczny/administracyjny `permission_callback`, formatowanie czasu ISO 8601), `ErrorMapper` (wyjątki
+  domeny → `WP_Error` z przetłumaczonym komunikatem i statusem HTTP). `GET /services`, `GET /services/{id}`,
+  `GET /resources?service=` — tylko aktywne, tylko pola ze schematu. `Services::set_instance()` dla testów.
+  Testy integracyjne (`tests/php/integration/Rest`, baza `RestTestCase` z własnym serwerem REST i zegarem).
+- **Decyzje:** ADR-019. Nieaktywna usługa = 404 (jak nieistniejąca). `/resources` bez `service` zwraca wszystkie aktywne
+  zasoby; z `service` — w kolejności preferencji przypisania. Brak opisu i waluty w katalogu (poza modelem domeny — M4/M6).
+- **Ryzyka:** brak paginacji katalogu (zakładamy niewielką liczbę usług/zasobów).
+>>>>>>> origin/develop
