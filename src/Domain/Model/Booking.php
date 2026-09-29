@@ -52,6 +52,7 @@ final class Booking {
 	 * @param ?int               $order_id             WooCommerce order id, if any.
 	 * @param ?string            $cancel_token_hash    Hash of the customer's cancellation token, if any.
 	 * @param ?DateTimeImmutable $created_at           Creation time.
+	 * @param ?string            $public_id            Random public identifier (used in URLs/REST instead of `id`).
 	 *
 	 * @throws InvalidValue On invalid data.
 	 */
@@ -66,7 +67,8 @@ final class Booking {
 		public readonly ?int $id = null,
 		public readonly ?int $order_id = null,
 		public readonly ?string $cancel_token_hash = null,
-		?DateTimeImmutable $created_at = null
+		?DateTimeImmutable $created_at = null,
+		public readonly ?string $public_id = null
 	) {
 		if ( null !== $id && $id <= 0 ) {
 			throw new InvalidValue( 'Id must be a positive integer.' );
@@ -79,6 +81,9 @@ final class Booking {
 		}
 		if ( null !== $order_id && $order_id <= 0 ) {
 			throw new InvalidValue( 'Order id must be a positive integer.' );
+		}
+		if ( null !== $public_id && '' === $public_id ) {
+			throw new InvalidValue( 'Public id must not be empty.' );
 		}
 		if ( null !== $cancel_token_hash && '' === $cancel_token_hash ) {
 			throw new InvalidValue( 'Cancel token hash must not be empty.' );
@@ -196,7 +201,8 @@ final class Booking {
 			id: $id ?? $this->id,
 			order_id: $order_id ?? $this->order_id,
 			cancel_token_hash: $this->cancel_token_hash,
-			created_at: $this->created_at
+			created_at: $this->created_at,
+			public_id: $this->public_id
 		);
 	}
 }

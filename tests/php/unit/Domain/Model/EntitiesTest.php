@@ -84,6 +84,9 @@ final class EntitiesTest extends TestCase {
 		yield 'booking: negative buffer' => array(
 			static fn () => new Booking( 1, 1, self::range(), BookingStatus::Pending, new Customer( 'A', 'a@example.com' ), -1 ),
 		);
+		yield 'booking: empty public id' => array(
+			static fn () => new Booking( 1, 1, self::range(), BookingStatus::Pending, new Customer( 'A', 'a@example.com' ), public_id: '' ),
+		);
 		yield 'booking: empty token hash' => array(
 			static fn () => new Booking( 1, 1, self::range(), BookingStatus::Pending, new Customer( 'A', 'a@example.com' ), cancel_token_hash: '' ),
 		);
@@ -140,7 +143,9 @@ final class EntitiesTest extends TestCase {
 	}
 
 	public function test_booking_reschedule_and_ids(): void {
-		$booking = self::booking()->with_id( 3 )->with_order_id( 99 );
+		$booking = ( new Booking( 1, 2, self::range(), BookingStatus::Confirmed, new Customer( 'A', 'a@example.com' ), public_id: 'abc123' ) )
+			->with_id( 3 )
+			->with_order_id( 99 );
 		$moved   = $booking->rescheduled(
 			new TimeRange( new DateTimeImmutable( '2026-10-02 08:00 UTC' ), new DateTimeImmutable( '2026-10-02 09:00 UTC' ) ),
 			4
@@ -148,6 +153,7 @@ final class EntitiesTest extends TestCase {
 
 		$this->assertSame( 3, $moved->id );
 		$this->assertSame( 99, $moved->order_id );
+		$this->assertSame( 'abc123', $moved->public_id );
 		$this->assertSame( 4, $moved->resource_id );
 		$this->assertSame( '2026-10-02', $moved->range->start->format( 'Y-m-d' ) );
 		$this->assertSame( '2026-10-01', $booking->range->start->format( 'Y-m-d' ) );

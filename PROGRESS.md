@@ -63,13 +63,22 @@ Jeden wpis na zamknięte issue: data, numer issue, co zrobione, decyzje, znane r
 - **Ryzyka:** czas jobów wp-env; zależność od zewnętrznych pobrań (obrazy Dockera, wordpress.org) — możliwe sporadyczne
   niepowodzenia sieciowe.
 
+## 2026-09-29 — #8 schemat bazy danych z wersjonowaniem
+
+- **Zrobione:** `Infrastructure\Database\Schema` (6 tabel InnoDB przez `dbDelta`, `tables()`, `install()`, `drop()`),
+  `Infrastructure\Database\Migrator` (moduł, `plugins_loaded` + aktywacja, blokada migracji, akcja `trmz_schema_migrated`),
+  testy integracyjne (InnoDB, idempotentna instalacja na czystej bazie, unikalność `active_start_utc`, blokada migracji).
+- **Decyzje:** ADR-012 (harmonogramy w czasie lokalnym, momenty w UTC, `public_id`, `active_start_utc` + UNIQUE, tabele per witryna).
+- **Ryzyka:** dbDelta nie usuwa kolumn/indeksów — przyszłe zmiany destrukcyjne wymagają jawnych kroków migracji.
+  Migracja podczas żądania frontowego po aktualizacji pluginu (jednorazowo, pod blokadą).
+
 ## 2026-09-29 — #9 encje i value objects domeny
 
 - **Zrobione:** `src/Domain/Model`: `TimeRange`, `LocalTime`, `TimeWindow`, `WeeklySchedule`, `ScheduleException`,
   `BookableResource`, `Service`, `Customer`, `Booking`, `BookingStatus` (enum + maszyna stanów), `Slot`;
   `src/Domain/Exception`: `DomainError`, `InvalidValue`, `InvalidStatusTransition`. Testy unit (walidacja, macierz przejść,
   blokowanie slotu przez wstrzymanie płatności).
-- **Decyzje:** ADR-012. Założenia (etykieta `assumption` w #9): nazwa `BookableResource`, okna nie przechodzą przez północ,
-  wyjątek „inne godziny” zastępuje też przerwy, przejścia statusów jak w ADR-012, bez `needs_attention`.
+- **Decyzje:** ADR-015. Założenia (etykieta `assumption` w #9): nazwa `BookableResource`, okna nie przechodzą przez północ,
+  wyjątek „inne godziny” zastępuje też przerwy, przejścia statusów jak w ADR-015, bez `needs_attention`.
 - **Ryzyka:** brak nowych tekstów dla użytkownika (komunikaty wyjątków nietłumaczone — adaptery muszą je mapować).
   Walidacja e-maila przez `filter_var` może różnić się od `is_email()` WordPressa — adapter sanitizuje wcześniej.

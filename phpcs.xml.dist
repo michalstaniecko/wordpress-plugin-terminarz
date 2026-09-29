@@ -24,7 +24,7 @@
 
 	<!--
 		PHPCompatibility 9.3 does not understand PHP 8.1 enums and reports $this/self inside enum
-		methods as used outside a class. Enums are listed here explicitly (see ADR-012).
+		methods as used outside a class. Enums are listed here explicitly (see ADR-015).
 	-->
 	<rule ref="PHPCompatibility.Variables.ForbiddenThisUseContexts.OutsideObjectContext">
 		<exclude-pattern>/src/Domain/Model/BookingStatus\.php$</exclude-pattern>
@@ -79,6 +79,25 @@
 		<exclude-pattern>/tests/phpstan/*</exclude-pattern>
 	</rule>
 	<rule ref="WordPress.WP.AlternativeFunctions">
+		<exclude-pattern>/tests/php/*</exclude-pattern>
+	</rule>
+
+	<!--
+		Custom tables (docs/ARCHITECTURE.md, ADR-012/ADR-014): repositories and the schema talk to $wpdb directly by design
+		and do not use the object cache (booking data must never be stale). Prepared-SQL rules stay active.
+	-->
+	<rule ref="WordPress.DB.DirectDatabaseQuery.DirectQuery">
+		<exclude-pattern>/src/Infrastructure/Database/*</exclude-pattern>
+		<exclude-pattern>/src/Infrastructure/Persistence/*</exclude-pattern>
+		<exclude-pattern>/tests/php/*</exclude-pattern>
+	</rule>
+	<rule ref="WordPress.DB.DirectDatabaseQuery.NoCaching">
+		<exclude-pattern>/src/Infrastructure/Database/*</exclude-pattern>
+		<exclude-pattern>/src/Infrastructure/Persistence/*</exclude-pattern>
+		<exclude-pattern>/tests/php/*</exclude-pattern>
+	</rule>
+	<rule ref="WordPress.DB.DirectDatabaseQuery.SchemaChange">
+		<exclude-pattern>/src/Infrastructure/Database/*</exclude-pattern>
 		<exclude-pattern>/tests/php/*</exclude-pattern>
 	</rule>
 </ruleset>
