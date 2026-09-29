@@ -301,6 +301,9 @@ test.describe( 'Booking block — customer form', () => {
 				.click();
 
 			await page.waitForURL( /trmz-e2e-payment=1/ );
+			expect(
+				new URL( page.url() ).searchParams.get( 'trmz-e2e-payment' )
+			).toBe( '1' );
 		} );
 	} );
 
