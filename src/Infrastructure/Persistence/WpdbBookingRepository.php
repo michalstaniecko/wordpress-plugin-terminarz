@@ -378,6 +378,59 @@ final class WpdbBookingRepository extends WpdbRepository implements BookingRepos
 	/**
 	 * {@inheritDoc}
 	 *
+	 * @param string                 $email            E-mail address.
+	 * @param int                    $limit            Page size.
+	 * @param int                    $offset           Offset.
+	 * @param DateTimeImmutable|null $keep_active_from Skip active bookings starting at or after this time.
+	 * @return Booking[]
+	 */
+	public function find_by_customer_email( string $email, int $limit, int $offset = 0, ?DateTimeImmutable $keep_active_from = null ): array {
+		$email = trim( $email );
+		if ( '' === $email ) {
+			return array();
+		}
+		$table = $this->table( Schema::BOOKINGS );
+		$where = 'customer_email = %s';
+		$args  = array( $email );
+		if ( null !== $keep_active_from ) {
+			$where .= ' AND NOT (active_start_utc IS NOT NULL AND start_utc >= %s)';
+			$args[] = self::to_sql( $keep_active_from );
+		}
+		$args[] = max( 1, $limit );
+		$args[] = max( 0, $offset );
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- table from Schema, fixed conditions.
+		$rows = $this->rows( $this->db->prepare( 'SELECT ' . self::COLUMNS . " FROM {$table} WHERE {$where} ORDER BY id ASC LIMIT %d OFFSET %d", $args ) );
+
+		return array_map( array( self::class, 'hydrate' ), $rows );
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @param int      $id       Booking ID.
+	 * @param Customer $customer New customer data.
+	 */
+	public function replace_customer( int $id, Customer $customer ): Booking {
+		$this->require_booking( $id );
+		$this->update(
+			$this->table( Schema::BOOKINGS ),
+			array(
+				'customer_name'    => $customer->name,
+				'customer_email'   => $customer->email,
+				'customer_phone'   => $customer->phone,
+				'customer_note'    => $customer->note,
+				'customer_user_id' => $customer->user_id,
+				'updated_at'       => $this->now(),
+			),
+			array( 'id' => $id )
+		);
+		return $this->require_booking( $id );
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
 	 * @param DateTimeImmutable $now   Current time.
 	 * @param int               $limit Maximum number of bookings.
 	 * @return int[]

@@ -203,3 +203,13 @@ Jeden wpis na zamknięte issue: data, numer issue, co zrobione, decyzje, znane r
 - **Decyzje:** ADR-023. `{id}` = wewnętrzne ID (panel), domyślne sortowanie po starcie rosnąco.
 - **Ryzyka:** wyszukiwanie `LIKE '%…%'` po imieniu/e-mailu nie używa indeksu — przy bardzo dużej liczbie rezerwacji może
   wymagać ograniczenia zakresem dat.
+
+## 2026-09-29 — #27 eksport i usuwanie danych osobowych
+
+- **Zrobione:** `Admin\Privacy` (moduł): exporter i eraser WP dla rezerwacji po e-mailu klienta (strony po 50), sugerowany
+  tekst polityki prywatności. `BookingRepository::find_by_customer_email()` / `replace_customer()`. `Admin\Labels`
+  (przetłumaczone statusy, daty w strefie witryny). Testy integracyjne (rejestracja, eksport z danymi i paginacją,
+  anonimizacja z zachowaniem rekordu, zachowanie nadchodzących rezerwacji, paginacja erasera, tekst polityki).
+- **Decyzje:** ADR-025. Anonimizacja zamiast usunięcia; nadchodzące aktywne rezerwacje zachowane (założenie, etykieta `assumption`).
+- **Ryzyka:** dopasowanie tylko po dokładnym e-mailu — rezerwacje złożone z innym adresem przez to samo konto WP nie są
+  objęte (zachowawczo; ewentualne rozszerzenie o `customer_user_id` do decyzji).
