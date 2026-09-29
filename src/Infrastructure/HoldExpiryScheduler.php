@@ -82,7 +82,8 @@ final class HoldExpiryScheduler implements Module {
 	 * `init`: makes sure the job is scheduled exactly once, in Action Scheduler or WP-Cron.
 	 */
 	public function schedule(): void {
-		if ( self::uses_action_scheduler() ) {
+		// function_exists() repeated so that static analysis knows the Action Scheduler API is available.
+		if ( self::uses_action_scheduler() && function_exists( 'as_has_scheduled_action' ) && function_exists( 'as_schedule_recurring_action' ) ) {
 			// One indexed query; checked only where Action Scheduler would run the job anyway.
 			if ( ! ( is_admin() || wp_doing_cron() || ( defined( 'WP_CLI' ) && WP_CLI ) || wp_doing_ajax() ) ) {
 				return;
