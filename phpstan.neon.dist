@@ -1,0 +1,14 @@
+# PHPStan configuration. Level 6, no baseline (see docs/ARCHITECTURE.md).
+# szepeviktor/phpstan-wordpress is loaded automatically by phpstan/extension-installer.
+parameters:
+	level: 6
+	paths:
+		- terminarz.php
+		- uninstall.php
+		- src
+		- tests/php/unit
+	bootstrapFiles:
+		- tests/phpstan/bootstrap.php
+	scanFiles:
+		- vendor/php-stubs/woocommerce-stubs/woocommerce-stubs.php
+	treatPhpDocTypesAsCertain: false

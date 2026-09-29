@@ -1,0 +1,81 @@
+{
+	"name": "michalstaniecko/terminarz",
+	"description": "Online appointment booking plugin for WordPress with optional WooCommerce payments.",
+	"type": "wordpress-plugin",
+	"license": "GPL-2.0-or-later",
+	"require": {
+		"php": ">=8.1"
+	},
+	"autoload": {
+		"psr-4": {
+			"Terminarz\\": "src/"
+		}
+	},
+	"config": {
+		"platform": {
+			"php": "8.1.0"
+		},
+		"optimize-autoloader": true,
+		"sort-packages": true,
+		"process-timeout": 0,
+		"allow-plugins": {
+			"dealerdirect/phpcodesniffer-composer-installer": true,
+			"phpstan/extension-installer": true
+		}
+	},
+	"require-dev": {
+		"php-stubs/woocommerce-stubs": "^11.1",
+		"phpcompatibility/phpcompatibility-wp": "^2.1",
+		"phpstan/extension-installer": "^1.4",
+		"phpstan/phpstan": "^2.1",
+		"phpunit/phpunit": "^9.6",
+		"szepeviktor/phpstan-wordpress": "^2.0",
+		"wp-cli/i18n-command": "^2.7",
+		"wp-coding-standards/wpcs": "^3.1",
+		"yoast/phpunit-polyfills": "^4.0"
+	},
+	"scripts": {
+		"i18n": "wp i18n make-pot . languages/terminarz.pot --slug=terminarz --domain=terminarz --exclude=node_modules,vendor,build,tests,docs,artifacts,bin",
+		"i18n:update-po": "wp i18n update-po languages/terminarz.pot languages",
+		"i18n:compile": [
+			"@php -r \"array_map('unlink', glob('languages/*.json') ?: array());\"",
+			"wp i18n make-mo languages",
+			"wp i18n make-php languages",
+			"node bin/i18n-js-map.js build/i18n-map.json",
+			"wp i18n make-json languages --use-map=build/i18n-map.json --pretty-print"
+		],
+		"i18n:check": "@php bin/i18n-check.php",
+		"test": [
+			"@test:unit",
+			"@test:integration"
+		],
+		"test:unit": "phpunit -c phpunit.xml.dist",
+		"test:integration": "npx wp-env run --config=.wp-env.tests.json cli --env-cwd=wp-content/plugins/terminarz vendor/bin/phpunit -c phpunit-integration.xml.dist",
+		"test:integration:no-wc": "npx wp-env run --config=.wp-env.tests.json cli --env-cwd=wp-content/plugins/terminarz env TRMZ_TESTS_WOOCOMMERCE=0 vendor/bin/phpunit -c phpunit-integration.xml.dist --exclude-group concurrency,woocommerce",
+		"test:integration:multisite": "npx wp-env run --config=.wp-env.tests.json cli --env-cwd=wp-content/plugins/terminarz env WP_TESTS_MULTISITE=1 vendor/bin/phpunit -c phpunit-integration.xml.dist --exclude-group concurrency",
+		"lint": "phpcs",
+		"lint:fix": "phpcbf",
+		"phpstan": "phpstan analyse --memory-limit=2G --no-progress"
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"Terminarz\\Tests\\": "tests/php/",
+			"Terminarz\\Tests\\Unit\\": "tests/php/unit/",
+			"Terminarz\\Tests\\Integration\\": "tests/php/integration/"
+		}
+	},
+	"scripts-descriptions": {
+		"test": "Runs unit and integration test suites (integration needs `npm run env:start:tests`).",
+		"test:unit": "Runs unit tests (no WordPress, no Docker).",
+		"test:integration": "Runs integration tests inside the wp-env tests environment (with WooCommerce loaded).",
+		"test:integration:no-wc": "Runs integration tests without WooCommerce (TRMZ_TESTS_WOOCOMMERCE=0).",
+		"test:integration:multisite": "Runs integration tests on a multisite network (WP_TESTS_MULTISITE=1).",
+		"i18n": "Generates languages/terminarz.pot.",
+		"i18n:update-po": "Updates languages/*.po from the .pot (new strings untranslated).",
+		"i18n:compile": "Builds .mo and JSON (JavaScript) translations from languages/*.po; needs `npm run build` first.",
+		"i18n:check": "Checks that the .pot matches the code and every .po is complete.",
+		"lint": "Checks PHP code against WordPress Coding Standards.",
+		"lint:fix": "Fixes auto-fixable coding standard violations.",
+		"phpstan": "Runs PHPStan (level 6)."
+	}
+}

@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!--
+	Unit tests: pure PHP, no WordPress, no database. Run with `composer test:unit`.
+-->
+<phpunit
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
+	bootstrap="tests/php/unit/bootstrap.php"
+	colors="true"
+	beStrictAboutOutputDuringTests="true"
+	beStrictAboutTestsThatDoNotTestAnything="true"
+	convertDeprecationsToExceptions="true"
+	failOnRisky="true"
+	failOnWarning="true"
+	cacheResultFile=".phpunit.cache/unit.result.cache"
+>
+	<testsuites>
+		<testsuite name="unit">
+			<directory suffix="Test.php">tests/php/unit</directory>
+		</testsuite>
+	</testsuites>
+	<coverage>
+		<include>
+			<directory suffix=".php">src</directory>
+		</include>
+	</coverage>
+</phpunit>

@@ -1,0 +1,213 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [develop, main]
+  push:
+    branches: [develop, main]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+env:
+  NODE_VERSION: '20'
+  PHP_VERSION: '8.1'
+
+jobs:
+  lint:
+    name: Lint (PHP + JS/CSS)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          coverage: none
+          tools: composer:v2
+      - uses: ramsey/composer-install@v4
+      - uses: actions/setup-node@v7
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - name: PHPCS (WordPress Coding Standards)
+        run: composer lint
+      - name: ESLint + stylelint
+        run: npm run lint
+
+  phpstan:
+    name: PHPStan (level 6)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          coverage: none
+          tools: composer:v2
+      - uses: ramsey/composer-install@v4
+      - run: composer phpstan
+
+  unit:
+    name: PHPUnit unit (PHP ${{ matrix.php }})
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['8.1', '8.3']
+    steps:
+      - uses: actions/checkout@v7
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+          tools: composer:v2
+      - uses: ramsey/composer-install@v4
+      - run: composer test:unit
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          coverage: none
+          tools: composer:v2
+      - uses: ramsey/composer-install@v4
+      - uses: actions/setup-node@v7
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - name: Build blocks
+        run: npm run build
+      - name: JavaScript unit tests
+        run: npm run test:js
+      - name: Check translations (.pot matches the code, every .po complete)
+        run: composer i18n:check
+      - name: Check compiled translations (.mo, .l10n.php, JSON) are up to date
+        run: |
+          composer i18n:compile
+          if [ -n "$(git status --porcelain -- languages/)" ]; then
+            git status --porcelain -- languages/
+            echo "::error::Compiled translations are outdated: run 'npm run build && npm run i18n:compile' and commit languages/."
+            exit 1
+          fi
+
+  integration:
+    name: PHPUnit integration (wp-env)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          coverage: none
+          tools: composer:v2
+      - uses: ramsey/composer-install@v4
+      - uses: actions/setup-node@v7
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - name: Build blocks (the booking block is registered from build/)
+        run: npm run build
+      - name: Start wp-env (tests environment)
+        run: npm run env:start:tests
+      - name: Run integration tests
+        # Shared CI runners are slower and noisier than a dev machine: looser availability benchmark threshold (#15).
+        run: npx wp-env run --config=.wp-env.tests.json cli --env-cwd=wp-content/plugins/terminarz env TRMZ_BENCH_MAX_MS=1000 vendor/bin/phpunit -c phpunit-integration.xml.dist --exclude-group concurrency
+      - name: Run integration tests without WooCommerce
+        run: npx wp-env run --config=.wp-env.tests.json cli --env-cwd=wp-content/plugins/terminarz env TRMZ_TESTS_WOOCOMMERCE=0 TRMZ_BENCH_MAX_MS=1000 vendor/bin/phpunit -c phpunit-integration.xml.dist --exclude-group concurrency,woocommerce
+      - name: Run integration tests on multisite (WP_TESTS_MULTISITE=1)
+        run: npx wp-env run --config=.wp-env.tests.json cli --env-cwd=wp-content/plugins/terminarz env WP_TESTS_MULTISITE=1 TRMZ_BENCH_MAX_MS=1000 vendor/bin/phpunit -c phpunit-integration.xml.dist --exclude-group concurrency
+      - name: Run concurrency test (parallel WP-CLI processes, no double bookings)
+        run: composer test:integration -- --group concurrency
+
+  e2e:
+    name: E2E (Playwright)
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v7
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          coverage: none
+          tools: composer:v2
+      - uses: ramsey/composer-install@v4
+      - uses: actions/setup-node@v7
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - name: Build blocks
+        run: npm run build
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
+      - name: Start wp-env (tests environment)
+        run: npm run env:start:tests
+      - name: Run E2E tests
+        run: npm run test:e2e
+      - name: Upload Playwright report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            artifacts/test-results/
+          if-no-files-found: ignore
+          retention-days: 14
+      - name: Dump debug.log on failure
+        if: ${{ failure() }}
+        run: npx wp-env run --config=.wp-env.tests.json cli bash -c 'cat wp-content/debug.log 2>/dev/null | tail -200 || true'
+
+  package:
+    name: Release ZIP (build + clean install)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          coverage: none
+          tools: composer:v2
+      - uses: actions/setup-node@v7
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - name: Build blocks
+        run: npm run build
+      - name: Build ZIP (composer install --no-dev -o, .distignore)
+        id: zip
+        run: |
+          zip_file="$(bin/build-zip.sh)"
+          echo "file=$zip_file" >> "$GITHUB_OUTPUT"
+          echo "name=$(basename "$zip_file" .zip)" >> "$GITHUB_OUTPUT"
+      - name: Check ZIP contents
+        run: bin/check-zip.sh "${{ steps.zip.outputs.file }}"
+      - name: Upload ZIP
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ steps.zip.outputs.name }}
+          path: ${{ steps.zip.outputs.file }}
+          if-no-files-found: error
+          retention-days: 30
+      - name: Install the ZIP on a clean WordPress (wp-env, no WooCommerce)
+        run: bin/test-zip-install.sh "${{ steps.zip.outputs.file }}"
+

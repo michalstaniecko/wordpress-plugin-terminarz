@@ -1,0 +1,57 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "terminarz/booking",
+	"version": "1.0.0",
+	"title": "Booking",
+	"category": "widgets",
+	"icon": "calendar-alt",
+	"description": "Lets visitors book an appointment: service, person or resource, day, time and contact details.",
+	"keywords": [ "appointment", "reservation", "calendar", "schedule" ],
+	"textdomain": "terminarz",
+	"attributes": {
+		"serviceIds": {
+			"type": "array",
+			"items": { "type": "integer" },
+			"default": []
+		},
+		"defaultServiceId": {
+			"type": "integer",
+			"default": 0
+		},
+		"showResourcePicker": {
+			"type": "boolean",
+			"default": true
+		},
+		"firstDayOfWeek": {
+			"type": "integer",
+			"default": -1
+		}
+	},
+	"supports": {
+		"html": false,
+		"align": [ "wide", "full" ],
+		"color": {
+			"background": true,
+			"text": true,
+			"link": false
+		},
+		"spacing": {
+			"margin": true,
+			"padding": true
+		},
+		"typography": {
+			"fontSize": true,
+			"lineHeight": true
+		}
+	},
+	"example": {
+		"attributes": {
+			"showResourcePicker": true
+		}
+	},
+	"editorScript": "file:./index.js",
+	"editorStyle": "file:./index.css",
+	"style": "file:./style-index.css",
+	"viewScript": "file:./view.js"
+}

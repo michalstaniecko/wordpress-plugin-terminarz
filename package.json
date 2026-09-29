@@ -1,0 +1,52 @@
+{
+	"name": "terminarz",
+	"version": "1.0.0",
+	"private": true,
+	"description": "Online appointment booking plugin for WordPress with optional WooCommerce payments.",
+	"license": "GPL-2.0-or-later",
+	"engines": {
+		"node": ">=20"
+	},
+	"devDependencies": {
+		"@axe-core/playwright": "^4.13.0",
+		"@playwright/test": "^1.63.0",
+		"@types/node": "^20.19.43",
+		"@wordpress/api-fetch": "^7.56.0",
+		"@wordpress/block-editor": "^18.0.0",
+		"@wordpress/blocks": "^16.1.0",
+		"@wordpress/components": "^41.0.0",
+		"@wordpress/dom-ready": "^4.56.0",
+		"@wordpress/e2e-test-utils-playwright": "^2.1.0",
+		"@wordpress/element": "^8.8.0",
+		"@wordpress/env": "^11.16.0",
+		"@wordpress/eslint-plugin": "^27.0.0",
+		"@wordpress/i18n": "^6.29.0",
+		"@wordpress/scripts": "^35.0.0",
+		"@wordpress/stylelint-config": "^26.0.0",
+		"@wordpress/url": "^4.56.0"
+	},
+	"scripts": {
+		"env:start": "wp-env start && wp-env start --config=.wp-env.tests.json",
+		"env:start:dev": "wp-env start",
+		"env:start:tests": "wp-env start --config=.wp-env.tests.json",
+		"env:stop": "wp-env stop && wp-env stop --config=.wp-env.tests.json",
+		"env:destroy": "wp-env destroy && wp-env destroy --config=.wp-env.tests.json",
+		"env:cli": "wp-env run cli",
+		"env:tests:cli": "wp-env run --config=.wp-env.tests.json cli",
+		"build": "wp-scripts build --webpack-src-dir=blocks --output-path=build",
+		"start": "wp-scripts start --webpack-src-dir=blocks --output-path=build",
+		"lint": "npm run lint:js && npm run lint:css",
+		"lint:js": "wp-scripts lint-js",
+		"lint:css": "wp-scripts lint-style \"blocks/**/*.{css,scss}\" --allow-empty-input",
+		"test:e2e": "playwright test",
+		"i18n": "composer run i18n",
+		"i18n:update-po": "composer run i18n:update-po",
+		"i18n:compile": "composer run i18n:compile",
+		"lint:fix": "wp-scripts lint-js --fix && wp-scripts lint-style \"blocks/**/*.{css,scss}\" --allow-empty-input --fix",
+		"test:e2e:debug": "playwright test --debug",
+		"test:e2e:install": "playwright install --with-deps chromium",
+		"test:js": "wp-scripts test-unit-js --roots tests/js",
+		"plugin-zip": "bin/build-zip.sh",
+		"plugin-zip:test": "bin/check-zip.sh dist/terminarz-$npm_package_version.zip && bin/test-zip-install.sh dist/terminarz-$npm_package_version.zip"
+	}
+}
