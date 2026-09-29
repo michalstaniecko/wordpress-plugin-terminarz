@@ -45,3 +45,20 @@ Przydatne komendy:
 | Testy E2E (Playwright, środowisko tests :8889) | `npm run test:e2e` (pierwszy raz: `npx playwright install chromium`; raport: `playwright-report/`) |
 
 Szczegóły architektury: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md). Dziennik postępu: [`PROGRESS.md`](PROGRESS.md).
+
+## CI (GitHub Actions)
+
+Workflow [`.github/workflows/ci.yml`](.github/workflows/ci.yml) uruchamia się dla PR i pushy do `develop` i `main`
+(oraz ręcznie — `workflow_dispatch`). Status checks:
+
+| Check | Co sprawdza |
+|---|---|
+| `Lint (PHP + JS/CSS)` | `composer lint` (WPCS 3 + PHPCompatibilityWP) i `npm run lint` (ESLint + stylelint) |
+| `PHPStan (level 6)` | `composer phpstan` — zero błędów, bez baseline'u |
+| `PHPUnit unit (PHP 8.1)`, `PHPUnit unit (PHP 8.3)` | `composer test:unit` na minimalnej i nowszej wersji PHP |
+| `Build` | `npm run build` i generowanie `.pot` (`npm run i18n`) |
+| `PHPUnit integration (wp-env)` | `composer test:integration` w środowisku testowym wp-env (PHP 8.1, najnowszy WordPress) |
+| `E2E (Playwright)` | `npm run test:e2e` na wp-env; raport HTML i ślady jako artefakt `playwright-report` (14 dni) |
+
+Zależności Composera i npm są cache'owane (`ramsey/composer-install`, `actions/setup-node` z `cache: npm`).
+Każdy z tych checków musi być zielony przed mergem PR do `develop`.

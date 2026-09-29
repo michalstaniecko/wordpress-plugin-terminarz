@@ -119,3 +119,14 @@ Dzięki temu `.pot` generuje się lokalnie i w CI bez uruchamiania wp-env. Plik 
 - Helpery `activateWooCommerce()` / `deactivateWooCommerce()` (`tests/e2e/utils/woocommerce.js`); testy, które
   wyłączają WooCommerce, przywracają go po sobie.
 - Jeden worker, bez równoległości (wspólna instancja WordPressa); w CI 1 retry, raport HTML jako artefakt.
+
+## ADR-011: CI w GitHub Actions
+
+**Decyzja.** Jeden workflow `ci.yml` (PR i push do `develop`/`main`) z niezależnymi jobami: `lint`, `phpstan`,
+`unit` (macierz PHP 8.1 i 8.3), `build` (+ generowanie `.pot`), `integration` (wp-env tests + `composer test:integration`),
+`e2e` (wp-env tests + Playwright, raport jako artefakt). Joby na `ubuntu-latest`; narzędzia PHP na hoście w wersji 8.1
+(`config.platform.php` = 8.1), w kontenerach wp-env również PHP 8.1. Cache: `ramsey/composer-install` i `setup-node`
+(`cache: npm`). Dla PR anulowane są poprzednie przebiegi tej samej gałęzi. Uprawnienia workflow: `contents: read`.
+
+**Konsekwencje.** Joby wp-env są najwolniejsze (pobieranie obrazów, WordPressa i WooCommerce przy każdym przebiegu);
+w razie potrzeby można dodać cache `~/.wp-env`.
