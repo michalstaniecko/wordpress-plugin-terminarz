@@ -162,3 +162,31 @@ w razie potrzeby można dodać cache `~/.wp-env`.
 **Konsekwencje.** Testy integracyjne: biblioteka testów WP zamienia `CREATE TABLE` w teście na `CREATE TEMPORARY TABLE`,
 dlatego testy „czystej instalacji” używają osobnego prefiksu (`wptests_fresh_`), a prawdziwe tabele suity powstają
 w bootstrapie (`plugins_loaded`).
+
+## ADR-015: Model domeny (`Terminarz\Domain\Model`)
+
+**Decyzja.**
+- Obiekty niemutowalne: właściwości `public readonly`, walidacja w konstruktorach (wyjątek `Domain\Exception\InvalidValue`,
+  wszystkie wyjątki domeny implementują `Domain\Exception\DomainError`). Zmiana = nowa instancja (`with_*()`).
+  Komunikaty wyjątków są dla programisty (angielskie, nietłumaczone); adaptery REST/admin mapują je na przetłumaczone teksty.
+- Czas absolutny: `TimeRange` — półotwarty `[start, end)`, oba końce normalizowane do **UTC** w konstruktorze.
+  Czas lokalny (harmonogramy): `LocalTime` (minuty od północy 0–1440, format `HH:MM`, `24:00` = koniec dnia) i
+  `TimeWindow` (`[start, end)` w obrębie jednego dnia — okna przez północ nie są wspierane).
+- `WeeklySchedule`: godziny pracy i przerwy per dzień tygodnia ISO (1 = poniedziałek … 7 = niedziela);
+  `windows_for()` = godziny pracy minus przerwy. Godziny pracy jednego dnia nie mogą się nakładać.
+- `ScheduleException` (nie `Throwable` — „wyjątek od harmonogramu”): data lokalna `Y-m-d`, `resource_id` lub `null`
+  (globalny), okna zastępcze; brak okien = dzień zamknięty. Okna wyjątku zastępują **zarówno godziny pracy, jak i przerwy**
+  danego dnia. Wyjątek zasobu ma pierwszeństwo przed globalnym (stosuje silnik, #11).
+- `BookableResource` zamiast `Resource` (`resource` jest słowem zastrzeżonym „soft” w PHP).
+- `Service`: czas trwania 1–1440 min, cena `price_minor` (int, grosze; waluta sklepu nie jest częścią domeny),
+  bufor po usłudze 0–1440 min.
+- `Booking`: opcjonalny `public_id` (losowy identyfikator publiczny), `range` (UTC, bez bufora) + `buffer_after_minutes` (kopia bufora usługi z chwili rezerwacji, więc edycja
+  usługi nie przesuwa istniejących blokad); `blocked_range()` = termin + bufor. `pending_payment` wymaga `hold_expires_at`.
+  `blocks_slot_at($now)` — status aktywny i (dla `pending_payment`) wstrzymanie jeszcze nie wygasło; dzięki temu
+  wygasłe wstrzymanie przestaje blokować slot od razu, zanim zadanie wygaszające zmieni status na `expired`.
+- `BookingStatus` (enum, wartości zapisywane w bazie): maszyna stanów
+  `pending_payment → pending | confirmed | cancelled | expired`, `pending → confirmed | cancelled`,
+  `confirmed → cancelled | completed`; `cancelled`, `expired`, `completed` są końcowe. `is_active()` = pending,
+  pending_payment, confirmed. Status `needs_attention` (np. płatność po wygaśnięciu wstrzymania) **nie** jest dodany —
+  decyzja należy do M6 (dodanie przypadku enuma i przejść jest wsteczne kompatybilne).
+- PHPCompatibility 9.3 nie rozumie enumów — dla plików z enumami wyłączone są dwie reguły w `phpcs.xml.dist`.
