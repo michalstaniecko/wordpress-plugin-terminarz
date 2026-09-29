@@ -127,3 +127,13 @@ Jeden wpis na zamknięte issue: data, numer issue, co zrobione, decyzje, znane r
   dokumentuje też wyjątki propagowane).
 - **Ryzyka:** `BookingService::reserve()` bez polityki slotu nie sprawdza godzin pracy — podpina ją #15; REST (M3) musi
   korzystać z serwisu z polityką. Wygaszenie wstrzymania w `create()` nie emituje zdarzenia.
+
+## 2026-09-29 — #14 test współbieżności — brak podwójnych rezerwacji
+
+- **Zrobione:** `DoubleBookingTest` (`@group concurrency`) + worker `tests/php/concurrency/worker.php`: 12 równoległych
+  procesów WP-CLI z barierą czasową; scenariusze: ten sam slot (1 sukces), nakładające się różne starty/usługi (1 sukces),
+  różne zasoby (wszystkie sukcesy). Osobny krok w CI (`--group concurrency`), opis w README.
+- **Decyzje:** ADR-017 (numer 016 zajęty przez silnik dostępności). Kontrola negatywna wykonana ręcznie (bez blokady
+  zasobu test wykrywa podwójne rezerwacje).
+- **Ryzyka:** test trwa ~20–30 s (bariera 8 s × 3 scenariusze); na bardzo wolnym runnerze może być potrzebne podniesienie
+  `TRMZ_CONCURRENCY_BARRIER`. Test pisze do tabel witryny E2E (sprzątane po sobie).
