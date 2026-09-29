@@ -400,3 +400,14 @@ Jeden wpis na zamknięte issue: data, numer issue, co zrobione, decyzje, znane r
   zamówienia spoza Terminarza i zamówienie wskazujące cudzą rezerwację.
 - **Decyzje:** ADR-038 (w tym: eraser WooCommerce nie wymaga uzupełnień).
 - **Ryzyka:** `failed` od razu zwalnia slot — klient ponawiający płatność może stracić termin (wtedy obsługa ręczna).
+
+## 2026-09-29 — #38 E2E płatności w sandboxie i praca bez WooCommerce
+
+- **Zrobione:** mu-plugin testowy `tests/e2e/mu-plugins/trmz-test-gateway.php` (bramka sukces/porażka, wyłączenie
+  „coming soon” sklepu, trasa `trmz-e2e/v1/expire-hold`), spec `booking-payment.spec.js`: rezerwacja → płatność →
+  `confirmed` w panelu (link do zamówienia, metabox), porzucona płatność → wygaśnięcie → slot wolny, nieudana płatność →
+  slot zwolniony, WooCommerce wyłączony → rezerwacja bez płatności; test klawiatury bloku odporny na dodatkowe elementy
+  nagłówka sklepu. Cała suita E2E zielona lokalnie.
+- **Decyzje:** ADR-039.
+- **Ryzyka:** strona „order-pay” renderowana klasycznym formularzem WooCommerce — przyszłe wersje WC mogą przejść na
+  blokowy formularz (wtedy bramka testowa będzie potrzebować integracji z blokami).

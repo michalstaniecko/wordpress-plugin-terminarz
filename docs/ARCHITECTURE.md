@@ -801,3 +801,26 @@ w historii z tym samym `order_id`.
 
 **Konsekwencje.** Klient, któremu płatność się nie powiodła, traci wstrzymanie od razu (zgodnie z issue); jeśli zapłaci
 ponownie, a slot jest zajęty, zamówienie trafia do obsługi ręcznej.
+
+## ADR-039: E2E płatności — testowa bramka i wymuszanie wygaśnięcia
+
+**Decyzja.**
+- `tests/e2e/mu-plugins/trmz-test-gateway.php` (mapowany tylko w `.wp-env.tests.json`; `/tests` jest w `.distignore`, więc
+  nie trafia do paczki; pomijany w PHPUnit): bramka `trmz_test_gateway` („Test payment”) z wyborem wyniku — „Payment
+  succeeds” → `payment_complete()`, „Payment fails” → zamówienie `failed` + komunikat. Bez żadnych kluczy i zewnętrznych usług.
+- Ten sam mu-plugin wyłącza tryb „coming soon” nowych sklepów WooCommerce (`pre_option_woocommerce_coming_soon` = `no`),
+  który ukrywał strony sklepu (w tym „Zapłać za zamówienie”) przed gośćmi, oraz rejestruje testową trasę
+  `POST /trmz-e2e/v1/expire-hold` (`manage_options`): przesuwa `hold_expires_at` rezerwacji w przeszłość i uruchamia
+  `trmz_expire_holds` — „porzucona płatność” bez czekania 15 minut.
+- `tests/e2e/specs/booking-payment.spec.js` (serial): admin ustawia tryb „całość” w ustawieniach i płatną usługę w panelu →
+  gość rezerwuje w bloku → przekierowanie na stronę „order-pay” (klasyczny formularz WooCommerce także przy blokowym
+  checkoutcie) → płatność testowa → „order-received” → admin widzi rezerwację `confirmed`, link do zamówienia i metabox
+  „Booking” w zamówieniu; porzucona płatność → wygaśnięcie → slot znów w `/availability`, rezerwacja „Expired”, zamówienie
+  anulowane; nieudana płatność → komunikat i zwolniony slot; WooCommerce dezaktywowany przy włączonym trybie płatności →
+  rezerwacja `pending` bez przekierowania. Na końcu tryb płatności `none` i brak PHP notice w `debug.log`.
+- Odpowiedź `POST /bookings` jest przechwytywana przez `page.route()` (blok od razu przechodzi na stronę płatności,
+  więc treści odpowiedzi nie da się odczytać po nawigacji).
+
+**Konsekwencje.** Po zmianie mu-pluginów trzeba zrestartować środowisko testowe (`wp-env stop` + `npm run env:start:tests`).
+Przy aktywnym sklepie motyw pokazuje dodatkowe elementy WooCommerce w nagłówku — test klawiatury bloku dopuszcza do 60
+naciśnięć Tab przed dotarciem do bloku.
