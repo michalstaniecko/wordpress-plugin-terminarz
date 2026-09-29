@@ -624,3 +624,25 @@ akceptowalne dla eksportu administracyjnego.
 
 **Konsekwencje.** view.js jest większy o api-fetch (~kilka KB). Pliki JSON tłumaczeń muszą odpowiadać ścieżkom
 skryptów z `build/` (do rozwiązania przy pakowaniu tłumaczeń w M8).
+
+## ADR-032: Front end bloku rezerwacji — kroki, dane i dostępność
+
+**Decyzja.**
+- `blocks/booking/view.js` montuje `app/BookingApp` (React, `createRoot`) w każdym kontenerze. Kroki: usługa → osoba/zasób
+  (lub „Dowolna dostępna”) → dzień → godzina → dane (`renderDetails`, #31). Krok usługi jest pomijany przy jednej usłudze,
+  krok zasobu — gdy `showResourcePicker=false` (→ `any`) lub usługę wykonuje ≤ 1 zasób. Cały stan w `BookingApp`, więc
+  „Wstecz” zachowuje wybory; zmiana usługi/zasobu czyści dzień i godzinę.
+- Dostępność pobierana **miesiącami** (`monthRange`: od dziś, do `lastDate`, ≤ 31 dni) i buforowana per usługa/zasób/miesiąc;
+  pusty miesiąc przy otwarciu kalendarza → automatycznie kolejny (maks. 2). `refreshAvailability()` czyści bufor (409, #31).
+- Czas: daty jako łańcuchy `Y-m-d` strefy witryny (arytmetyka na północach UTC — strefa przeglądarki i DST nie przesuwają
+  dni), godziny odczytywane wprost z ISO z offsetem witryny (`timeOf`), informacja o strefie z `timezone` odpowiedzi
+  (`+02:00` → `UTC+02:00`). Wysyłany jest `start_utc` slotu.
+- Dostępność (podstawa pod #32): nagłówek kroku (`h2`, `tabindex=-1`) dostaje fokus po każdej zmianie kroku (nie przy
+  załadowaniu strony); postęp „Krok n z m”; komunikaty ładowania/wyników w jednym regionie `role=status` `aria-live=polite`;
+  błędy `role=alert` powiązane przez `aria-describedby`. Usługi, zasoby i godziny to **natywne radio** w `role=radiogroup`
+  (strzałki i Tab działają natywnie, bez własnego ARIA). Kalendarz: tabela `role=grid` wg wzorca APG (roving tabindex,
+  strzałki, Home/End, PageUp/PageDown, także między miesiącami), dni bez terminów fokusowalne z `aria-disabled`,
+  `aria-selected` na komórce, `aria-current=date`, pełna data w `aria-label` przycisku dnia.
+- Style: klasy `trmz-*` (BEM), kolory dziedziczone z motywu (`currentcolor` + `color-mix`), cele ≥ 44 px (dni ≥ 32×40 px),
+  widoczny fokus (`outline` 3 px).
+- Logika czysta w `blocks/booking/lib/` (calendar, slots, format, config) — testy Jest w `tests/js/` (`npm run test:js`).

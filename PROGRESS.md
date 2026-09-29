@@ -303,3 +303,15 @@ Jeden wpis na zamknięte issue: data, numer issue, co zrobione, decyzje, znane r
   escaping zgody, filtr), JS unit (helpery edytora), E2E (wstawienie, konfiguracja i zapis bloku, konfiguracja na froncie).
 - **Decyzje:** ADR-031 (blok dynamiczny, konfiguracja w data-atrybucie, prywatna kopia api-fetch bez nonce dla anonimowych).
 - **Ryzyka:** JSON-y tłumaczeń JS muszą pasować do ścieżek w `build/` (M8).
+
+## 2026-09-29 — #30 front end bloku: usługa, zasób, dzień i godzina
+
+- **Zrobione:** aplikacja React (`blocks/booking/app/`: `BookingApp`, `Step`, `ChoiceList`, `Calendar`, `Summary`,
+  `DetailsStep`, `api`) montowana przez `view.js`; kroki usługa → zasób/„dowolny” → dzień (kalendarz miesiąca, dni z wolnymi
+  terminami) → godzina (grupy rano/popołudnie/wieczór) → podsumowanie; pobieranie przez prywatną kopię api-fetch, stany
+  ładowania/błędu/pustej dostępności, informacja o strefie witryny, nawigacja wstecz z zachowaniem wyborów. Czysta logika
+  w `lib/` (kalendarz, sloty, formatowanie, konfiguracja) z testami Jest; style bloku. E2E `booking-block-steps.spec.js`
+  (kroki, fokus nagłówków, powrót z zachowaniem wyborów, „dowolny” zasób, pusty stan, pomijanie kroku zasobu).
+- **Decyzje:** ADR-032 (natywne radio dla wyborów, kalendarz `grid` wg APG, dostępność pobierana miesiącami, automatyczne
+  przejście do kolejnego miesiąca, gdy bieżący jest pusty).
+- **Ryzyka:** godziny wyświetlane w formacie 24 h niezależnie od ustawień formatu czasu witryny.
