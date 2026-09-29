@@ -54,3 +54,11 @@ Jeden wpis na zamknięte issue: data, numer issue, co zrobione, decyzje, znane r
 - **Ryzyka:** odczyt `debug.log` przez HTTP działa tylko dlatego, że środowisko testowe serwuje `wp-content/`
   — gdyby wp-env to zmienił, trzeba przejść na `wp-env run cli cat`. Sprawdzone negatywnie (wstrzyknięty
   `E_USER_WARNING` powoduje porażkę testu).
+
+## 2026-09-29 — #7 GitHub Actions CI
+
+- **Zrobione:** `.github/workflows/ci.yml` z jobami lint, phpstan, unit (PHP 8.1/8.3), build, integration (wp-env), e2e
+  (wp-env + Playwright, raport jako artefakt), cache Composera i npm; opis status checks w README.
+- **Decyzje:** ADR-011.
+- **Ryzyka:** czas jobów wp-env; zależność od zewnętrznych pobrań (obrazy Dockera, wordpress.org) — możliwe sporadyczne
+  niepowodzenia sieciowe.
