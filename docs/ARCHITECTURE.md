@@ -130,3 +130,35 @@ Dzięki temu `.pot` generuje się lokalnie i w CI bez uruchamiania wp-env. Plik 
 
 **Konsekwencje.** Joby wp-env są najwolniejsze (pobieranie obrazów, WordPressa i WooCommerce przy każdym przebiegu);
 w razie potrzeby można dodać cache `~/.wp-env`.
+
+## ADR-012: Schemat bazy danych i migracje
+
+**Kontekst.** Rezerwacje wymagają zapytań zakresowych i atomowego zajmowania slotów — CPT/postmeta się do tego nie nadają.
+
+**Decyzja.**
+- Własne tabele InnoDB z prefiksem witryny: `{prefix}trmz_resources`, `trmz_services`, `trmz_service_resources` (pivot
+  z kolejnością), `trmz_schedules`, `trmz_schedule_exceptions`, `trmz_bookings`. Definicje w
+  `Terminarz\Infrastructure\Database\Schema` (format `dbDelta`), wersja w stałej `Schema::VERSION` i opcji `trmz_db_version`.
+- Migracja: `Migrator` (moduł) na `plugins_loaded` (priorytet 5), gdy wersja w opcji ≠ wersja w kodzie, oraz przy aktywacji.
+  Równoległe żądania serializuje blokada `trmz_db_migration_lock` (`add_option` jest atomowe; blokada starsza niż 5 min
+  jest przejmowana). Po migracji akcja `trmz_schema_migrated`. Zmiana schematu = edycja `CREATE TABLE` + podbicie `VERSION`
+  (dbDelta dodaje kolumny/indeksy, ale nie usuwa — usunięcia wymagają jawnego kroku migracji).
+- Czas: momenty (`start_utc`, `end_utc`, `buffer_end_utc`, `hold_expires_at`, `created_at`, `updated_at`) jako `DATETIME` w UTC.
+  Wyjątek: harmonogram tygodniowy (`weekday` ISO 1–7, `start_time`/`end_time` `TIME`) i wyjątki (`start_date`/`end_date`
+  `DATE`, godziny w JSON `intervals`) są w **czasie lokalnym witryny** — to reguły „ścienne”, które przy zmianie czasu
+  (DST) mają zachować godzinę lokalną; zamiana na UTC następuje w silniku dostępności.
+- `trmz_schedules`: wiersz = przedział (`kind` `work`/`break`) dla zasobu i dnia tygodnia.
+  `trmz_schedule_exceptions`: `resource_id` NULL = wyjątek globalny; `kind` `closed`/`custom_hours`; zakres dat włącznie.
+- `trmz_bookings`: `public_id` (losowy, unikalny, do użycia w REST/URL zamiast sekwencyjnego `id`), `active_start_utc`
+  (= `start_utc` dla rezerwacji blokujących slot, NULL dla anulowanych/wygasłych) z `UNIQUE (resource_id, active_start_utc)`
+  — ostatnia linia obrony przed podwójną rezerwacją (NULL-e się nie kolidują). `cancel_token_hash` przechowuje tylko skrót
+  tokenu anulowania. Indeks `resource_range (resource_id, start_utc, buffer_end_utc, status)` pod zapytania o zajętość.
+- Multisite: tabele per witryna (`$wpdb->prefix`). Witryna bez tabel dostaje je leniwie przy pierwszym żądaniu (brak opcji
+  wersji → migracja); pełna obsługa multisite w M8 (#61).
+- `Schema::drop()` usuwa tabele i opcję — do użycia przez `uninstall.php`, gdy użytkownik zaznaczy usuwanie danych.
+- PHPCS: reguły `DirectDatabaseQuery.*` wyłączone dla `src/Infrastructure/Database` i `src/Infrastructure/Persistence`
+  (świadomie bez object cache — dane rezerwacji nie mogą być nieaktualne); reguły `PreparedSQL` pozostają aktywne.
+
+**Konsekwencje.** Testy integracyjne: biblioteka testów WP zamienia `CREATE TABLE` w teście na `CREATE TEMPORARY TABLE`,
+dlatego testy „czystej instalacji” używają osobnego prefiksu (`wptests_fresh_`), a prawdziwe tabele suity powstają
+w bootstrapie (`plugins_loaded`).

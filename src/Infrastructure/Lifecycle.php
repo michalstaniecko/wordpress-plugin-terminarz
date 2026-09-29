@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Terminarz\Infrastructure;
 
+use Terminarz\Infrastructure\Database\Migrator;
+
 /**
  * Callbacks for register_activation_hook() / register_deactivation_hook().
  */
@@ -51,6 +53,7 @@ final class Lifecycle {
 	 * Activation steps for a single site.
 	 */
 	private static function activate_site(): void {
+		Migrator::migrate();
 		Capabilities::grant();
 	}
 }
