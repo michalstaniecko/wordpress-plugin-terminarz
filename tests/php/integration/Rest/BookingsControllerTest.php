@@ -11,6 +11,7 @@ namespace Terminarz\Tests\Integration\Rest;
 
 use Terminarz\Domain\Model\Booking;
 use Terminarz\Domain\Model\BookingStatus;
+use Terminarz\Infrastructure\Settings;
 use Terminarz\Rest\BookingsController;
 use WP_REST_Request;
 
@@ -106,6 +107,15 @@ final class BookingsControllerTest extends RestTestCase {
 
 	public function test_auto_confirm_filter_confirms_new_bookings(): void {
 		add_filter( 'trmz_auto_confirm_bookings', '__return_true' );
+
+		$response = $this->request( 'POST', '/bookings', $this->body() );
+
+		$this->assertSame( 201, $response->get_status() );
+		$this->assertSame( 'confirmed', $response->get_data()['status'] );
+	}
+
+	public function test_auto_confirm_setting_confirms_new_bookings(): void {
+		update_option( Settings::OPTION, array( 'auto_confirm' => '1' ) );
 
 		$response = $this->request( 'POST', '/bookings', $this->body() );
 

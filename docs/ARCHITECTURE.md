@@ -332,6 +332,7 @@ W CI osobny krok joba `integration`. Zmienne: `TRMZ_CONCURRENCY_WORKERS`, `TRMZ_
   adapter pokazuje własne, przetłumaczone teksty.
 - Identyfikator rezerwacji na zewnątrz: `Booking::$public_id` (`BookingRepository::get_by_public_id()`); token anulowania
   dostępny tylko w `Reservation::$cancel_token` zaraz po rezerwacji, weryfikacja `BookingService::verify_cancel_token()`.
+- Ustawienia: `Services::instance()->settings()` (`Infrastructure\Settings`, gettery z ADR-024), np. `->auto_confirm()`.
 - Hooki: `trmz_booking_created`, `trmz_booking_status_changed`, `trmz_booking_rescheduled`, `trmz_schema_migrated`;
   filtry: `trmz_availability_settings`, `trmz_db_inside_external_transaction`.
 
@@ -382,7 +383,7 @@ dojdą razem z panelem admina (M4) / WooCommerce (M6) jako nowe pola schematu (z
 - `permission_callback` = `create_item_permissions_check()`: zalogowany użytkownik (uwierzytelnienie ciasteczkiem) musi
   wysłać poprawny nonce `wp_rest` (ochrona CSRF; przy Application Passwords nonce nie jest wymagany) + limit zapytań (ADR-022).
 - Status początkowy: `confirmed`, gdy filtr `trmz_auto_confirm_bookings` (bool, `Service`) zwróci `true`, inaczej `pending`.
-  Do spięcia z ustawieniem auto-potwierdzania z panelu (#21). `pending_payment` — M6.
+  Wartość domyślna filtra = ustawienie `auto_confirm` z panelu (`Settings::auto_confirm()`, ADR-024). `pending_payment` — M6.
 - Odpowiedź publiczna: `public_id`, `status`, `service`, `resource` (przydzielony), `start`, `end`, `start_utc` — bez danych
   klienta, wewnętrznego ID i tokenu anulowania (token trafi do e-maila w M7).
 - `Customer` rozszerzony o `note` i `user_id` (kolumny `customer_note`, `customer_user_id` istniały w schemacie) — zalogowany
@@ -430,3 +431,37 @@ limit — trzeba to opisać w dokumentacji wydania (M8, readme).
   nieaktywna rezerwacja → 422, zasób spoza usługi → 400.
 - Repozytorium: `BookingRepository::search()` / `count()` z `Domain\Repository\BookingCriteria` (walidowane filtry,
   kolumna sortowania z białej listy, `LIKE` z `esc_like`) — do reużycia przez listę w panelu (#25).
+
+## ADR-024: Ustawienia pluginu i menu admina
+
+**Kontekst.** Parametry dostępności (ADR-018), auto-potwierdzanie (M3), płatności (M6), powiadomienia (M5) i deinstalacja
+czytają wspólne ustawienia; potrzebne jest jedno miejsce z domyślnymi wartościami, zakresami i sanitizacją.
+
+**Decyzja.**
+- `Terminarz\Infrastructure\Settings` — typowany widok opcji `trmz_settings` (jedna tablica, autoload): stałe `DEFAULTS`,
+  `RANGES`, `CHOICES`, `FLAGS`; `Settings::load()` (lub `Services::instance()->settings()`, cache na kontener), gettery:
+  `slot_step_minutes()` (5–240, 15), `min_lead_minutes()` (0–43200, 60), `max_horizon_days()` (0–730, 90),
+  `customer_cancel_limit_hours()` (0–720, 24), `auto_confirm()` (false), `hold_minutes()` (5–120, 15),
+  `payment_mode()` (`none`|`deposit`|`full`, `none`), `payments_enabled()` (tryb ≠ none **i** aktywny WooCommerce),
+  `deposit_percent()` (1–100, 30), `any_resource_strategy()` (`order`|`least_busy`, `order`),
+  `notification_email()` (pusty = `admin_email` witryny), `consent_text()` (HTML po `wp_kses_post`, pusty),
+  `delete_data_on_uninstall()` (false).
+- Odczyt: wartości nieprawidłowe/brakujące → domyślne (bez komunikatów). Zapis: `Settings::sanitize()` jako
+  `sanitize_callback` (rejestracja na `init`, więc chroni też `update_option()` z kodu/WP-CLI): nieprawidłowa wartość →
+  zostaje poprzednia + `add_settings_error`; brak checkboxa = false; brak innego klucza = bez zmian; nieznane klucze odrzucane.
+- `Services::availability_settings()` buduje `AvailabilitySettings` z `Settings` (filtr `trmz_availability_settings` bez zmian).
+  Zmiana domyślnych względem ADR-018: minimalne wyprzedzenie 0 → 60 min, horyzont brak → 90 dni.
+- Admin: `Admin\Menu` (moduł) — rejestr stron `Admin\AdminPage` (`slug`, `menu_title`, `page_title`, `position`, `register`,
+  `render`); top-level „Terminarz” (ikona `dashicons-calendar-alt`, pozycja 26) wskazuje na stronę o najniższej pozycji,
+  każda strona to podmenu z capability `trmz_manage_bookings`. Kolejne ekrany dodaje się w `Plugin::default_modules()`:
+  `new Menu( array( new SettingsPage(), new XyzPage() ) )`.
+- `Admin\SettingsPage` (`admin.php?page=trmz-settings`, pozycja 90): Settings API (grupa `trmz_settings`, sekcje: reguły
+  rezerwacji, płatności, powiadomienia, prywatność). `options.php` wymaga domyślnie `manage_options` — filtr
+  `option_page_capability_trmz_settings` obniża to do `trmz_manage_bookings`. Tryb płatności jest widoczny zawsze,
+  z ostrzeżeniem, gdy WooCommerce nie jest aktywny.
+
+- REST: domyślna wartość filtra `trmz_auto_confirm_bookings` pochodzi z `Settings::auto_confirm()`.
+
+**Konsekwencje.** Adaptery czytają ustawienia przez gettery, nigdy przez `get_option()` bezpośrednio. Wyprzedzenie
+przechowywane w minutach (spójnie z ADR-018), choć issue mówiło o godzinach. Testy korzystające z
+`Services` bez jawnego `AvailabilitySettings` podlegają domyślnemu horyzontowi 90 dni i wyprzedzeniu 60 min.
