@@ -182,6 +182,17 @@ Jeden wpis na zamknięte issue: data, numer issue, co zrobione, decyzje, znane r
   jeszcze niezmergowane. Start tylko z jawnym offsetem. Token anulowania nie jest zwracany.
 - **Ryzyka:** limit zapytań dochodzi w #19. Token anulowania dostępny tylko w chwili rezerwacji (M7 musi to uwzględnić).
 
+## 2026-09-29 — #19 limit zapytań dla endpointów zapisu
+
+- **Zrobione:** `Infrastructure\RateLimiter` (okno stałe, transienty, klucz HMAC z solą WP), `Rest\RequestLimit`
+  (IP z `REMOTE_ADDR` + filtr `trmz_client_ip`, filtr `trmz_rate_limit` domyślnie 5/10 min, 429 + `Retry-After`),
+  podpięte do `POST /bookings`; `Services::rate_limiter()`. Testy integracyjne: 6. żądanie → 429 z `Retry-After: 600`,
+  odliczanie i reset okna, liczenie nieudanych prób, per IP i ignorowanie `X-Forwarded-For`, filtry, wyłączenie limitu,
+  brak limitu dla menedżerów, IP nie jest zapisywane jawnie.
+- **Decyzje:** ADR-022. Liczone są wszystkie poprawne składniowo żądania (także 409). Menedżerowie
+  (`trmz_manage_bookings`) bez limitu.
+- **Ryzyka:** nieatomowa inkrementacja; za proxy bez filtra `trmz_client_ip` wszyscy dzielą jeden limit (do opisania w M8).
+
 ## 2026-09-29 — #21 menu admina i strona ustawień
 
 - **Zrobione:** `Infrastructure\Settings` (opcja `trmz_settings`: domyślne, zakresy, sanitizacja, typowane gettery),

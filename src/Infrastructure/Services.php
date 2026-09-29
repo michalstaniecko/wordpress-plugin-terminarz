@@ -192,6 +192,13 @@ final class Services {
 	}
 
 	/**
+	 * Request limiter (transients, same clock as the services).
+	 */
+	public function rate_limiter(): RateLimiter {
+		return new RateLimiter( $this->clock );
+	}
+
+	/**
 	 * Availability service.
 	 */
 	public function availability_service(): AvailabilityService {

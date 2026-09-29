@@ -22,6 +22,7 @@ final class RestModule implements Module {
 	 */
 	public function register(): void {
 		add_action( 'rest_api_init', array( $this, 'register_routes' ) );
+		add_filter( 'rest_request_after_callbacks', array( RequestLimit::class, 'add_retry_after' ), 10, 3 );
 	}
 
 	/**
