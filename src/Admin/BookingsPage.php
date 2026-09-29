@@ -324,6 +324,14 @@ class BookingsPage extends Screen {
 			$rows[ __( 'Held until', 'terminarz' ) ] = esc_html( Labels::datetime( $booking->hold_expires_at ) );
 		}
 
+		/**
+		 * Filters the rows of the booking details screen (the WooCommerce integration links the order).
+		 *
+		 * @param array<string, string> $rows    Label => value as escaped HTML (escape everything you add).
+		 * @param Booking               $booking Booking.
+		 */
+		$rows = (array) apply_filters( 'trmz_admin_booking_details_rows', $rows, $booking );
+
 		echo '<table class="form-table trmz-booking-details" role="presentation"><tbody>';
 		foreach ( $rows as $label => $html ) {
 			// Values are escaped above.

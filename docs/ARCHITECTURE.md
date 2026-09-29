@@ -708,3 +708,35 @@ WooCommerce ładuje się po Terminarzu (kolejność alfabetyczna), więc przy `b
 **Konsekwencje.** Komponenty integracji nie mogą być używane przed `plugins_loaded`. Filtr `trmz_woocommerce_active`
 pozwala wyłączyć płatności (np. w testach), ale nie „włączyć” ich bez WooCommerce. Pełna suita z WooCommerce jest
 wolniejsza (hooki WC przy tworzeniu użytkowników/wpisów).
+
+## ADR-036: Rezerwacja płatna tworzy zamówienie WooCommerce
+
+**Kontekst.** Przy trybie płatności „zaliczka”/„całość” klient płaci online; slot musi być zajęty na czas płatności,
+a porażka przy tworzeniu płatności nie może zostawić zablokowanego terminu.
+
+**Decyzja.**
+- Port aplikacyjny `Application\PaymentProvider::start_payment(Booking, Service): string` (URL płatności, wyjątek
+  `PaymentFailed`) i `Application\PaymentAmount::due($price_minor, ?$deposit_percent)` (zaliczka = % ceny zaokrąglony
+  „half up”, min. 1 jednostka). `Services::payment_provider()` zwraca dostawcę z filtra `trmz_payment_provider` tylko gdy
+  `Settings::payments_enabled()`; integracja WC rejestruje `OrderPayments`.
+- `POST /bookings`: usługa płatna (`price_minor > 0`) i dostępny dostawca → rezerwacja `pending_payment` z
+  `hold_expires_at = teraz + Settings::hold_minutes()`, potem `start_payment()`. Odpowiedź 201 zawiera dodatkowo
+  `payment_url` (`$order->get_checkout_payment_url()`, walidowany `wp_http_validate_url`) — blok przekierowuje (ADR-033).
+  Usługa darmowa lub płatności wyłączone → dotychczasowy przepływ (`pending`/`confirmed`, bez `payment_url`).
+- Porażka (`PaymentFailed`/dowolny `Exception`, niepoprawny URL) → rezerwacja anulowana (`cancel()`, slot zwolniony),
+  akcja `trmz_payment_start_failed` (Booking, Exception), 500 `trmz_payment_unavailable` z przetłumaczonym komunikatem.
+- Zamówienie (`OrderPayments`): `wc_create_order` (`status` pending, `created_via` = `terminarz`, `customer_id` = konto
+  klienta lub gość), **jedna pozycja `WC_Order_Item_Product` bez produktu w katalogu** (nazwa = usługa, meta widoczne
+  „Appointment”, „Resource”, przy zaliczce „Payment”; ukryte `_trmz_booking_id`), kwota traktowana jako ostateczna —
+  `calculate_totals(false)` nie dolicza podatku; billing: imię (pierwsze słowo) / nazwisko (reszta), e-mail, telefon;
+  meta zamówienia `_trmz_booking_id` i `_trmz_booking_public_id` (`OrderLink`), notatka z czasem wstrzymania;
+  `BookingRepository::attach_order()`. Błąd po utworzeniu zamówienia → zamówienie `cancelled` z notatką.
+- Powiązanie jest ważne tylko, gdy obie strony wskazują na siebie (`OrderLink::booking()`).
+- Admin (`OrderAdmin`): metabox „Booking” na ekranie edycji zamówienia (ID ekranu z `wc_get_page_screen_id('shop-order')`
+  przy HPOS, `shop_order` bez HPOS; tylko z `trmz_manage_bookings`); w szczegółach rezerwacji wiersz „Order” z linkiem do
+  edycji zamówienia, statusem i kwotą — przez nowy filtr `trmz_admin_booking_details_rows` (wartości = escapowany HTML).
+
+**Konsekwencje.** Pozycja bez produktu nie ma stawki podatku — sklepy rozliczające VAT od usług muszą to rozstrzygnąć
+(założenie w #35). „Recalculate” w edycji zamówienia może doliczyć podatek, jeśli sklep ma włączone podatki. Goście
+płacący po ponad 10 min od utworzenia zamówienia mogą zostać poproszeni przez WooCommerce o potwierdzenie e-maila
+(domyślny mechanizm WC dla strony „order-pay”). Jawny token anulowania nadal nie trafia do odpowiedzi (M7).

@@ -12,6 +12,7 @@ namespace Terminarz\Infrastructure;
 use Terminarz\Application\AvailabilityService;
 use Terminarz\Application\AvailabilitySettings;
 use Terminarz\Application\BookingService;
+use Terminarz\Application\PaymentProvider;
 use Terminarz\Application\Clock;
 use Terminarz\Application\SystemClock;
 use Terminarz\Domain\Availability\AvailabilityEngine;
@@ -219,6 +220,26 @@ final class Services {
 	 */
 	public function settings(): Settings {
 		return $this->plugin_settings ??= Settings::load();
+	}
+
+	/**
+	 * Online payment provider for bookings of paid services, or null when payments are off (payment mode `none`
+	 * or no supported WooCommerce). Provided by the WooCommerce integration through the `trmz_payment_provider` filter.
+	 */
+	public function payment_provider(): ?PaymentProvider {
+		if ( ! $this->settings()->payments_enabled() ) {
+			return null;
+		}
+
+		/**
+		 * Filters the online payment provider (the WooCommerce integration registers its own).
+		 *
+		 * @param PaymentProvider|null $provider Provider.
+		 * @param Services             $services Composition root.
+		 */
+		$provider = apply_filters( 'trmz_payment_provider', null, $this );
+
+		return $provider instanceof PaymentProvider ? $provider : null;
 	}
 
 	/**

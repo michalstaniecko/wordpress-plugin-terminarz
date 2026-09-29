@@ -53,7 +53,10 @@ final class WooCommerceModule implements Module {
 	 * @return Module[]
 	 */
 	public static function default_components(): array {
-		return array();
+		return array(
+			new OrderPayments(),
+			new OrderAdmin(),
+		);
 	}
 
 	/**
