@@ -93,6 +93,17 @@ Jeden wpis na zamknięte issue: data, numer issue, co zrobione, decyzje, znane r
 - **Poprawka:** `autoload-dev` mapuje `Terminarz\Tests\Unit\` na `tests/php/unit/` (katalog małymi literami — na Linuksie PSR-4 nie znajdował klas bazowych testów).
 - **Ryzyka:** test wydajności mierzy czas (< 300 ms przy ~7 ms lokalnie) — na bardzo wolnym runnerze CI mógłby być niestabilny.
 
+## 2026-09-29 — #12 testy DST i stref czasowych silnika dostępności
+
+- **Zrobione:** `tests/php/unit/Domain/Availability/DstAndTimezoneTest.php`: Europe/Warsaw (29.03 — brak 02:00–03:00,
+  granice okien w luce, czas trwania/bufor/wyprzedzenie w czasie rzeczywistym; 25.10 — powtórzona godzina dwa razy
+  bez duplikatów, zajętość w drugim wystąpieniu), America/New_York (obie zmiany, dzień lokalny ≠ dzień UTC, horyzont),
+  Australia/Lord_Howe (DST 30 min), Pacific/Kiritimati (UTC+14, data lokalna o dzień przed UTC, horyzont), stały offset
+  `+02:00`; niezmienniki całoroczne (każda realna godzina 2026 dokładnie raz) dla 6 stref; monotoniczność `WallClock`.
+- **Decyzje:** bez zmian w silniku — reguły z ADR-016 przeszły wszystkie przypadki (PHP 8.1 i 8.3 w CI).
+- **Ryzyka:** wyniki zależą od bazy stref czasowych (tzdata) w PHP; zmiana przepisów dla testowanych stref w przyszłych
+  wersjach tzdata mogłaby wymagać aktualizacji oczekiwań (daty testowe to 2026).
+
 ## 2026-09-29 — #10 repozytoria zasobów, usług, harmonogramów i wyjątków
 
 - **Zrobione:** interfejsy `Domain\Repository\{Resource,Service,Schedule,ScheduleException}Repository`, wyjątki domeny
