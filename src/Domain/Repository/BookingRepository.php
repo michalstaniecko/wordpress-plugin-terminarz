@@ -108,6 +108,21 @@ interface BookingRepository {
 	public function in_range( TimeRange $range, ?array $resource_ids = null ): array;
 
 	/**
+	 * Bookings matching the criteria (any status unless filtered), one page, in the requested order.
+	 *
+	 * @param BookingCriteria $criteria Criteria.
+	 * @return Booking[]
+	 */
+	public function search( BookingCriteria $criteria ): array;
+
+	/**
+	 * Number of bookings matching the criteria (paging ignored).
+	 *
+	 * @param BookingCriteria $criteria Criteria.
+	 */
+	public function count( BookingCriteria $criteria ): int;
+
+	/**
 	 * Marks bookings awaiting payment whose hold expired as `expired` (releasing their slots).
 	 *
 	 * @param DateTimeImmutable $now   Current time.

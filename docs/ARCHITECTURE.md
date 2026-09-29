@@ -332,7 +332,7 @@ W CI osobny krok joba `integration`. Zmienne: `TRMZ_CONCURRENCY_WORKERS`, `TRMZ_
   adapter pokazuje własne, przetłumaczone teksty.
 - Identyfikator rezerwacji na zewnątrz: `Booking::$public_id` (`BookingRepository::get_by_public_id()`); token anulowania
   dostępny tylko w `Reservation::$cancel_token` zaraz po rezerwacji, weryfikacja `BookingService::verify_cancel_token()`.
-- Ustawienia: `Services::instance()->settings()` (`Infrastructure\Settings`, gettery z ADR-023), np. `->auto_confirm()`.
+- Ustawienia: `Services::instance()->settings()` (`Infrastructure\Settings`, gettery z ADR-024), np. `->auto_confirm()`.
 - Hooki: `trmz_booking_created`, `trmz_booking_status_changed`, `trmz_booking_rescheduled`, `trmz_schema_migrated`;
   filtry: `trmz_availability_settings`, `trmz_db_inside_external_transaction`.
 
@@ -383,7 +383,7 @@ dojdą razem z panelem admina (M4) / WooCommerce (M6) jako nowe pola schematu (z
 - `permission_callback` = `create_item_permissions_check()`: zalogowany użytkownik (uwierzytelnienie ciasteczkiem) musi
   wysłać poprawny nonce `wp_rest` (ochrona CSRF; przy Application Passwords nonce nie jest wymagany) + limit zapytań (ADR-022).
 - Status początkowy: `confirmed`, gdy filtr `trmz_auto_confirm_bookings` (bool, `Service`) zwróci `true`, inaczej `pending`.
-  Wartość domyślna filtra = ustawienie `auto_confirm` z panelu (`Settings::auto_confirm()`, ADR-023). `pending_payment` — M6.
+  Wartość domyślna filtra = ustawienie `auto_confirm` z panelu (`Settings::auto_confirm()`, ADR-024). `pending_payment` — M6.
 - Odpowiedź publiczna: `public_id`, `status`, `service`, `resource` (przydzielony), `start`, `end`, `start_utc` — bez danych
   klienta, wewnętrznego ID i tokenu anulowania (token trafi do e-maila w M7).
 - `Customer` rozszerzony o `note` i `user_id` (kolumny `customer_note`, `customer_user_id` istniały w schemacie) — zalogowany
@@ -414,7 +414,25 @@ token przy wysyłce.
 **Konsekwencje.** Za reverse proxy/CDN bez skonfigurowanego filtra wszyscy klienci mają to samo `REMOTE_ADDR` i dzielą
 limit — trzeba to opisać w dokumentacji wydania (M8, readme).
 
-## ADR-023: Ustawienia pluginu i menu admina
+## ADR-023: Administracyjne endpointy rezerwacji
+
+**Decyzja.**
+- `Rest\AdminBookingsController` (wszystko za `manage_permissions_check()` — `trmz_manage_bookings`; 401 anonim, 403 bez
+  uprawnienia): `GET /bookings` (filtry `status[]`, `service`, `resource`, `from`/`to` — daty lokalne startu, `search` —
+  fragment imienia/e-maila lub dokładny `public_id`; `orderby` `start|created`, `order`, `page`, `per_page` ≤ 100; nagłówki
+  `X-WP-Total`, `X-WP-TotalPages`), `GET /bookings/{id}`, `POST /bookings/{id}/confirm|cancel|reschedule`.
+- `{id}` to wewnętrzne ID (tylko dla panelu); reprezentacja admina zawiera `public_id`, dane klienta, `allowed_transitions`
+  (z maszyny stanów — UI może pokazać tylko dozwolone akcje), czasy lokalne i UTC; nigdy skrótu tokenu anulowania.
+- Trasa `/bookings` jest współdzielona z publicznym `POST` (WordPress scala endpointy tej samej trasy); administracyjny
+  `GET` rejestrowany jest bez `schema`, żeby schemat trasy pozostał publiczny.
+- Zmiany statusu przez `BookingService::change_status()` (hook `trmz_booking_status_changed`); niedozwolone przejście → 422
+  `trmz_invalid_status_transition`. Przeniesienie przez `BookingService::reschedule()` — atomowe (ADR-014) z weryfikacją
+  dostępności z wykluczeniem własnego terminu (ADR-018), hook `trmz_booking_rescheduled`; konflikt/poza godzinami → 409,
+  nieaktywna rezerwacja → 422, zasób spoza usługi → 400.
+- Repozytorium: `BookingRepository::search()` / `count()` z `Domain\Repository\BookingCriteria` (walidowane filtry,
+  kolumna sortowania z białej listy, `LIKE` z `esc_like`) — do reużycia przez listę w panelu (#25).
+
+## ADR-024: Ustawienia pluginu i menu admina
 
 **Kontekst.** Parametry dostępności (ADR-018), auto-potwierdzanie (M3), płatności (M6), powiadomienia (M5) i deinstalacja
 czytają wspólne ustawienia; potrzebne jest jedno miejsce z domyślnymi wartościami, zakresami i sanitizacją.

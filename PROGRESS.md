@@ -193,6 +193,17 @@ Jeden wpis na zamknięte issue: data, numer issue, co zrobione, decyzje, znane r
   (`trmz_manage_bookings`) bez limitu.
 - **Ryzyka:** nieatomowa inkrementacja; za proxy bez filtra `trmz_client_ip` wszyscy dzielą jeden limit (do opisania w M8).
 
+## 2026-09-29 — #20 endpointy administracyjne rezerwacji
+
+- **Zrobione:** `Rest\AdminBookingsController`: `GET /bookings` (filtry, wyszukiwanie, sortowanie, paginacja z `X-WP-Total`),
+  `GET /bookings/{id}`, `POST /bookings/{id}/confirm|cancel|reschedule` — tylko `trmz_manage_bookings`.
+  `BookingRepository::search()`/`count()` + `BookingCriteria`. Testy integracyjne (401 anonim / 403 subskrybent i redaktor bez
+  uprawnienia na wszystkich trasach, reprezentacja, filtry i paginacja, maszyna stanów + hook, przeniesienie + hook, 409/422/400),
+  unit `BookingCriteria`, E2E `tests/e2e/specs/rest-api.spec.js` (smoke REST na prawdziwym WP: katalog, walidacja, 401/200).
+- **Decyzje:** ADR-023. `{id}` = wewnętrzne ID (panel), domyślne sortowanie po starcie rosnąco.
+- **Ryzyka:** wyszukiwanie `LIKE '%…%'` po imieniu/e-mailu nie używa indeksu — przy bardzo dużej liczbie rezerwacji może
+  wymagać ograniczenia zakresem dat.
+
 ## 2026-09-29 — #21 menu admina i strona ustawień
 
 - **Zrobione:** `Infrastructure\Settings` (opcja `trmz_settings`: domyślne, zakresy, sanitizacja, typowane gettery),
@@ -201,7 +212,7 @@ Jeden wpis na zamknięte issue: data, numer issue, co zrobione, decyzje, znane r
   `option_page_capability_trmz_settings`, ostrzeżenie o braku WooCommerce); REST `POST /bookings` bierze domyślne auto-potwierdzanie z ustawień. Testy: jednostkowe `MenuTest`, integracyjne
   `SettingsTest` (domyślne, sanitizacja, granice, kses, zapis częściowy, uszkodzone wartości, spięcie z dostępnością)
   i `SettingsPageTest` (menu, capability, rejestracja, render z escapingiem); E2E `settings.spec.js`; `.pot`.
-- **Decyzje:** ADR-023. Założenia (etykieta `assumption`): wyprzedzenie w minutach (domyślnie 60), horyzont 90 dni,
+- **Decyzje:** ADR-024. Założenia (etykieta `assumption`): wyprzedzenie w minutach (domyślnie 60), horyzont 90 dni,
   nieprawidłowa wartość z formularza zachowuje poprzednią.
 - **Ryzyka:** zmiana domyślnych wyprzedzenia/horyzontu wpływa na testy używające `Services` bez jawnych ustawień dostępności
   (np. przyszłe testy REST z datami > 90 dni od „teraz”). `consent_text` i `customer_cancel_limit_hours` nie są jeszcze
