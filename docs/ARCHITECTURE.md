@@ -465,3 +465,24 @@ czytają wspólne ustawienia; potrzebne jest jedno miejsce z domyślnymi wartoś
 **Konsekwencje.** Adaptery czytają ustawienia przez gettery, nigdy przez `get_option()` bezpośrednio. Wyprzedzenie
 przechowywane w minutach (spójnie z ADR-018), choć issue mówiło o godzinach. Testy korzystające z
 `Services` bez jawnego `AvailabilitySettings` podlegają domyślnemu horyzontowi 90 dni i wyprzedzeniu 60 min.
+
+## ADR-025: Eksport i usuwanie danych osobowych (narzędzia prywatności WP)
+
+**Decyzja.**
+- Moduł `Admin\Privacy` rejestruje exporter i eraser (`wp_privacy_personal_data_exporters` / `_erasers`, ID
+  `terminarz-bookings`) oraz sugerowany tekst polityki prywatności (`wp_add_privacy_policy_content` na `admin_init`).
+- Dopasowanie po **dokładnym** adresie e-mail klienta (`customer_email`, porównanie wg kolacji — bez rozróżniania wielkości
+  liter; indeks `customer_email`). `BookingRepository::find_by_customer_email($email, $limit, $offset, ?$keep_active_from)`
+  i `replace_customer($id, Customer)`.
+- Eksport: wszystkie rezerwacje (dowolny status), strony po 50, pola: publiczne ID, usługa, zasób, start/koniec
+  (strefa witryny), status, dane kontaktowe, notatka, data utworzenia.
+- Usuwanie (**założenie**, #27): anonimizacja danych klienta (`wp_privacy_anonymize_data()` → `[deleted]`,
+  `deleted@site.invalid`, pusty telefon/notatka, bez powiązania z kontem) z zachowaniem rekordu (statystyki, historia
+  zasobu). **Nadchodzące aktywne rezerwacje** (aktywny status i start ≥ teraz) są zachowywane bez zmian
+  (`items_retained` + komunikat z ID) — administrator anuluje je i ponawia usuwanie. Eraser zawsze czyta od offsetu 0
+  (zanonimizowane wiersze przestają pasować, zachowane są wykluczone z zapytania), więc numer strony nie ma znaczenia
+  i pętla się kończy.
+- Etykiety statusów i formatowanie dat dla ekranów/integracji: `Admin\Labels` (tłumaczenia poza domeną, ADR-015).
+
+**Konsekwencje.** Skrót tokenu anulowania i ID zamówienia WooCommerce nie są danymi osobowymi i pozostają. Dane klienta
+w zamówieniu WooCommerce obsługuje eraser WooCommerce (M6).

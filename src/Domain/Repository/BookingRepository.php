@@ -16,6 +16,7 @@ use Terminarz\Domain\Exception\InvalidValue;
 use Terminarz\Domain\Exception\SlotUnavailable;
 use Terminarz\Domain\Model\Booking;
 use Terminarz\Domain\Model\BookingStatus;
+use Terminarz\Domain\Model\Customer;
 use Terminarz\Domain\Model\TimeRange;
 
 /**
@@ -121,6 +122,28 @@ interface BookingRepository {
 	 * @param BookingCriteria $criteria Criteria.
 	 */
 	public function count( BookingCriteria $criteria ): int;
+
+	/**
+	 * Bookings of a customer by exact e-mail address (case-insensitive), oldest first — for personal data export/erasure.
+	 *
+	 * @param string                 $email          E-mail address.
+	 * @param int                    $limit          Page size (>= 1).
+	 * @param int                    $offset         Offset (>= 0).
+	 * @param DateTimeImmutable|null $keep_active_from When set, skips active bookings starting at or after this time
+	 *                                                 (upcoming appointments that must keep their contact data).
+	 * @return Booking[]
+	 */
+	public function find_by_customer_email( string $email, int $limit, int $offset = 0, ?DateTimeImmutable $keep_active_from = null ): array;
+
+	/**
+	 * Replaces the customer data of a booking (e.g. anonymisation). Status, time and slot are untouched.
+	 *
+	 * @param int      $id       Booking ID.
+	 * @param Customer $customer New customer data.
+	 * @return Booking Updated booking.
+	 * @throws EntityNotFound When the booking does not exist.
+	 */
+	public function replace_customer( int $id, Customer $customer ): Booking;
 
 	/**
 	 * Marks bookings awaiting payment whose hold expired as `expired` (releasing their slots).

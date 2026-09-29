@@ -217,3 +217,13 @@ Jeden wpis na zamknięte issue: data, numer issue, co zrobione, decyzje, znane r
 - **Ryzyka:** zmiana domyślnych wyprzedzenia/horyzontu wpływa na testy używające `Services` bez jawnych ustawień dostępności
   (np. przyszłe testy REST z datami > 90 dni od „teraz”). `consent_text` i `customer_cancel_limit_hours` nie są jeszcze
   używane (blok rezerwacji / anulowanie przez klienta), `delete_data_on_uninstall` czeka na `uninstall.php` (#45).
+
+## 2026-09-29 — #27 eksport i usuwanie danych osobowych
+
+- **Zrobione:** `Admin\Privacy` (moduł): exporter i eraser WP dla rezerwacji po e-mailu klienta (strony po 50), sugerowany
+  tekst polityki prywatności. `BookingRepository::find_by_customer_email()` / `replace_customer()`. `Admin\Labels`
+  (przetłumaczone statusy, daty w strefie witryny). Testy integracyjne (rejestracja, eksport z danymi i paginacją,
+  anonimizacja z zachowaniem rekordu, zachowanie nadchodzących rezerwacji, paginacja erasera, tekst polityki).
+- **Decyzje:** ADR-025. Anonimizacja zamiast usunięcia; nadchodzące aktywne rezerwacje zachowane (założenie, etykieta `assumption`).
+- **Ryzyka:** dopasowanie tylko po dokładnym e-mailu — rezerwacje złożone z innym adresem przez to samo konto WP nie są
+  objęte (zachowawczo; ewentualne rozszerzenie o `customer_user_id` do decyzji).

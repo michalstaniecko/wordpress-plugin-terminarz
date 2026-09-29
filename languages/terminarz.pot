@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-29T16:55:16+00:00\n"
+"POT-Creation-Date: 2026-09-29T17:03:51+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: terminarz\n"
@@ -17,6 +17,7 @@ msgstr ""
 #. Plugin Name of the plugin
 #: terminarz.php:3
 #: src/Admin/Menu.php:98
+#: src/Admin/Privacy.php:187
 msgid "Terminarz"
 msgstr ""
 
@@ -28,6 +29,121 @@ msgstr ""
 #. Author of the plugin
 #: terminarz.php:8
 msgid "Michał Staniećko"
+msgstr ""
+
+#: src/Admin/Labels.php:27
+msgctxt "booking status"
+msgid "Pending"
+msgstr ""
+
+#: src/Admin/Labels.php:28
+msgctxt "booking status"
+msgid "Awaiting payment"
+msgstr ""
+
+#: src/Admin/Labels.php:29
+msgctxt "booking status"
+msgid "Confirmed"
+msgstr ""
+
+#: src/Admin/Labels.php:30
+msgctxt "booking status"
+msgid "Cancelled"
+msgstr ""
+
+#: src/Admin/Labels.php:31
+msgctxt "booking status"
+msgid "Expired"
+msgstr ""
+
+#: src/Admin/Labels.php:32
+msgctxt "booking status"
+msgid "Completed"
+msgstr ""
+
+#: src/Admin/Privacy.php:55
+#: src/Admin/Privacy.php:70
+msgid "Terminarz bookings"
+msgstr ""
+
+#: src/Admin/Privacy.php:93
+msgid "Bookings"
+msgstr ""
+
+#: src/Admin/Privacy.php:94
+msgid "Appointments booked with this e-mail address."
+msgstr ""
+
+#. translators: %s: public booking ID.
+#: src/Admin/Privacy.php:142
+#, php-format
+msgid "Booking %s could not be anonymised."
+msgstr ""
+
+#. translators: 1: public booking ID, 2: date and time of the appointment.
+#: src/Admin/Privacy.php:162
+#, php-format
+msgid "Upcoming booking %1$s (%2$s) was retained. Cancel it first if the customer data must be erased."
+msgstr ""
+
+#: src/Admin/Privacy.php:180
+msgid "Suggested text for the section about appointment bookings. Adjust it to how you use the data."
+msgstr ""
+
+#: src/Admin/Privacy.php:181
+msgid "Suggested text:"
+msgstr ""
+
+#: src/Admin/Privacy.php:182
+msgid "When you book an appointment on this website, we collect your name, e-mail address, optional phone number and the note you enter, together with the booked service, date and time. We use this data to manage the appointment and to contact you about it. If you book while logged in, the booking is linked to your account."
+msgstr ""
+
+#: src/Admin/Privacy.php:184
+msgid "Booking data is kept for as long as needed to provide the service and for our records. You can request an export or erasure of your personal data. On erasure, your contact details are removed from past bookings; the anonymous booking record (service, date and time) is kept for statistics. Upcoming bookings are retained until they are cancelled."
+msgstr ""
+
+#: src/Admin/Privacy.php:202
+msgid "Booking ID"
+msgstr ""
+
+#: src/Admin/Privacy.php:203
+msgid "Service"
+msgstr ""
+
+#: src/Admin/Privacy.php:204
+msgid "Resource"
+msgstr ""
+
+#: src/Admin/Privacy.php:205
+msgid "Start"
+msgstr ""
+
+#: src/Admin/Privacy.php:206
+msgid "End"
+msgstr ""
+
+#: src/Admin/Privacy.php:207
+msgid "Status"
+msgstr ""
+
+#: src/Admin/Privacy.php:208
+msgid "Name"
+msgstr ""
+
+#: src/Admin/Privacy.php:209
+msgid "E-mail"
+msgstr ""
+
+#: src/Admin/Privacy.php:210
+msgid "Phone"
+msgstr ""
+
+#: src/Admin/Privacy.php:211
+msgid "Note"
+msgstr ""
+
+#: src/Admin/Privacy.php:212
+msgid "Booked on"
 msgstr ""
 
 #: src/Admin/SettingsPage.php:43

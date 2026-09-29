@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Terminarz;
 
 use Terminarz\Admin\Menu;
+use Terminarz\Admin\Privacy;
 use Terminarz\Admin\SettingsPage;
 use Terminarz\Infrastructure\Database\Migrator;
 use Terminarz\Infrastructure\I18n;
@@ -73,6 +74,7 @@ final class Plugin {
 			new Migrator(),
 			new Menu( array( new SettingsPage() ) ),
 			new RestModule(),
+			new Privacy(),
 		);
 	}
 
