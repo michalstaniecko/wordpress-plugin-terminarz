@@ -9,7 +9,6 @@ declare(strict_types=1);
 
 namespace Terminarz\Integrations\WooCommerce;
 
-use Terminarz\Admin\Labels;
 use Terminarz\Application\BookingService;
 use Terminarz\Domain\Exception\DomainError;
 use Terminarz\Domain\Exception\SlotUnavailable;
@@ -18,6 +17,7 @@ use Terminarz\Domain\Model\BookingStatus;
 use Terminarz\Infrastructure\Database\DatabaseError;
 use Terminarz\Infrastructure\Module;
 use Terminarz\Infrastructure\Services;
+use Terminarz\Notifications\MessageType;
 use WC_Order;
 
 /**
@@ -335,35 +335,22 @@ final class OrderStatusSync implements Module {
 	}
 
 	/**
-	 * E-mail to the business about an order needing attention.
+	 * E-mail to the business about an order needing attention (template `admin_payment_needs_attention`).
 	 *
 	 * @param WC_Order $order   Order.
 	 * @param Booking  $booking Booking.
 	 * @param string   $reason  Translated explanation.
 	 */
 	private function notify_business( WC_Order $order, Booking $booking, string $reason ): void {
-		$subject = sprintf(
-			/* translators: 1: site name, 2: order number. */
-			__( '[%1$s] Order #%2$s needs attention', 'terminarz' ),
-			wp_specialchars_decode( (string) get_option( 'blogname' ), ENT_QUOTES ),
-			$order->get_order_number()
+		$this->services()->mailer()->send_for_booking(
+			MessageType::AdminPaymentNeedsAttention,
+			$booking,
+			array(
+				'reason'       => $reason,
+				'order_number' => (string) $order->get_order_number(),
+				'order_url'    => (string) $order->get_edit_order_url(),
+			)
 		);
-		$lines = array(
-			$reason,
-			'',
-			/* translators: %s: order number. */
-			sprintf( __( 'Order: #%s', 'terminarz' ), $order->get_order_number() ),
-			/* translators: %s: public booking ID. */
-			sprintf( __( 'Booking: %s', 'terminarz' ), (string) $booking->public_id ),
-			/* translators: %s: appointment date and time. */
-			sprintf( __( 'Appointment: %s', 'terminarz' ), Labels::datetime( $booking->range->start ) ),
-			/* translators: 1: customer name, 2: customer e-mail. */
-			sprintf( __( 'Customer: %1$s <%2$s>', 'terminarz' ), $booking->customer->name, $booking->customer->email ),
-			'',
-			$order->get_edit_order_url(),
-		);
-
-		wp_mail( $this->services()->settings()->notification_email(), $subject, implode( "\n", $lines ) );
 	}
 
 	/**

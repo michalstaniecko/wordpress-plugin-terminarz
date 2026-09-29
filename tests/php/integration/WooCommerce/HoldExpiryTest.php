@@ -27,6 +27,8 @@ use Terminarz\Integrations\WooCommerce\OrderStatusSync;
  */
 final class HoldExpiryTest extends WooCommerceTestCase {
 
+	use \Terminarz\Tests\Integration\Support\CapturedMails;
+
 	public function set_up(): void {
 		parent::set_up();
 		reset_phpmailer_instance();
@@ -177,15 +179,10 @@ final class HoldExpiryTest extends WooCommerceTestCase {
 		$notes = wc_get_order_notes( array( 'order_id' => $order->get_id() ) );
 		$this->assertStringContainsString( 'no longer available', implode( ' ', wp_list_pluck( $notes, 'content' ) ) );
 
-		$ours = array_values(
-			array_filter(
-				tests_retrieve_phpmailer_instance()->mock_sent,
-				static fn( array $mail ): bool => str_contains( (string) $mail['subject'], 'needs attention' )
-			)
-		);
+		$ours = self::mails_with_subject( 'needs attention' );
 		$this->assertCount( 1, $ours );
-		$this->assertSame( 'office@example.org', $ours[0]['to'][0][0] );
-		$this->assertStringContainsString( (string) $booking->public_id, (string) $ours[0]['body'] );
+		$this->assertSame( 'office@example.org', $ours[0]['to'] );
+		$this->assertStringContainsString( (string) $booking->public_id, $ours[0]['body'] );
 
 		// A second "paid" transition does not notify again.
 		$order->update_status( 'processing' );

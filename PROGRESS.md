@@ -411,3 +411,15 @@ Jeden wpis na zamknięte issue: data, numer issue, co zrobione, decyzje, znane r
 - **Decyzje:** ADR-039.
 - **Ryzyka:** strona „order-pay” renderowana klasycznym formularzem WooCommerce — przyszłe wersje WC mogą przejść na
   blokowy formularz (wtedy bramka testowa będzie potrzebować integracji z blokami).
+
+## 2026-09-29 — #39 infrastruktura powiadomień i edytowalne szablony
+
+- **Zrobione:** moduł `Terminarz\Notifications` (`MessageType`, `Template`, `Templates` w opcji `trmz_email_templates`,
+  `Placeholders`, `BookingPlaceholders`, `Renderer`, `Mailer`, `Services::mailer()`), domyślne przetłumaczalne treści
+  7 wiadomości, HTML przez nagłówki `wp_mail`, filtry `trmz_email`, `trmz_email_html`, `trmz_email_placeholders`.
+  Ekran „Terminarz → E-maile” (edycja, podgląd, wysyłka testowa, przywracanie domyślnych). `OrderStatusSync` wysyła
+  „płatność wymaga uwagi” z szablonu. mu-plugin E2E `trmz-mail-catcher.php` + `utils/mails.js`, spec `emails.spec.js`.
+  Testy integracyjne: szablony, sanitizacja, escaping, nagłówki, filtry, ekran (nonce/capability).
+- **Decyzje:** ADR-040 (przechwytywanie maili: MockPHPMailer w PHPUnit, mu-plugin w E2E, bez Mailpit).
+- **Ryzyka:** `{cancel_url}` jest pusty do czasu #41; e-maile są wysyłane synchronicznie w żądaniu (wolny SMTP spowalnia
+  rezerwację) — kolejka do rozważenia później.
