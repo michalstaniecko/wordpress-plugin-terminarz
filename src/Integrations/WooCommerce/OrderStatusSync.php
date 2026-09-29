@@ -26,7 +26,12 @@ use WC_Order;
  * - order paid (`processing`/`completed`) → booking `confirmed`; if its payment hold already ran out, the slot is booked
  *   again as a new confirmed booking when still free, otherwise the order goes `on-hold` and the business is notified
  *   (a refund or another appointment is a human decision);
- * - booking hold expired → the unpaid order (`pending`/`failed`) is cancelled with a note.
+ * - order `cancelled`/`failed`/`refunded` → active booking `cancelled` (slot released; a later payment of a failed order
+ *   books the slot again when it is still free);
+ * - booking hold expired → the unpaid order (`pending`/`failed`) is cancelled with a note;
+ * - booking cancelled elsewhere (panel, customer) → an unpaid order is cancelled, a paid one only gets a note — refunds
+ *   are never automatic (a human decision);
+ * - booking confirmed in the panel while awaiting payment → note on the order.
  *
  * Every handler checks the current state first (idempotent) and changes made here do not trigger the opposite handler
  * (re-entrancy flag).
@@ -37,6 +42,11 @@ final class OrderStatusSync implements Module {
 	 * Order statuses meaning "paid".
 	 */
 	public const PAID_STATUSES = array( 'processing', 'completed' );
+
+	/**
+	 * Order statuses that release the booking.
+	 */
+	public const RELEASING_STATUSES = array( 'cancelled', 'failed', 'refunded' );
 
 	/**
 	 * Order meta: why the plugin released the booking's slot (`expired`, `order_status`), so that a later payment may
@@ -98,6 +108,8 @@ final class OrderStatusSync implements Module {
 
 		if ( in_array( (string) $to, self::PAID_STATUSES, true ) ) {
 			$this->sync( fn() => $this->order_paid( $order ) );
+		} elseif ( in_array( (string) $to, self::RELEASING_STATUSES, true ) ) {
+			$this->sync( fn() => $this->order_released( $order, (string) $to ) );
 		}
 	}
 
@@ -118,7 +130,84 @@ final class OrderStatusSync implements Module {
 
 		if ( BookingStatus::Expired === $booking->status ) {
 			$this->sync( fn() => $this->hold_expired( $order, $booking ) );
+		} elseif ( BookingStatus::Cancelled === $booking->status ) {
+			$this->sync( fn() => $this->booking_cancelled( $order, $booking ) );
+		} elseif ( BookingStatus::Confirmed === $booking->status && BookingStatus::PendingPayment === $previous && $order->needs_payment() ) {
+			$this->sync( fn() => $this->booking_confirmed_unpaid( $order, $booking ) );
 		}
+	}
+
+	/**
+	 * The order was cancelled, failed or refunded: cancel the active booking (releases the slot).
+	 *
+	 * @param WC_Order $order  Order.
+	 * @param string   $status New order status.
+	 */
+	private function order_released( WC_Order $order, string $status ): void {
+		$booking = OrderLink::booking( $order, $this->services() );
+		if ( null === $booking || ! $booking->status->can_transition_to( BookingStatus::Cancelled ) ) {
+			return; // Already inactive (expired, cancelled, completed): nothing to release.
+		}
+
+		$this->services()->booking_service()->cancel( (int) $booking->id );
+		$order->update_meta_data( self::RELEASED_META, 'order_status' );
+		$order->save();
+		$order->add_order_note(
+			sprintf(
+				/* translators: 1: public booking ID, 2: order status name. */
+				__( 'Booking %1$s was cancelled and its slot released because the order is now "%2$s".', 'terminarz' ),
+				(string) $booking->public_id,
+				wc_get_order_status_name( $status )
+			)
+		);
+	}
+
+	/**
+	 * The booking was cancelled outside WooCommerce (panel, customer): cancel an unpaid order; a paid one only gets a
+	 * note — the refund is a human decision.
+	 *
+	 * @param WC_Order $order   Order.
+	 * @param Booking  $booking Cancelled booking.
+	 */
+	private function booking_cancelled( WC_Order $order, Booking $booking ): void {
+		if ( $order->has_status( array( 'pending', 'failed' ) ) ) {
+			$order->update_status(
+				'cancelled',
+				sprintf(
+					/* translators: %s: public booking ID. */
+					__( 'Booking %s was cancelled, so this unpaid order was cancelled too.', 'terminarz' ),
+					(string) $booking->public_id
+				)
+			);
+			return;
+		}
+		if ( $order->has_status( array( 'cancelled', 'refunded' ) ) ) {
+			return;
+		}
+
+		$order->add_order_note(
+			sprintf(
+				/* translators: %s: public booking ID. */
+				__( 'Booking %s was cancelled. The payment was NOT refunded automatically — decide whether to refund it.', 'terminarz' ),
+				(string) $booking->public_id
+			)
+		);
+	}
+
+	/**
+	 * A booking awaiting payment was confirmed manually: note on the still unpaid order.
+	 *
+	 * @param WC_Order $order   Order.
+	 * @param Booking  $booking Confirmed booking.
+	 */
+	private function booking_confirmed_unpaid( WC_Order $order, Booking $booking ): void {
+		$order->add_order_note(
+			sprintf(
+				/* translators: %s: public booking ID. */
+				__( 'Booking %s was confirmed in the booking panel although this order is not paid.', 'terminarz' ),
+				(string) $booking->public_id
+			)
+		);
 	}
 
 	/**

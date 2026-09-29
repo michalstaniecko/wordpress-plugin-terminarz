@@ -389,3 +389,14 @@ Jeden wpis na zamknięte issue: data, numer issue, co zrobione, decyzje, znane r
   decyzja człowieka, `needs-human`).
 - **Ryzyka:** e-mail do biura jest prostym `wp_mail` (M7 może go przenieść do systemu powiadomień); nowa rezerwacja po
   płatności po czasie ma nowy `public_id`.
+
+## 2026-09-29 — #37 synchronizacja statusów zamówienia i rezerwacji
+
+- **Zrobione:** `OrderStatusSync` rozszerzony: zamówienie `cancelled`/`failed`/`refunded` → rezerwacja `cancelled`;
+  anulowanie rezerwacji (panel/REST/klient) → anulowanie nieopłaconego zamówienia lub notatka bez zwrotu przy opłaconym;
+  ręczne potwierdzenie nieopłaconej rezerwacji → notatka; ponowna płatność po `failed` → ponowna rezerwacja wolnego slotu.
+  Testy integracyjne: potwierdzenie (idempotentne, jedno zdarzenie), `cancelled`/`failed`/`refunded`, powtórzenia,
+  brak pętli (liczniki zdarzeń), brak automatycznego zwrotu, płatność za ręcznie anulowaną rezerwację, REST admina,
+  zamówienia spoza Terminarza i zamówienie wskazujące cudzą rezerwację.
+- **Decyzje:** ADR-038 (w tym: eraser WooCommerce nie wymaga uzupełnień).
+- **Ryzyka:** `failed` od razu zwalnia slot — klient ponawiający płatność może stracić termin (wtedy obsługa ręczna).
