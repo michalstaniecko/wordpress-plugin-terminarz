@@ -368,3 +368,26 @@ dojdą razem z panelem admina (M4) / WooCommerce (M6) jako nowe pola schematu (z
 - Cache: domyślnie `Cache-Control: no-store` (dostępność zmienia się z każdą rezerwacją); filtr
   `trmz_availability_cache_max_age` (sekundy) pozwala na `public, max-age=N` — rezerwacja i tak weryfikuje slot ponownie.
 - Wydajność: benchmark przez REST (30 dni × 10 zasobów, ~1200 rezerwacji) ~11 ms lokalnie; próg `TRMZ_BENCH_MAX_MS`.
+
+## ADR-021: Tworzenie rezerwacji przez REST (`POST /terminarz/v1/bookings`)
+
+**Decyzja.**
+- Body (JSON): `service`, `resource` (`id` | `any`, domyślnie `any`), `start` (ISO 8601 **z jawnym offsetem** lub `Z`,
+  np. `start_utc` slotu — czas lokalny bez offsetu jest niejednoznaczny przy DST, więc jest odrzucany), `name`, `email`,
+  `phone`, `note`, `consent` (musi być `true`), `website` (honeypot). Walidacja schematem WP (`maxLength` = rozmiar kolumn,
+  `format: email`, wzorzec telefonu), sanitizacja `sanitize_text_field` / `sanitize_email` / `sanitize_textarea_field`.
+- Slot jest weryfikowany ponownie po stronie serwera: `BookingService::reserve()` / `reserve_any()` z polityką dostępności
+  (ADR-018) i atomowym zapisem (ADR-014). Kody: 201, 400 (dane, zgoda, honeypot `trmz_rejected` bez szczegółów),
+  404 (usługa), 409 (`trmz_slot_unavailable` — zajęty, poza godzinami, w przeszłości, poza siatką).
+- `permission_callback` = `create_item_permissions_check()`: zalogowany użytkownik (uwierzytelnienie ciasteczkiem) musi
+  wysłać poprawny nonce `wp_rest` (ochrona CSRF; przy Application Passwords nonce nie jest wymagany) + limit zapytań (ADR-022).
+- Status początkowy: `confirmed`, gdy filtr `trmz_auto_confirm_bookings` (bool, `Service`) zwróci `true`, inaczej `pending`.
+  Do spięcia z ustawieniem auto-potwierdzania z panelu (#21). `pending_payment` — M6.
+- Odpowiedź publiczna: `public_id`, `status`, `service`, `resource` (przydzielony), `start`, `end`, `start_utc` — bez danych
+  klienta, wewnętrznego ID i tokenu anulowania (token trafi do e-maila w M7).
+- `Customer` rozszerzony o `note` i `user_id` (kolumny `customer_note`, `customer_user_id` istniały w schemacie) — zalogowany
+  klient jest zapisywany z ID konta.
+
+**Konsekwencje.** Jawny token anulowania istnieje tylko w `Reservation` zwracanym przez `BookingService` — REST go odrzuca,
+więc M7 musi wysłać e-mail w tym samym żądaniu (np. `BookingService` przekaże token do powiadomień) albo wygenerować nowy
+token przy wysyłce.

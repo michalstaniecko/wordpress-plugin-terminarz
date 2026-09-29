@@ -32,7 +32,7 @@ use Terminarz\Infrastructure\Database\Schema;
  */
 final class WpdbBookingRepository extends WpdbRepository implements BookingRepository {
 
-	private const COLUMNS = 'id, public_id, service_id, resource_id, start_utc, end_utc, buffer_end_utc, status, customer_name, customer_email, customer_phone, cancel_token_hash, order_id, hold_expires_at, created_at';
+	private const COLUMNS = 'id, public_id, service_id, resource_id, start_utc, end_utc, buffer_end_utc, status, customer_name, customer_email, customer_phone, customer_note, customer_user_id, cancel_token_hash, order_id, hold_expires_at, created_at';
 
 	private const DATETIME = 'Y-m-d H:i:s';
 
@@ -98,6 +98,8 @@ final class WpdbBookingRepository extends WpdbRepository implements BookingRepos
 					'customer_name'     => $booking->customer->name,
 					'customer_email'    => $booking->customer->email,
 					'customer_phone'    => $booking->customer->phone,
+					'customer_note'     => $booking->customer->note,
+					'customer_user_id'  => $booking->customer->user_id,
 					'cancel_token_hash' => $booking->cancel_token_hash,
 					'order_id'          => $booking->order_id,
 					'hold_expires_at'   => null === $booking->hold_expires_at ? null : self::to_sql( $booking->hold_expires_at ),
@@ -460,7 +462,13 @@ final class WpdbBookingRepository extends WpdbRepository implements BookingRepos
 			service_id: (int) $row['service_id'],
 			range: new TimeRange( $start, $end ),
 			status: BookingStatus::from( (string) $row['status'] ),
-			customer: new Customer( (string) $row['customer_name'], (string) $row['customer_email'], (string) $row['customer_phone'] ),
+			customer: new Customer(
+				(string) $row['customer_name'],
+				(string) $row['customer_email'],
+				(string) $row['customer_phone'],
+				(string) ( $row['customer_note'] ?? '' ),
+				null === $row['customer_user_id'] ? null : (int) $row['customer_user_id']
+			),
 			buffer_after_minutes: intdiv( $buffer_end->getTimestamp() - $end->getTimestamp(), 60 ),
 			hold_expires_at: null === $row['hold_expires_at'] ? null : self::from_sql( (string) $row['hold_expires_at'] ),
 			id: (int) $row['id'],

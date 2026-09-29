@@ -170,3 +170,14 @@ Jeden wpis na zamknięte issue: data, numer issue, co zrobione, decyzje, znane r
   walidacja, nagłówki cache, benchmark REST (~11 ms, próg `TRMZ_BENCH_MAX_MS`).
 - **Decyzje:** ADR-020. `from`/`to` wymagane (bez domyślnego „dziś”); dla `any` pole `resource` slotu = `null`.
 - **Ryzyka:** przy włączonym cache (filtr) klient może zobaczyć zajęty już slot — rezerwacja zwróci wtedy 409.
+
+## 2026-09-29 — #18 endpoint tworzenia rezerwacji
+
+- **Zrobione:** `Rest\BookingsController` — `POST /terminarz/v1/bookings`: schemat i sanitizacja danych klienta, zgoda
+  wymagana, honeypot `website`, nonce `wp_rest` dla zalogowanych, ponowna weryfikacja slotu i atomowa rezerwacja
+  (konkretny zasób lub `any`), 201 z `public_id`, 400/404/409 z przetłumaczonymi komunikatami. `Customer` + `note`, `user_id`
+  (zapisywane w istniejących kolumnach). Testy integracyjne (27): sukces + hook `trmz_booking_created`, `any`, 409, sloty spoza
+  harmonogramu, walidacja, sanitizacja XSS, nonce, auto-potwierdzanie.
+- **Decyzje:** ADR-021. Status początkowy przez filtr `trmz_auto_confirm_bookings` (domyślnie `pending`) — #21 (ustawienia)
+  jeszcze niezmergowane. Start tylko z jawnym offsetem. Token anulowania nie jest zwracany.
+- **Ryzyka:** limit zapytań dochodzi w #19. Token anulowania dostępny tylko w chwili rezerwacji (M7 musi to uwzględnić).
