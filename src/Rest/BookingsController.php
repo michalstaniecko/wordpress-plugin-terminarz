@@ -10,6 +10,8 @@ declare(strict_types=1);
 namespace Terminarz\Rest;
 
 use DateTimeImmutable;
+use Terminarz\Application\PaymentFailed;
+use Terminarz\Application\PaymentProvider;
 use Terminarz\Domain\Exception\DomainError;
 use Terminarz\Domain\Exception\EntityNotFound;
 use Terminarz\Domain\Exception\InvalidValue;
@@ -119,12 +121,16 @@ final class BookingsController extends Controller {
 			return new WP_Error( 'trmz_invalid_customer', __( 'Please provide your name and a valid e-mail address.', 'terminarz' ), array( 'status' => 400 ) );
 		}
 
+		// Paid services need an online payment when payments are enabled: the slot is held while the customer pays.
+		$payments = $service->is_free() ? null : $services->payment_provider();
+		$hold     = $services->settings()->hold_minutes();
+
 		try {
 			$customer = new Customer( $name, $email, (string) $request['phone'], (string) $request['note'], get_current_user_id() > 0 ? get_current_user_id() : null );
-			$status   = $this->initial_status( $service );
+			$status   = null === $payments ? $this->initial_status( $service ) : BookingStatus::PendingPayment;
 			$booking  = null === $resource_id
-				? $services->booking_service()->reserve_any( $service_id, $start, $customer, $status )->booking
-				: $services->booking_service()->reserve( $service_id, $resource_id, $start, $customer, $status )->booking;
+				? $services->booking_service()->reserve_any( $service_id, $start, $customer, $status, $hold )->booking
+				: $services->booking_service()->reserve( $service_id, $resource_id, $start, $customer, $status, $hold )->booking;
 		} catch ( InvalidValue $e ) {
 			return ErrorMapper::to_wp_error( $e, array( InvalidValue::class => __( 'The booking data is not valid.', 'terminarz' ) ) );
 		} catch ( EntityNotFound $e ) {
@@ -133,15 +139,78 @@ final class BookingsController extends Controller {
 			return ErrorMapper::to_wp_error( $e );
 		}
 
+		$payment_url = null;
+		if ( null !== $payments ) {
+			$payment_url = $this->start_payment( $payments, $booking, $service );
+			if ( $payment_url instanceof WP_Error ) {
+				return $payment_url;
+			}
+			$booking = $services->bookings()->get( (int) $booking->id ) ?? $booking;
+		}
+
 		$response = $this->prepare_item_for_response( $booking, $request );
+		if ( null !== $payment_url ) {
+			$data                = (array) $response->get_data();
+			$data['payment_url'] = $payment_url;
+			$response->set_data( $data );
+		}
 		$response->set_status( 201 );
 
 		return $response;
 	}
 
 	/**
-	 * Status of a new booking: `confirmed` when bookings are confirmed automatically, otherwise `pending`
-	 * (awaiting the business). Payments (`pending_payment`) come with the WooCommerce integration (M6).
+	 * Creates the payment of a booking awaiting payment. On failure the booking is cancelled (the slot is released)
+	 * and a 500 error is returned — the customer can try again.
+	 *
+	 * @param PaymentProvider $payments Payment provider.
+	 * @param Booking         $booking  Stored booking (`pending_payment`).
+	 * @param Service         $service  Booked service.
+	 * @return string|WP_Error Payment URL or error.
+	 */
+	private function start_payment( PaymentProvider $payments, Booking $booking, Service $service ) {
+		try {
+			$url = $payments->start_payment( $booking, $service );
+		} catch ( \Exception $e ) {
+			return $this->payment_failed( $booking, $e );
+		}
+		if ( '' === $url || ! wp_http_validate_url( $url ) ) {
+			return $this->payment_failed( $booking, new PaymentFailed( 'The payment provider returned an invalid URL.' ) );
+		}
+		return $url;
+	}
+
+	/**
+	 * Cancels a booking whose payment could not be started (releases the slot) and returns the error response.
+	 *
+	 * @param Booking    $booking Booking awaiting payment.
+	 * @param \Exception $error   Cause.
+	 */
+	private function payment_failed( Booking $booking, \Exception $error ): WP_Error {
+		try {
+			$this->services()->booking_service()->cancel( (int) $booking->id );
+		} catch ( DomainError | DatabaseError $cancel_error ) {
+			unset( $cancel_error ); // The hold expires on its own; nothing more to do here.
+		}
+
+		/**
+		 * Fires when the online payment of a new booking could not be started (the booking was cancelled).
+		 *
+		 * @param Booking    $booking Booking.
+		 * @param \Exception $error   Error.
+		 */
+		do_action( 'trmz_payment_start_failed', $booking, $error );
+
+		return new WP_Error(
+			'trmz_payment_unavailable',
+			__( 'The online payment could not be started, so the appointment was not booked. Please try again later.', 'terminarz' ),
+			array( 'status' => 500 )
+		);
+	}
+
+	/**
+	 * Status of a new booking that needs no online payment: `confirmed` when bookings are confirmed automatically,
+	 * otherwise `pending` (awaiting the business). Paid services with payments enabled start as `pending_payment`.
 	 *
 	 * @param Service $service Booked service.
 	 */
@@ -299,40 +368,46 @@ final class BookingsController extends Controller {
 			'title'      => 'trmz-booking-public',
 			'type'       => 'object',
 			'properties' => array(
-				'public_id' => array(
+				'public_id'   => array(
 					'description' => __( 'Public booking identifier.', 'terminarz' ),
 					'type'        => 'string',
 					'readonly'    => true,
 				),
-				'status'    => array(
+				'status'      => array(
 					'description' => __( 'Booking status.', 'terminarz' ),
 					'type'        => 'string',
 					'enum'        => array_map( static fn( BookingStatus $s ): string => $s->value, BookingStatus::cases() ),
 					'readonly'    => true,
 				),
-				'service'   => array(
+				'service'     => array(
 					'type'     => 'integer',
 					'readonly' => true,
 				),
-				'resource'  => array(
+				'resource'    => array(
 					'description' => __( 'Resource assigned to the booking.', 'terminarz' ),
 					'type'        => 'integer',
 					'readonly'    => true,
 				),
-				'start'     => array(
+				'start'       => array(
 					'type'     => 'string',
 					'format'   => 'date-time',
 					'readonly' => true,
 				),
-				'end'       => array(
+				'end'         => array(
 					'type'     => 'string',
 					'format'   => 'date-time',
 					'readonly' => true,
 				),
-				'start_utc' => array(
+				'start_utc'   => array(
 					'type'     => 'string',
 					'format'   => 'date-time',
 					'readonly' => true,
+				),
+				'payment_url' => array(
+					'description' => __( 'Where the customer pays for the booking; present only for bookings awaiting online payment.', 'terminarz' ),
+					'type'        => 'string',
+					'format'      => 'uri',
+					'readonly'    => true,
 				),
 			),
 		);

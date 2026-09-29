@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-29T18:41:36+00:00\n"
+"POT-Creation-Date: 2026-09-29T18:49:51+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: terminarz\n"
@@ -78,6 +78,7 @@ msgstr ""
 #: src/Admin/BookingsPage.php:308
 #: src/Admin/Privacy.php:204
 #: src/Admin/SchedulePage.php:131
+#: src/Integrations/WooCommerce/OrderPayments.php:137
 msgid "Resource"
 msgstr ""
 
@@ -123,6 +124,7 @@ msgstr ""
 #: src/Admin/BookingsPage.php:321
 #: src/Admin/ResourcesPage.php:295
 #: src/Admin/ServicesPage.php:296
+#: src/Integrations/WooCommerce/OrderAdmin.php:108
 msgid "Order"
 msgstr ""
 
@@ -181,12 +183,12 @@ msgid "Confirm"
 msgstr ""
 
 #: src/Admin/BookingsListTable.php:235
-#: src/Admin/BookingsPage.php:358
+#: src/Admin/BookingsPage.php:366
 msgid "Reschedule"
 msgstr ""
 
 #: src/Admin/BookingsListTable.php:241
-#: src/Admin/BookingsPage.php:368
+#: src/Admin/BookingsPage.php:376
 msgid "Cancel this booking?"
 msgstr ""
 
@@ -250,6 +252,7 @@ msgid "Search bookings"
 msgstr ""
 
 #: src/Admin/BookingsPage.php:282
+#: src/Integrations/WooCommerce/OrderAdmin.php:67
 msgid "Booking"
 msgstr ""
 
@@ -288,61 +291,61 @@ msgstr ""
 msgid "Held until"
 msgstr ""
 
-#: src/Admin/BookingsPage.php:347
+#: src/Admin/BookingsPage.php:355
 msgid "Confirm booking"
 msgstr ""
 
-#: src/Admin/BookingsPage.php:364
+#: src/Admin/BookingsPage.php:372
 msgid "Cancel booking"
 msgstr ""
 
-#: src/Admin/BookingsPage.php:384
+#: src/Admin/BookingsPage.php:392
 msgid "Reschedule booking"
 msgstr ""
 
-#: src/Admin/BookingsPage.php:391
+#: src/Admin/BookingsPage.php:399
 msgid "&larr; Back to the booking"
 msgstr ""
 
-#: src/Admin/BookingsPage.php:394
+#: src/Admin/BookingsPage.php:402
 msgid "Only active bookings can be moved."
 msgstr ""
 
-#: src/Admin/BookingsPage.php:406
+#: src/Admin/BookingsPage.php:414
 msgid "Current time:"
 msgstr ""
 
-#: src/Admin/BookingsPage.php:425
+#: src/Admin/BookingsPage.php:433
 msgid "&larr; Previous day"
 msgstr ""
 
-#: src/Admin/BookingsPage.php:427
+#: src/Admin/BookingsPage.php:435
 #: src/Admin/SchedulePage.php:158
 #: blocks/booking/edit.js:178
 msgid "Day"
 msgstr ""
 
-#: src/Admin/BookingsPage.php:429
+#: src/Admin/BookingsPage.php:437
 msgid "Show free times"
 msgstr ""
 
-#: src/Admin/BookingsPage.php:431
+#: src/Admin/BookingsPage.php:439
 msgid "Next day &rarr;"
 msgstr ""
 
-#: src/Admin/BookingsPage.php:437
+#: src/Admin/BookingsPage.php:445
 msgid "No free times on this day."
 msgstr ""
 
-#: src/Admin/BookingsPage.php:449
+#: src/Admin/BookingsPage.php:457
 msgid "Free times"
 msgstr ""
 
-#: src/Admin/BookingsPage.php:461
+#: src/Admin/BookingsPage.php:469
 msgid "Move booking"
 msgstr ""
 
-#: src/Admin/BookingsPage.php:472
+#: src/Admin/BookingsPage.php:480
 msgid "Guest"
 msgstr ""
 
@@ -1174,8 +1177,54 @@ msgstr ""
 msgid "Delete data on uninstall"
 msgstr ""
 
+#: src/Integrations/WooCommerce/OrderAdmin.php:83
+msgid "The booking of this order no longer exists or is linked to another order."
+msgstr ""
+
+#: src/Integrations/WooCommerce/OrderAdmin.php:90
+msgid "Status:"
+msgstr ""
+
+#: src/Integrations/WooCommerce/OrderAdmin.php:91
+msgid "Booking ID:"
+msgstr ""
+
+#: src/Integrations/WooCommerce/OrderAdmin.php:92
+msgid "View booking"
+msgstr ""
+
+#. translators: %d: order ID.
+#: src/Integrations/WooCommerce/OrderAdmin.php:112
+#, php-format
+msgid "#%d (deleted)"
+msgstr ""
+
+#. translators: 1: public booking ID, 2: date and time the slot is held until.
+#: src/Integrations/WooCommerce/OrderPayments.php:100
+#, php-format
+msgid "Order created for booking %1$s. The slot is held until %2$s."
+msgstr ""
+
+#: src/Integrations/WooCommerce/OrderPayments.php:109
+msgid "The booking could not be linked to this order."
+msgstr ""
+
+#: src/Integrations/WooCommerce/OrderPayments.php:134
+msgid "Appointment"
+msgstr ""
+
+#: src/Integrations/WooCommerce/OrderPayments.php:141
+msgid "Payment"
+msgstr ""
+
+#. translators: 1: deposit percentage, 2: full price with currency.
+#: src/Integrations/WooCommerce/OrderPayments.php:144
+#, php-format
+msgid "Deposit %1$d%% of %2$s"
+msgstr ""
+
 #. translators: 1: required WooCommerce version, 2: installed WooCommerce version.
-#: src/Integrations/WooCommerce/WooCommerceModule.php:139
+#: src/Integrations/WooCommerce/WooCommerceModule.php:142
 #, php-format
 msgid "Terminarz online payments require WooCommerce %1$s or newer (installed: %2$s). Bookings are accepted without payment until WooCommerce is updated."
 msgstr ""
@@ -1194,7 +1243,7 @@ msgid "New resource (must provide the service); omitted = keep."
 msgstr ""
 
 #: src/Rest/AdminBookingsController.php:234
-#: src/Rest/BookingsController.php:101
+#: src/Rest/BookingsController.php:103
 msgid "Please provide a valid date and time."
 msgstr ""
 
@@ -1253,7 +1302,7 @@ msgid "Sort direction."
 msgstr ""
 
 #: src/Rest/AdminBookingsController.php:440
-#: src/Rest/BookingsController.php:303
+#: src/Rest/BookingsController.php:372
 msgid "Public booking identifier."
 msgstr ""
 
@@ -1273,7 +1322,7 @@ msgstr ""
 
 #: src/Rest/AvailabilityController.php:222
 #: src/Rest/AvailabilityController.php:264
-#: src/Rest/BookingsController.php:211
+#: src/Rest/BookingsController.php:280
 #: src/Rest/ServicesController.php:59
 #: src/Rest/ServicesController.php:157
 msgid "Service ID."
@@ -1281,7 +1330,7 @@ msgstr ""
 
 #: src/Rest/AvailabilityController.php:228
 #: src/Rest/AvailabilityController.php:269
-#: src/Rest/BookingsController.php:217
+#: src/Rest/BookingsController.php:286
 msgid "Resource ID or \"any\"."
 msgstr ""
 
@@ -1317,62 +1366,70 @@ msgstr ""
 msgid "Resource ID; null when any resource was requested."
 msgstr ""
 
-#: src/Rest/BookingsController.php:76
+#: src/Rest/BookingsController.php:78
 #: blocks/booking/app/DetailsStep.js:86
 msgid "Your session has expired. Please reload the page and try again."
 msgstr ""
 
-#: src/Rest/BookingsController.php:93
+#: src/Rest/BookingsController.php:95
 msgid "The booking could not be processed."
 msgstr ""
 
-#: src/Rest/BookingsController.php:96
+#: src/Rest/BookingsController.php:98
 #: blocks/booking/app/DetailsStep.js:47
 msgid "Please accept the terms to book an appointment."
 msgstr ""
 
-#: src/Rest/BookingsController.php:119
+#: src/Rest/BookingsController.php:121
 msgid "Please provide your name and a valid e-mail address."
 msgstr ""
 
-#: src/Rest/BookingsController.php:129
+#: src/Rest/BookingsController.php:135
 msgid "The booking data is not valid."
 msgstr ""
 
-#: src/Rest/BookingsController.php:223
+#: src/Rest/BookingsController.php:206
+msgid "The online payment could not be started, so the appointment was not booked. Please try again later."
+msgstr ""
+
+#: src/Rest/BookingsController.php:292
 msgid "Start of the appointment, ISO 8601 with a time zone offset (e.g. the start_utc of a slot)."
 msgstr ""
 
-#: src/Rest/BookingsController.php:228
+#: src/Rest/BookingsController.php:297
 msgid "Full name."
 msgstr ""
 
-#: src/Rest/BookingsController.php:230
+#: src/Rest/BookingsController.php:299
 msgid "E-mail address."
 msgstr ""
 
-#: src/Rest/BookingsController.php:238
+#: src/Rest/BookingsController.php:307
 msgid "Phone number."
 msgstr ""
 
-#: src/Rest/BookingsController.php:240
+#: src/Rest/BookingsController.php:309
 msgid "Note for the business."
 msgstr ""
 
-#: src/Rest/BookingsController.php:248
+#: src/Rest/BookingsController.php:317
 msgid "Consent to the processing of personal data for the booking; must be true."
 msgstr ""
 
-#: src/Rest/BookingsController.php:253
+#: src/Rest/BookingsController.php:322
 msgid "Leave empty (anti-spam field)."
 msgstr ""
 
-#: src/Rest/BookingsController.php:308
+#: src/Rest/BookingsController.php:377
 msgid "Booking status."
 msgstr ""
 
-#: src/Rest/BookingsController.php:318
+#: src/Rest/BookingsController.php:387
 msgid "Resource assigned to the booking."
+msgstr ""
+
+#: src/Rest/BookingsController.php:407
+msgid "Where the customer pays for the booking; present only for bookings awaiting online payment."
 msgstr ""
 
 #: src/Rest/Controller.php:63

@@ -362,3 +362,16 @@ Jeden wpis na zamknięte issue: data, numer issue, co zrobione, decyzje, znane r
   tryb płatności ignorowany, komunikat w ustawieniach, rezerwacja REST bez płatności).
 - **Decyzje:** ADR-035.
 - **Ryzyka:** suita z WooCommerce jest wolniejsza; instalacja WC w bootstrapie przy każdym uruchomieniu PHPUnit.
+
+## 2026-09-29 — #35 rezerwacja tworzy zamówienie WooCommerce
+
+- **Zrobione:** port `Application\PaymentProvider` + `PaymentFailed` + `PaymentAmount` (test jednostkowy),
+  `Services::payment_provider()` (filtr `trmz_payment_provider`), `POST /bookings` tworzy rezerwację `pending_payment`
+  z wstrzymaniem z ustawień i zwraca `payment_url`; porażka → anulowanie rezerwacji i 500 `trmz_payment_unavailable`.
+  `Integrations\WooCommerce\OrderPayments` (zamówienie z pozycją bez produktu, kwota pełna/zaliczka, billing, meta
+  `_trmz_booking_id`), `OrderLink`, `OrderAdmin` (metabox w zamówieniu zgodny z HPOS, link do zamówienia w szczegółach
+  rezerwacji przez filtr `trmz_admin_booking_details_rows`). Testy integracyjne (HPOS, kwoty, wstrzymanie, usługa
+  darmowa, tryb none, klient zalogowany, porażki, linki w obu panelach).
+- **Decyzje:** ADR-036; założenie (assumption w #35): pozycja `WC_Order_Item_Product` bez produktu, kwota bez doliczania
+  podatku.
+- **Ryzyka:** rozliczenie VAT usług do decyzji biznesowej; weryfikacja e-maila gościa przez WC po 10 min.
