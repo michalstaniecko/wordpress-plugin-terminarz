@@ -26,9 +26,11 @@ use Terminarz\Infrastructure\Services;
  * | created `pending_payment`                          | —                     | —            |
  * | `pending_payment` → `pending`                      | `customer_pending`    | `admin_new`  |
  * | `pending`/`pending_payment` → `confirmed`          | `customer_confirmed`  | `admin_new`¹ |
+ * | `pending`/`confirmed` → `cancelled`                | `customer_cancelled`  | `admin_cancelled` |
  *
  * ¹ Deduplicated: the business hears about a booking once, when it is placed (after payment for paid services).
- * A booking awaiting payment is not confirmed yet, so nothing is sent until the payment arrives.
+ * A booking awaiting payment is not confirmed yet, so nothing is sent until the payment arrives, and nothing is sent
+ * when it expires or is cancelled before payment (WooCommerce informs about the order itself).
  */
 final class BookingNotifier implements Module {
 
@@ -84,6 +86,9 @@ final class BookingNotifier implements Module {
 		} elseif ( BookingStatus::Pending === $booking->status && BookingStatus::PendingPayment === $previous ) {
 			$this->notify( MessageType::CustomerPending, $booking );
 			$this->notify( MessageType::AdminNew, $booking );
+		} elseif ( BookingStatus::Cancelled === $booking->status && in_array( $previous, array( BookingStatus::Pending, BookingStatus::Confirmed ), true ) ) {
+			$this->notify( MessageType::CustomerCancelled, $booking );
+			$this->notify( MessageType::AdminCancelled, $booking );
 		}
 	}
 

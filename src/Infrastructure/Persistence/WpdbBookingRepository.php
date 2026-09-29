@@ -101,7 +101,7 @@ final class WpdbBookingRepository extends WpdbRepository implements BookingRepos
 					'customer_phone'    => $booking->customer->phone,
 					'customer_note'     => $booking->customer->note,
 					'customer_user_id'  => $booking->customer->user_id,
-					'cancel_token_hash' => $booking->cancel_token_hash,
+					'cancel_token_hash' => $booking->cancel_secret, // Column name predates ADR-042: it stores the link secret.
 					'order_id'          => $booking->order_id,
 					'hold_expires_at'   => null === $booking->hold_expires_at ? null : self::to_sql( $booking->hold_expires_at ),
 					'created_at'        => $now_sql,
@@ -604,7 +604,7 @@ final class WpdbBookingRepository extends WpdbRepository implements BookingRepos
 			hold_expires_at: null === $row['hold_expires_at'] ? null : self::from_sql( (string) $row['hold_expires_at'] ),
 			id: (int) $row['id'],
 			order_id: null === $row['order_id'] ? null : (int) $row['order_id'],
-			cancel_token_hash: null === $row['cancel_token_hash'] ? null : (string) $row['cancel_token_hash'],
+			cancel_secret: null === $row['cancel_token_hash'] ? null : (string) $row['cancel_token_hash'],
 			created_at: self::from_sql( (string) $row['created_at'] ),
 			public_id: (string) $row['public_id']
 		);

@@ -25,7 +25,7 @@ final class Schema {
 	/**
 	 * Current schema version. Bump it whenever a CREATE TABLE statement below changes.
 	 */
-	public const VERSION = '3';
+	public const VERSION = '4';
 
 	/**
 	 * Option that stores the installed schema version.
@@ -126,10 +126,36 @@ final class Schema {
 		}
 
 		$changes = dbDelta( $this->create_statements() );
+		$this->backfill_cancel_secrets();
 
 		update_option( self::VERSION_OPTION, self::VERSION, true );
 
 		return array_values( array_map( 'strval', $changes ) );
+	}
+
+	/**
+	 * Gives every booking without one a random cancellation link secret (schema v4, ADR-042). The `cancel_token_hash`
+	 * column keeps its historical name: it now stores the secret. Values stored before v4 (SHA-256 of a random token)
+	 * are random as well and stay valid secrets.
+	 *
+	 * @return int Number of bookings updated.
+	 */
+	public function backfill_cancel_secrets(): int {
+		$table   = $this->table( self::BOOKINGS );
+		$updated = 0;
+		do {
+			// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- table from constants; migration.
+			$ids   = $this->db->get_col( "SELECT id FROM `{$table}` WHERE cancel_token_hash IS NULL LIMIT 500" );
+			$batch = 0;
+			foreach ( $ids as $id ) {
+				// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- migration of a custom table.
+				$batch += (int) $this->db->update( $table, array( 'cancel_token_hash' => bin2hex( random_bytes( 32 ) ) ), array( 'id' => (int) $id ) );
+			}
+			$updated += $batch;
+			$full     = 500 === count( $ids );
+		} while ( $full && $batch > 0 );
+
+		return $updated;
 	}
 
 	/**

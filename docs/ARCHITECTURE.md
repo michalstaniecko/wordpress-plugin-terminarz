@@ -891,3 +891,45 @@ tylko znanych nazw). Uninstall (M8) powinien usuwać opcję `trmz_email_template
 **Konsekwencje.** Uninstall (M8) usuwa tabelę `trmz_notification_log` razem z pozostałymi (jest w `Schema::tables()`).
 Wolny serwer SMTP wydłuża odpowiedź `POST /bookings`; kolejkowanie (Action Scheduler) można dodać później bez zmiany
 szablonów.
+
+## ADR-042: Link anulowania — token HMAC z sekretu rezerwacji i strona anulowania
+
+**Kontekst.** Dotąd token anulowania był losowy i jawny tylko w `Reservation` w chwili rezerwacji (w bazie SHA-256).
+E-maile wysyłane później (potwierdzenie po płatności, przypomnienie) nie mogły więc zbudować linku. Issue #41 zakładało
+„w bazie tylko hash (`hash_hmac` z solą WP)”.
+
+**Decyzja.**
+- Każda rezerwacja ma losowy sekret (`CancelTokens::new_secret()`, `random_bytes(32)` → 64 hex) zapisany w kolumnie
+  `cancel_token_hash` (nazwa historyczna; w domenie `Booking::$cancel_secret`). Token w linku =
+  `hash_hmac('sha256', public_id . '|' . sekret, wp_salt('auth'))` (`Application\CancelTokens`, czysty PHP; klucz
+  wstrzykuje `Services::cancel_tokens()`). Weryfikacja: ponowne wyliczenie + `hash_equals`, token musi mieć format
+  64 hex.
+- Własności: link da się odtworzyć dla każdego maila; sam wyciek bazy nie wystarcza do podrobienia linku (potrzebna sól
+  z `wp-config.php`); zmiana sekretu rezerwacji albo soli `AUTH_SALT` unieważnia link(i). Odstępstwo od brzmienia issue
+  (w bazie sekret zamiast hasha tokenu) opisane w #41 z etykietą `assumption` — daje te same gwarancje wobec wycieku bazy
+  i jest konieczne, by link był odtwarzalny.
+- Migracja schematu v4: `Schema::backfill_cancel_secrets()` nadaje losowy sekret rezerwacjom bez niego (partiami po 500).
+  Wartości sprzed v4 (SHA-256 losowego tokenu) są równie losowe i zostają jako sekrety — stare jawne tokeny nigdy nie
+  opuściły serwera (REST ich nie zwracał), więc nic nie trzeba unieważniać.
+- `BookingService`: `cancel_token()`, `verify_cancel_token()` (metody instancji), `check_customer_cancellation()`,
+  `cancel_by_customer()` (wyjątek `CancellationRefused` z powodem `invalid_token` | `not_active` | `too_late`),
+  `cancellation_deadline()` = start − `customer_cancel_limit_hours` (0 = do startu). `Reservation::$cancel_token` to
+  teraz token HMAC.
+- Strona: `Frontend\CancellationPage` na `template_redirect` dla `/?trmz_cancel=<public_id>&token=<token>` (bez reguł
+  rewrite, działa przy każdych permalinkach). GET tylko pokazuje rezerwację, termin i przycisk (prefetch skanerów poczty
+  nic nie anuluje); POST z tokenem w ukrytym polu anuluje. Brak nonce — klient jest niezalogowany, a rolę tokenu CSRF
+  pełni sam token. Strona samodzielna (bez motywu), `noindex`, `nocache_headers()`, `Referrer-Policy: no-referrer`,
+  filtr `trmz_cancel_page_html`. Komunikaty: nieważny link (404, bez ujawniania, czy rezerwacja istnieje), po terminie,
+  już anulowana/nieaktywna.
+- Limit zapytań: `RequestLimit::check()` przyjmuje teraz `null` zamiast `WP_REST_Request`; kubełek `booking_cancel`
+  liczy każdy POST i każdy GET z nieważnym linkiem (poprawne GET-y nie są liczone), 429 + `Retry-After`.
+- Po anulowaniu slot jest wolny (status `cancelled`), `OrderStatusSync` anuluje nieopłacone zamówienie (opłacone — notatka,
+  zwrot to decyzja człowieka), `BookingNotifier` wysyła `customer_cancelled` i `admin_cancelled` przy przejściu
+  `pending`/`confirmed` → `cancelled` (także anulowanie w panelu i przez zamówienie); anulowanie przed płatnością — bez
+  e-maili.
+- Placeholdery `{cancel_url}` i `{cancel_deadline}` (tylko dla aktywnych rezerwacji); domyślne szablony klienta
+  (przyjęcie, potwierdzenie, przypomnienie) zawierają link. Blok po rezerwacji informuje o e-mailu z linkiem, gdy szablon
+  przyjęcia lub potwierdzenia jest włączony (`emailNotice` w konfiguracji bloku).
+
+**Konsekwencje.** Rotacja `AUTH_SALT` unieważnia wszystkie wysłane linki anulowania (klient musi się skontaktować
+z firmą). Własne (zmienione) szablony zapisane przed tą zmianą nie dostaną linku automatycznie.

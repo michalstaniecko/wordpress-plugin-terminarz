@@ -61,13 +61,15 @@ final class BookingService {
 	 * @param ResourceRepository $resources Resources.
 	 * @param EventDispatcher    $events    Event dispatcher.
 	 * @param Clock              $clock     Clock.
+	 * @param CancelTokens       $tokens    Cancellation link tokens.
 	 */
 	public function __construct(
 		private readonly BookingRepository $bookings,
 		private readonly ServiceRepository $services,
 		private readonly ResourceRepository $resources,
 		private readonly EventDispatcher $events,
-		private readonly Clock $clock
+		private readonly Clock $clock,
+		private readonly CancelTokens $tokens
 	) {
 	}
 
@@ -174,7 +176,6 @@ final class BookingService {
 		$now = $this->clock->now();
 		$this->assert_bookable( $service_id, $resource_id, $start, $now, null );
 
-		$token   = bin2hex( random_bytes( 32 ) );
 		$booking = new Booking(
 			resource_id: $resource_id,
 			service_id: $service_id,
@@ -183,14 +184,14 @@ final class BookingService {
 			customer: $customer,
 			buffer_after_minutes: $service->buffer_after_minutes,
 			hold_expires_at: BookingStatus::PendingPayment === $status ? $now->modify( sprintf( '+%d minutes', $hold_minutes ) ) : null,
-			cancel_token_hash: self::hash_token( $token ),
+			cancel_secret: CancelTokens::new_secret(),
 			public_id: bin2hex( random_bytes( 16 ) )
 		);
 
 		$stored = $this->bookings->create( $booking, $now );
 		$this->events->dispatch( self::EVENT_CREATED, $stored );
 
-		return new Reservation( $stored, $token );
+		return new Reservation( $stored, $this->tokens->token( $stored ) );
 	}
 
 	/**
@@ -221,7 +222,6 @@ final class BookingService {
 			throw SlotUnavailable::at( $previous->resource_id, $previous->range->start );
 		}
 
-		$token   = bin2hex( random_bytes( 32 ) );
 		$booking = new Booking(
 			resource_id: $previous->resource_id,
 			service_id: $previous->service_id,
@@ -230,14 +230,14 @@ final class BookingService {
 			customer: $previous->customer,
 			buffer_after_minutes: $previous->buffer_after_minutes,
 			order_id: $previous->order_id,
-			cancel_token_hash: self::hash_token( $token ),
+			cancel_secret: CancelTokens::new_secret(),
 			public_id: bin2hex( random_bytes( 16 ) )
 		);
 
 		$stored = $this->bookings->create( $booking, $now );
 		$this->events->dispatch( self::EVENT_CREATED, $stored );
 
-		return new Reservation( $stored, $token );
+		return new Reservation( $stored, $this->tokens->token( $stored ) );
 	}
 
 	/**
@@ -310,22 +310,73 @@ final class BookingService {
 	}
 
 	/**
-	 * Whether a plain cancellation token matches the booking (constant-time comparison).
+	 * Token of the customer's cancellation link of a booking ('' when it has none).
 	 *
 	 * @param Booking $booking Booking.
-	 * @param string  $token   Plain token.
 	 */
-	public static function verify_cancel_token( Booking $booking, string $token ): bool {
-		return null !== $booking->cancel_token_hash && '' !== $token && hash_equals( $booking->cancel_token_hash, self::hash_token( $token ) );
+	public function cancel_token( Booking $booking ): string {
+		return $this->tokens->token( $booking );
 	}
 
 	/**
-	 * Hash stored for a cancellation token.
+	 * Whether a cancellation token matches the booking (constant-time comparison).
 	 *
-	 * @param string $token Plain token.
+	 * @param Booking $booking Booking.
+	 * @param string  $token   Token from the link.
 	 */
-	public static function hash_token( string $token ): string {
-		return hash( 'sha256', $token );
+	public function verify_cancel_token( Booking $booking, string $token ): bool {
+		return $this->tokens->verify( $booking, $token );
+	}
+
+	/**
+	 * Checks that the customer holding a cancellation link may cancel the booking now: the token matches, the booking
+	 * is active and the deadline (`$limit_hours` before the start; 0 = until the start) has not passed.
+	 *
+	 * @param string $public_id   Public booking ID from the link.
+	 * @param string $token       Token from the link.
+	 * @param int    $limit_hours Cancellation limit (hours before the start).
+	 * @throws CancellationRefused When the customer cannot cancel.
+	 */
+	public function check_customer_cancellation( string $public_id, string $token, int $limit_hours ): Booking {
+		$booking = 1 === preg_match( '/^[0-9a-f]{32}$/', $public_id ) ? $this->bookings->get_by_public_id( $public_id ) : null;
+		if ( null === $booking || ! $this->tokens->verify( $booking, $token ) ) {
+			throw new CancellationRefused( CancellationRefused::INVALID_TOKEN );
+		}
+		if ( ! $booking->status->can_transition_to( BookingStatus::Cancelled ) ) {
+			throw new CancellationRefused( CancellationRefused::NOT_ACTIVE, $booking );
+		}
+		if ( $this->clock->now() >= self::cancellation_deadline( $booking, $limit_hours ) ) {
+			throw new CancellationRefused( CancellationRefused::TOO_LATE, $booking );
+		}
+		return $booking;
+	}
+
+	/**
+	 * Cancels a booking on behalf of the customer holding its cancellation link (see check_customer_cancellation()).
+	 *
+	 * @param string $public_id   Public booking ID from the link.
+	 * @param string $token       Token from the link.
+	 * @param int    $limit_hours Cancellation limit (hours before the start).
+	 * @throws CancellationRefused When the customer cannot cancel.
+	 */
+	public function cancel_by_customer( string $public_id, string $token, int $limit_hours ): Booking {
+		$booking = $this->check_customer_cancellation( $public_id, $token, $limit_hours );
+		try {
+			return $this->cancel( (int) $booking->id );
+		} catch ( InvalidStatusTransition $e ) {
+			// Changed concurrently (e.g. expired or cancelled by staff a moment ago).
+			throw new CancellationRefused( CancellationRefused::NOT_ACTIVE, $booking );
+		}
+	}
+
+	/**
+	 * Last moment the customer may cancel: `$limit_hours` before the start.
+	 *
+	 * @param Booking $booking     Booking.
+	 * @param int     $limit_hours Limit (hours, >= 0).
+	 */
+	public static function cancellation_deadline( Booking $booking, int $limit_hours ): DateTimeImmutable {
+		return $booking->range->start->modify( sprintf( '-%d hours', max( 0, $limit_hours ) ) );
 	}
 
 	/**

@@ -84,6 +84,26 @@ final class SchemaTest extends WP_UnitTestCase {
 		$this->assertSame( 1, $wpdb->insert( $table, array_merge( $row, array( 'booking_id' => 2 ) ) ) );
 	}
 
+	public function test_install_gives_bookings_without_a_cancel_secret_a_random_one(): void {
+		global $wpdb;
+		$schema = new Schema( $wpdb, self::FRESH_PREFIX );
+		$schema->install();
+		$table = $schema->table( Schema::BOOKINGS );
+		$wpdb->insert( $table, $this->booking_row( 'a', 1, null ) );
+		$wpdb->insert( $table, $this->booking_row( 'b', 1, null ) );
+		$wpdb->insert( $table, array_merge( $this->booking_row( 'c', 1, null ), array( 'cancel_token_hash' => str_repeat( 'e', 64 ) ) ) );
+
+		$this->assertSame( 2, $schema->backfill_cancel_secrets() );
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- test table name.
+		$secrets = $wpdb->get_col( "SELECT cancel_token_hash FROM {$table} ORDER BY public_id" );
+		$this->assertMatchesRegularExpression( '/^[0-9a-f]{64}$/', $secrets[0] );
+		$this->assertMatchesRegularExpression( '/^[0-9a-f]{64}$/', $secrets[1] );
+		$this->assertNotSame( $secrets[0], $secrets[1] );
+		$this->assertSame( str_repeat( 'e', 64 ), $secrets[2], 'Existing values are kept.' );
+		$this->assertSame( 0, $schema->backfill_cancel_secrets() );
+	}
+
 	public function test_active_start_is_unique_per_resource_but_nulls_are_not(): void {
 		global $wpdb;
 		$schema = new Schema( $wpdb, self::FRESH_PREFIX );

@@ -141,6 +141,7 @@ final class Templates {
 				/* translators: Default e-mail text. Keep the {placeholders} unchanged. */
 				. '<p>' . __( 'Thank you for your booking request. We will confirm it by e-mail shortly.', 'terminarz' ) . '</p>'
 				. $details
+				. self::cancel_block()
 			),
 			MessageType::CustomerConfirmed => new Template(
 				true,
@@ -151,6 +152,7 @@ final class Templates {
 				/* translators: Default e-mail text. Keep the {placeholders} unchanged. */
 				. '<p>' . __( 'Your booking is confirmed. We look forward to seeing you.', 'terminarz' ) . '</p>'
 				. $details
+				. self::cancel_block()
 			),
 			MessageType::CustomerCancelled => new Template(
 				true,
@@ -171,6 +173,7 @@ final class Templates {
 				/* translators: Default e-mail text. Keep the {placeholders} unchanged. */
 				. '<p>' . __( 'This is a reminder of your upcoming appointment.', 'terminarz' ) . '</p>'
 				. $details
+				. self::cancel_block()
 			),
 			MessageType::AdminNew => new Template(
 				true,
@@ -224,6 +227,18 @@ final class Templates {
 			. __( 'Date: {start_date}, {start_time}–{end_time}', 'terminarz' ) . '<br />'
 			/* translators: Default e-mail text. Keep the {placeholders} unchanged. */
 			. __( 'Booking number: {booking_id}', 'terminarz' )
+			. '</p>';
+	}
+
+	/**
+	 * Cancellation link paragraph of customer e-mails.
+	 */
+	private static function cancel_block(): string {
+		return '<p>'
+			/* translators: Default e-mail text. Keep the {placeholders} unchanged. */
+			. __( 'If you cannot come, please cancel your booking by {cancel_deadline}:', 'terminarz' )
+			/* translators: Default e-mail text (link label). */
+			. ' <a href="{cancel_url}">' . __( 'Cancel booking', 'terminarz' ) . '</a>'
 			. '</p>';
 	}
 

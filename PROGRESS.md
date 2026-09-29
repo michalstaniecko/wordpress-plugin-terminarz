@@ -433,3 +433,17 @@ Jeden wpis na zamknięte issue: data, numer issue, co zrobione, decyzje, znane r
   płatność w czasie / po czasie / wygaśnięcie (WooCommerce), strefa czasowa witryny, schemat.
 - **Decyzje:** ADR-041.
 - **Ryzyka:** wysyłka synchroniczna (czas odpowiedzi przy wolnym SMTP).
+
+## 2026-09-29 — #41 bezpieczny link anulowania i e-mail o anulowaniu
+
+- **Zrobione:** `Application\CancelTokens` (HMAC z sekretu rezerwacji i `wp_salt('auth')`), `Booking::$cancel_secret`,
+  schemat v4 z uzupełnieniem sekretów, `BookingService::cancel_token()/verify_cancel_token()/check_customer_cancellation()/
+  cancel_by_customer()/cancellation_deadline()`, `CancellationRefused`, strona `Frontend\CancellationPage`
+  (`?trmz_cancel=…&token=…`, GET potwierdzenie / POST anulowanie, noindex, no-referrer, limit `booking_cancel`),
+  e-maile `customer_cancelled`/`admin_cancelled`, placeholdery `{cancel_url}`/`{cancel_deadline}` w domyślnych szablonach,
+  komunikat o e-mailu w bloku. Testy: jednostkowe tokenów, integracyjne strony (link z maila, GET bez skutków, POST,
+  slot wolny, e-maile, nieważne linki, termin, limit 0, 429), WooCommerce (nieopłacone zamówienie anulowane, opłacone —
+  notatka), migracja sekretów, konfiguracja bloku.
+- **Decyzje:** ADR-042; założenie w #41 (sekret w bazie + HMAC zamiast hasha tokenu).
+- **Ryzyka:** rotacja `AUTH_SALT` unieważnia wysłane linki; strona anulowania nie używa motywu (spójność wizualna
+  przez filtr `trmz_cancel_page_html`).

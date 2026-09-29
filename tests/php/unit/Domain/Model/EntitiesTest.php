@@ -90,7 +90,7 @@ final class EntitiesTest extends TestCase {
 			static fn () => new Booking( 1, 1, self::range(), BookingStatus::Pending, new Customer( 'A', 'a@example.com' ), public_id: '' ),
 		);
 		yield 'booking: empty token hash' => array(
-			static fn () => new Booking( 1, 1, self::range(), BookingStatus::Pending, new Customer( 'A', 'a@example.com' ), cancel_token_hash: '' ),
+			static fn () => new Booking( 1, 1, self::range(), BookingStatus::Pending, new Customer( 'A', 'a@example.com' ), cancel_secret: '' ),
 		);
 	}
 
