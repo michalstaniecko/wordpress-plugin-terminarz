@@ -85,6 +85,33 @@ final class SchemaTest extends WP_UnitTestCase {
 		$this->assertSame( 1, $wpdb->insert( $table, $this->booking_row( 'e', 1, null ) ), 'Second inactive booking (NULL).' );
 	}
 
+	public function test_upgrade_from_version_1_adds_resource_type_and_keeps_rows(): void {
+		global $wpdb;
+		$schema = new Schema( $wpdb, self::FRESH_PREFIX );
+		$table  = $schema->table( Schema::RESOURCES );
+		$wpdb->query( "DROP TABLE IF EXISTS {$table}" ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- test table name.
+		// Version 1 of the resources table (before the `type` column).
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- test table name.
+		$wpdb->query( "CREATE TABLE {$table} ( id bigint(20) unsigned NOT NULL AUTO_INCREMENT, name varchar(191) NOT NULL, description text NULL, user_id bigint(20) unsigned NULL, sort_order int(11) NOT NULL DEFAULT 0, is_active tinyint(1) NOT NULL DEFAULT 1, created_at datetime NOT NULL, updated_at datetime NOT NULL, PRIMARY KEY  (id) ) ENGINE=InnoDB" );
+		$wpdb->insert(
+			$table,
+			array(
+				'name'       => 'Legacy',
+				'created_at' => '2030-01-01 00:00:00',
+				'updated_at' => '2030-01-01 00:00:00',
+			)
+		);
+		// Note: ALTER TABLE commits the test transaction implicitly (even on temporary tables), so this test goes through
+		// Schema::install() without the migration lock/version options, which would otherwise leak into later tests.
+		$changes = $schema->install();
+
+		$this->assertNotEmpty( preg_grep( '/type/', $changes ) );
+
+		$this->assertContains( 'type', $wpdb->get_col( "DESCRIBE {$table}" ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$this->assertSame( 'person', $wpdb->get_var( "SELECT type FROM {$table} WHERE name = 'Legacy'" ) ); // phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+		$this->assertSame( Schema::VERSION, get_option( Schema::VERSION_OPTION ) );
+	}
+
 	public function test_maybe_migrate_runs_only_when_version_differs(): void {
 		$schema   = new Schema( $GLOBALS['wpdb'], self::FRESH_PREFIX );
 		$migrator = new Migrator( static fn() => $schema );

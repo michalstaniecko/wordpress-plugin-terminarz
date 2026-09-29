@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Terminarz\Admin;
 
 use DateTimeImmutable;
+use Terminarz\Domain\Model\BookableResource;
 use Terminarz\Domain\Model\BookingStatus;
 
 /**
@@ -44,6 +45,28 @@ final class Labels {
 			$labels[ $status->value ] = self::status( $status );
 		}
 		return $labels;
+	}
+
+	/**
+	 * Translated labels of resource types keyed by stored value.
+	 *
+	 * @return array<string, string>
+	 */
+	public static function resource_types(): array {
+		return array(
+			BookableResource::TYPE_PERSON => _x( 'Person', 'resource type', 'terminarz' ),
+			BookableResource::TYPE_ROOM   => _x( 'Room', 'resource type', 'terminarz' ),
+			BookableResource::TYPE_DEVICE => _x( 'Device', 'resource type', 'terminarz' ),
+		);
+	}
+
+	/**
+	 * Translated label of a resource type.
+	 *
+	 * @param string $type Stored type.
+	 */
+	public static function resource_type( string $type ): string {
+		return self::resource_types()[ $type ] ?? $type;
 	}
 
 	/**

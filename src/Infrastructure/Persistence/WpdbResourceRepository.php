@@ -42,7 +42,7 @@ final class WpdbResourceRepository extends WpdbRepository implements ResourceRep
 		}
 		$table = $this->table( Schema::RESOURCES );
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- table from Schema, placeholders generated.
-		$rows = $this->rows( $this->db->prepare( "SELECT id, name, is_active FROM {$table} WHERE id IN (" . self::int_placeholders( $ids ) . ')', $ids ) );
+		$rows = $this->rows( $this->db->prepare( "SELECT id, name, is_active, type, description, sort_order FROM {$table} WHERE id IN (" . self::int_placeholders( $ids ) . ')', $ids ) );
 
 		$result = array();
 		foreach ( $rows as $row ) {
@@ -60,7 +60,7 @@ final class WpdbResourceRepository extends WpdbRepository implements ResourceRep
 	public function all( bool $only_active = false ): array {
 		$table = $this->table( Schema::RESOURCES );
 		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table from Schema.
-		$sql = $this->db->prepare( "SELECT id, name, is_active FROM {$table} WHERE is_active >= %d ORDER BY sort_order ASC, id ASC", $only_active ? 1 : 0 );
+		$sql = $this->db->prepare( "SELECT id, name, is_active, type, description, sort_order FROM {$table} WHERE is_active >= %d ORDER BY sort_order ASC, id ASC", $only_active ? 1 : 0 );
 
 		return array_map( array( self::class, 'hydrate' ), $this->rows( $sql ) );
 	}
@@ -74,9 +74,12 @@ final class WpdbResourceRepository extends WpdbRepository implements ResourceRep
 	public function save( BookableResource $bookable ): BookableResource {
 		$table = $this->table( Schema::RESOURCES );
 		$data  = array(
-			'name'       => $bookable->name,
-			'is_active'  => $bookable->is_active ? 1 : 0,
-			'updated_at' => $this->now(),
+			'name'        => $bookable->name,
+			'type'        => $bookable->type,
+			'description' => $bookable->description,
+			'sort_order'  => $bookable->sort_order,
+			'is_active'   => $bookable->is_active ? 1 : 0,
+			'updated_at'  => $this->now(),
 		);
 
 		if ( null === $bookable->id ) {
@@ -119,6 +122,14 @@ final class WpdbResourceRepository extends WpdbRepository implements ResourceRep
 	 * @param array<string, mixed> $row Row.
 	 */
 	private static function hydrate( array $row ): BookableResource {
-		return new BookableResource( (int) $row['id'], (string) $row['name'], 1 === (int) $row['is_active'] );
+		$type = (string) ( $row['type'] ?? '' );
+		return new BookableResource(
+			(int) $row['id'],
+			(string) $row['name'],
+			1 === (int) $row['is_active'],
+			in_array( $type, BookableResource::TYPES, true ) ? $type : BookableResource::TYPE_PERSON,
+			(string) ( $row['description'] ?? '' ),
+			(int) ( $row['sort_order'] ?? 0 )
+		);
 	}
 }

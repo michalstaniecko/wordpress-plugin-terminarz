@@ -227,3 +227,14 @@ Jeden wpis na zamknięte issue: data, numer issue, co zrobione, decyzje, znane r
 - **Decyzje:** ADR-025. Anonimizacja zamiast usunięcia; nadchodzące aktywne rezerwacje zachowane (założenie, etykieta `assumption`).
 - **Ryzyka:** dopasowanie tylko po dokładnym e-mailu — rezerwacje złożone z innym adresem przez to samo konto WP nie są
   objęte (zachowawczo; ewentualne rozszerzenie o `customer_user_id` do decyzji).
+
+## 2026-09-29 — #22 zarządzanie zasobami
+
+- **Zrobione:** baza ekranów admina `Admin\Screen` (PRG przez `admin-post.php`, nonce + capability, `Admin\Input`,
+  `Admin\Notices`), `Admin\ResourcesPage` + `ResourcesListTable` (`trmz-resources`): lista, dodawanie/edycja (nazwa, typ,
+  opis, kolejność, aktywny), aktywacja/dezaktywacja z ostrzeżeniem o przyszłych rezerwacjach, usuwanie (blokowane przy
+  rezerwacjach). Schemat v2 (`trmz_resources.type`), `BookableResource` + `type`/`description`/`sort_order`.
+  Testy integracyjne handlerów (tworzenie, sanitizacja, walidacja z zachowaniem danych, dezaktywacja, blokada usuwania,
+  capability, nonce, escaping listy), test migracji schematu, unit test typu.
+- **Decyzje:** ADR-026 (klasyczne ekrany PHP zamiast React).
+- **Ryzyka:** kolumna „Usługi” na liście robi zapytanie na wiersz (akceptowalne przy małej liczbie zasobów).

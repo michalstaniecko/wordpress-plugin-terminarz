@@ -79,7 +79,9 @@ final class SettingsPageTest extends WP_UnitTestCase {
 
 		$this->assertCount( 1, $menus );
 		$this->assertNotFalse( has_action( 'admin_menu', array( $menus[0], 'add_menu' ) ) );
-		$this->assertSame( SettingsPage::SLUG, $menus[0]->parent_slug() );
+		$slugs = array_map( static fn( $page ): string => $page->slug(), $menus[0]->pages() );
+		$this->assertContains( SettingsPage::SLUG, $slugs );
+		$this->assertSame( $slugs[0], $menus[0]->parent_slug() );
 	}
 
 	public function test_options_page_capability_is_the_plugin_capability(): void {
