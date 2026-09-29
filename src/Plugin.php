@@ -12,6 +12,7 @@ namespace Terminarz;
 use Terminarz\Infrastructure\Database\Migrator;
 use Terminarz\Infrastructure\I18n;
 use Terminarz\Infrastructure\Module;
+use Terminarz\Rest\RestModule;
 
 /**
  * Holds the list of plugin modules and registers their WordPress hooks once.
@@ -68,6 +69,7 @@ final class Plugin {
 		return array(
 			new I18n(),
 			new Migrator(),
+			new RestModule(),
 		);
 	}
 
