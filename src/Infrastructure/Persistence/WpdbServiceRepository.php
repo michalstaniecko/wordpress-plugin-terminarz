@@ -20,7 +20,7 @@ use Terminarz\Infrastructure\Database\Schema;
  */
 final class WpdbServiceRepository extends WpdbRepository implements ServiceRepository {
 
-	private const COLUMNS = 'id, name, duration_minutes, price_minor, buffer_after_minutes, is_active';
+	private const COLUMNS = 'id, name, duration_minutes, price_minor, buffer_after_minutes, is_active, description, sort_order';
 
 	/**
 	 * {@inheritDoc}
@@ -63,6 +63,8 @@ final class WpdbServiceRepository extends WpdbRepository implements ServiceRepos
 			'price_minor'          => $service->price_minor,
 			'buffer_after_minutes' => $service->buffer_after_minutes,
 			'is_active'            => $service->is_active ? 1 : 0,
+			'description'          => $service->description,
+			'sort_order'           => $service->sort_order,
 			'updated_at'           => $this->now(),
 		);
 
@@ -169,7 +171,9 @@ final class WpdbServiceRepository extends WpdbRepository implements ServiceRepos
 			(int) $row['duration_minutes'],
 			(int) $row['price_minor'],
 			(int) $row['buffer_after_minutes'],
-			1 === (int) $row['is_active']
+			1 === (int) $row['is_active'],
+			(string) ( $row['description'] ?? '' ),
+			(int) ( $row['sort_order'] ?? 0 )
 		);
 	}
 }
