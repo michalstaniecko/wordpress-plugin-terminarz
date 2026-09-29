@@ -46,6 +46,7 @@ test.describe( 'Booking block — choosing a time', () => {
 		pageUrl = await createBookingPage( requestUtils, `Book ${ suffix }`, {
 			serviceIds: [ serviceId, emptyId ],
 		} );
+		expect( pageUrl ).toContain( '://' );
 	} );
 
 	test( 'walks through the steps and keeps choices when going back', async ( {

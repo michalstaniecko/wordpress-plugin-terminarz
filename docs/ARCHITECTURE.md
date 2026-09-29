@@ -646,3 +646,23 @@ skryptów z `build/` (do rozwiązania przy pakowaniu tłumaczeń w M8).
 - Style: klasy `trmz-*` (BEM), kolory dziedziczone z motywu (`currentcolor` + `color-mix`), cele ≥ 44 px (dni ≥ 32×40 px),
   widoczny fokus (`outline` 3 px).
 - Logika czysta w `blocks/booking/lib/` (calendar, slots, format, config) — testy Jest w `tests/js/` (`npm run test:js`).
+
+## ADR-033: Formularz rezerwacji w bloku i obsługa błędów
+
+**Decyzja.**
+- Krok „Twoje dane” (`app/DetailsStep`): imię i nazwisko, e-mail (wymagane), telefon, uwagi, zgoda (treść z ustawień,
+  ADR-031) i honeypot `website` (poza ekranem, `aria-hidden`, `tabindex=-1`). Stan formularza trzyma `BookingApp`, więc
+  powrót do wyboru godziny (także po 409) nie gubi danych.
+- Walidacja klienta (`lib/form.js`, limity = schemat REST) z komunikatami przy polach (`aria-invalid`,
+  `aria-describedby` → podpowiedź + błąd), fokus na pierwszym błędnym polu; serwer i tak waliduje ponownie.
+- Mapowanie odpowiedzi `POST /bookings` (`mapBookingError`): 409 / `trmz_invalid_date` → powrót do kroku godziny
+  z komunikatem i odświeżoną dostępnością; 429 → komunikat z czasem z `Retry-After` (minuty); 400
+  `rest_invalid_param`/`rest_missing_callback_param`/`trmz_consent_required`/`trmz_invalid_customer` → błędy pól;
+  403 `rest_cookie_invalid_nonce` → „sesja wygasła”; brak połączenia i inne → komunikat ogólny (`role=alert`).
+- Sukces (201): ekran potwierdzenia z terminem z odpowiedzi serwera i statusem (`pending` → oczekuje na potwierdzenie,
+  `confirmed` → potwierdzona, `pending_payment` → oczekuje na płatność), przycisk „Zarezerwuj kolejną wizytę”.
+- Punkty rozszerzenia: `payment_url` w odpowiedzi 201 → przekierowanie (tylko `http(s)`, `safeRedirectUrl`) — dla M6;
+  zdarzenie DOM `terminarz:booking-created` (bąbelkujące, `detail` = odpowiedź) na kontenerze bloku.
+- E2E: mu-plugin `tests/e2e/mu-plugins/trmz-e2e.php` (mapowany tylko w `.wp-env.tests.json`, nieaktywny w PHPUnit)
+  podnosi limit rezerwacji do 1000 / 10 min — wszystkie testy przeglądarkowe mają jedno IP. 429 w bloku testowane
+  zamockowaną odpowiedzią, sam limiter — PHPUnit.

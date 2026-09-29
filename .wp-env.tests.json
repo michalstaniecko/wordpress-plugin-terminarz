@@ -6,7 +6,8 @@
 	"port": 8889,
 	"mappings": {
 		"wp-content/plugins/terminarz": ".",
-		"wp-content/plugins/woocommerce": "https://downloads.wordpress.org/plugin/woocommerce.latest-stable.zip"
+		"wp-content/plugins/woocommerce": "https://downloads.wordpress.org/plugin/woocommerce.latest-stable.zip",
+		"wp-content/mu-plugins": "./tests/e2e/mu-plugins"
 	},
 	"config": {
 		"WP_DEBUG": true,
