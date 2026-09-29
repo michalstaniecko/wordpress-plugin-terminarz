@@ -45,6 +45,7 @@ final class Settings {
 		'customer_cancel_limit_hours' => array( 0, 720 ),
 		'hold_minutes'                => array( 5, 120 ),
 		'deposit_percent'             => array( 1, 100 ),
+		'reminder_hours_before'       => array( 0, 168 ),
 	);
 
 	/**
@@ -67,7 +68,7 @@ final class Settings {
 	/**
 	 * Default values. `notification_email` = '' means "use the site's admin e-mail".
 	 *
-	 * @var array{slot_step_minutes:int, min_lead_minutes:int, max_horizon_days:int, customer_cancel_limit_hours:int, auto_confirm:bool, hold_minutes:int, payment_mode:string, deposit_percent:int, any_resource_strategy:string, notification_email:string, consent_text:string, delete_data_on_uninstall:bool}
+	 * @var array{slot_step_minutes:int, min_lead_minutes:int, max_horizon_days:int, customer_cancel_limit_hours:int, auto_confirm:bool, hold_minutes:int, payment_mode:string, deposit_percent:int, any_resource_strategy:string, notification_email:string, reminder_hours_before:int, consent_text:string, delete_data_on_uninstall:bool}
 	 */
 	public const DEFAULTS = array(
 		'slot_step_minutes'           => 15,
@@ -80,6 +81,7 @@ final class Settings {
 		'deposit_percent'             => 30,
 		'any_resource_strategy'       => AvailabilitySettings::STRATEGY_ORDER,
 		'notification_email'          => '',
+		'reminder_hours_before'       => 24,
 		'consent_text'                => '',
 		'delete_data_on_uninstall'    => false,
 	);
@@ -268,6 +270,7 @@ final class Settings {
 			'deposit_percent'             => __( 'Deposit (%)', 'terminarz' ),
 			'hold_minutes'                => __( 'Slot hold for payment (minutes)', 'terminarz' ),
 			'notification_email'          => __( 'Notification e-mail', 'terminarz' ),
+			'reminder_hours_before'       => __( 'Reminder (hours before)', 'terminarz' ),
 			'consent_text'                => __( 'Consent text', 'terminarz' ),
 			'delete_data_on_uninstall'    => __( 'Delete data on uninstall', 'terminarz' ),
 		);
@@ -359,6 +362,13 @@ final class Settings {
 	public function notification_email(): string {
 		$email = (string) $this->values['notification_email'];
 		return '' !== $email ? $email : (string) get_option( 'admin_email' );
+	}
+
+	/**
+	 * How many hours before a confirmed appointment the customer gets a reminder (0 = no reminders).
+	 */
+	public function reminder_hours_before(): int {
+		return (int) $this->values['reminder_hours_before'];
 	}
 
 	/**

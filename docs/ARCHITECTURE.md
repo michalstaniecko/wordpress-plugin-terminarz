@@ -933,3 +933,25 @@ E-maile wysyłane później (potwierdzenie po płatności, przypomnienie) nie mo
 
 **Konsekwencje.** Rotacja `AUTH_SALT` unieważnia wszystkie wysłane linki anulowania (klient musi się skontaktować
 z firmą). Własne (zmienione) szablony zapisane przed tą zmianą nie dostaną linku automatycznie.
+
+## ADR-043: Przypomnienia przed wizytą
+
+**Decyzja.**
+- Ustawienie `reminder_hours_before` (0–168, domyślnie 24; 0 = wyłączone) w sekcji „Powiadomienia”.
+- `Notifications\ReminderScheduler` planuje jedną akcję na potwierdzoną rezerwację: `as_schedule_single_action()`
+  (grupa `terminarz`), gdy Action Scheduler jest dostępny, inaczej `wp_schedule_single_event()`; hook
+  `trmz_send_reminder`, argument = ID rezerwacji. Wybór backendu wspólny z `HoldExpiryScheduler::uses_action_scheduler()`
+  (nowy filtr `trmz_use_action_scheduler`, przydatny także w testach).
+- Zdarzenia: potwierdzenie (utworzona `confirmed` lub przejście do `confirmed`) → zaplanuj; `trmz_booking_rescheduled` →
+  przeplanuj; przejście do statusu nieaktywnego (anulowana/wygasła/zakończona) → usuń z obu backendów. Rezerwacje
+  `pending`/`pending_payment` nie mają przypomnień. Rezerwacja złożona później niż czas przypomnienia — bez przypomnienia.
+- Zadanie jest idempotentne: sprawdza bieżący stan (`confirmed`, przed startem, przypomnienia włączone) i wysyła przez
+  `BookingNotifier` z kluczem deduplikacji `customer_reminder:<timestamp startu>` (powtórzone uruchomienie nic nie
+  wysyła, przeniesiona rezerwacja dostaje nowe przypomnienie). Zadanie uruchomione za wcześnie (ustawienie zmniejszone
+  po zaplanowaniu) planuje się ponownie na właściwy czas; po zwiększeniu ustawienia już zaplanowane przypomnienia
+  przychodzą w starym terminie.
+- Deaktywacja pluginu nie usuwa zaplanowanych przypomnień (po ponownej aktywacji zadziałają); `ReminderScheduler::unschedule_all()`
+  jest dla uninstall (M8).
+
+**Konsekwencje.** Na WP-Cron punktualność zależy od ruchu na stronie (jak w całym WordPressie); Action Scheduler
+z WooCommerce działa w tle co minutę.
