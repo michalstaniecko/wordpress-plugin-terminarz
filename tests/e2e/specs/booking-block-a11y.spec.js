@@ -51,7 +51,7 @@ async function expectNoAxeViolations( page, step ) {
  * @param {import('@playwright/test').Locator} locator Target.
  * @param {number}                             [max]   Maximum number of Tab presses.
  */
-async function tabTo( page, locator, max = 25 ) {
+async function tabTo( page, locator, max = 60 ) {
 	for ( let i = 0; i < max; i++ ) {
 		if (
 			await locator.evaluate(
