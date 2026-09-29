@@ -528,3 +528,15 @@ Jeden wpis na zamknięte issue: data, numer issue, co zrobione, decyzje, znane r
   placeholderów.
   Przy ustawieniach domyślnych (przypomnienie 24 h przed, limit anulowania 24 h) przypomnienie wychodzi dokładnie w chwili
   terminu, więc nie zawiera linku — tylko prośbę o kontakt.
+
+## 2026-09-29 — #44 i18n: `.pot` i tłumaczenie polskie (+ #90 JSON-y zgodne z `build/`)
+
+- **Zrobione:** `languages/terminarz-pl_PL.po` (524 stringi, formy mnogie), skompilowane `.mo`, `.l10n.php` i JSON-y
+  skryptów bloku (nazwy z md5 `build/booking/*.js` przez `make-json --use-map`, mapa z `bin/i18n-js-map.js`);
+  skrypty `i18n:update-po`, `i18n:compile`, `i18n:check` (`bin/i18n-check.php`); kontrola w CI (job Build).
+  Testy: `TranslationsTest` (integracyjny), E2E `i18n-polish.spec.js`. Na zlecenie orkiestratora: domyślne
+  `reminder_hours_before` = 48 h (przypomnienie przed domyślnym 24-godzinnym limitem anulowania, więc z linkiem),
+  opis `{cancel_info}` w readme.txt.
+- **Decyzje:** ADR-047 (pliki skompilowane commitowane), założenie w #42 (domyślne przypomnienie 48 h).
+- **Ryzyka:** tłumaczenie bez korekty natywnego redaktora; teksty core WordPressa bez paczki pl_PL po angielsku.
+

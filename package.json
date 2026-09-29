@@ -40,6 +40,8 @@
 		"lint:css": "wp-scripts lint-style \"blocks/**/*.{css,scss}\" --allow-empty-input",
 		"test:e2e": "playwright test",
 		"i18n": "composer run i18n",
+		"i18n:update-po": "composer run i18n:update-po",
+		"i18n:compile": "composer run i18n:compile",
 		"lint:fix": "wp-scripts lint-js --fix && wp-scripts lint-style \"blocks/**/*.{css,scss}\" --allow-empty-input --fix",
 		"test:e2e:debug": "playwright test --debug",
 		"test:e2e:install": "playwright install --with-deps chromium",

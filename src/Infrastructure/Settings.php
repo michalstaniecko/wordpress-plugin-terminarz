@@ -81,7 +81,7 @@ final class Settings {
 		'deposit_percent'             => 30,
 		'any_resource_strategy'       => AvailabilitySettings::STRATEGY_ORDER,
 		'notification_email'          => '',
-		'reminder_hours_before'       => 24,
+		'reminder_hours_before'       => 48,
 		'consent_text'                => '',
 		'delete_data_on_uninstall'    => false,
 	);

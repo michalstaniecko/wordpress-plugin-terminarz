@@ -35,7 +35,16 @@
 		"yoast/phpunit-polyfills": "^4.0"
 	},
 	"scripts": {
-		"i18n": "wp i18n make-pot . languages/terminarz.pot --slug=terminarz --domain=terminarz --exclude=node_modules,vendor,build,tests,docs,artifacts",
+		"i18n": "wp i18n make-pot . languages/terminarz.pot --slug=terminarz --domain=terminarz --exclude=node_modules,vendor,build,tests,docs,artifacts,bin",
+		"i18n:update-po": "wp i18n update-po languages/terminarz.pot languages",
+		"i18n:compile": [
+			"@php -r \"array_map('unlink', glob('languages/*.json') ?: array());\"",
+			"wp i18n make-mo languages",
+			"wp i18n make-php languages",
+			"node bin/i18n-js-map.js build/i18n-map.json",
+			"wp i18n make-json languages --use-map=build/i18n-map.json --pretty-print"
+		],
+		"i18n:check": "@php bin/i18n-check.php",
 		"test": [
 			"@test:unit",
 			"@test:integration"
@@ -62,6 +71,9 @@
 		"test:integration:no-wc": "Runs integration tests without WooCommerce (TRMZ_TESTS_WOOCOMMERCE=0).",
 		"test:integration:multisite": "Runs integration tests on a multisite network (WP_TESTS_MULTISITE=1).",
 		"i18n": "Generates languages/terminarz.pot.",
+		"i18n:update-po": "Updates languages/*.po from the .pot (new strings untranslated).",
+		"i18n:compile": "Builds .mo and JSON (JavaScript) translations from languages/*.po; needs `npm run build` first.",
+		"i18n:check": "Checks that the .pot matches the code and every .po is complete.",
 		"lint": "Checks PHP code against WordPress Coding Standards.",
 		"lint:fix": "Fixes auto-fixable coding standard violations.",
 		"phpstan": "Runs PHPStan (level 6)."
