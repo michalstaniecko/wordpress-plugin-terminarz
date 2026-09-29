@@ -95,6 +95,14 @@ filter, reading only a header your proxy sets and overwrites, for example:
 
 The limits themselves can be changed with the `trmz_rate_limit` filter (default: 5 requests per 10 minutes per client).
 
+= How do I keep it secure? =
+
+* Behind a reverse proxy or CDN, set the `trmz_client_ip` filter (see above).
+* Define `AUTH_KEY` and `AUTH_SALT` in `wp-config.php`: cancellation links are signed with them.
+* Grant `trmz_manage_bookings` only to trusted roles – it gives access to customer data and the plugin settings.
+* A payment gateway that sends customers to a payment page on another domain must add that host with the core
+  `allowed_redirect_hosts` filter; other payment URLs are refused.
+
 = Are reminders sent on time? =
 
 With WooCommerce active reminders use Action Scheduler; otherwise WP-Cron, which runs only when someone visits the site.

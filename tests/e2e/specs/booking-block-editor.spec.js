@@ -84,13 +84,17 @@ test.describe( 'Booking block in the editor', () => {
 			editor.canvas.getByText( 'This block contains unexpected' )
 		).toHaveCount( 0 );
 
-		// The front end renders the container with the configuration.
-		await page.goto( saved.link );
-		const container = page.locator( '.wp-block-terminarz-booking' );
-		await expect( container ).toHaveCount( 1 );
-		const config = JSON.parse(
-			await container.getAttribute( 'data-trmz-config' )
+		// The front end renders the container with the configuration (JSON script element, replaced by the app on mount).
+		const html = await ( await page.request.get( saved.link ) ).text();
+		const match = html.match(
+			/<script type="application\/json" class="trmz-booking__config">([\s\S]*?)<\/script>/
 		);
+		expect( match ).not.toBeNull();
+		const config = JSON.parse( match[ 1 ] );
+		await page.goto( saved.link );
+		await expect(
+			page.locator( '.wp-block-terminarz-booking' )
+		).toHaveCount( 1 );
 		expect( config.serviceIds ).toEqual( [ serviceId ] );
 		expect( config.showResourcePicker ).toBe( false );
 		expect( config.firstDayOfWeek ).toBe( 0 );

@@ -540,3 +540,13 @@ Jeden wpis na zamknięte issue: data, numer issue, co zrobione, decyzje, znane r
 - **Decyzje:** ADR-047 (pliki skompilowane commitowane), założenie w #42 (domyślne przypomnienie 48 h).
 - **Ryzyka:** tłumaczenie bez korekty natywnego redaktora; teksty core WordPressa bez paczki pl_PL po angielsku.
 
+## 2026-09-29 — #47 przegląd bezpieczeństwa
+
+- **Zrobione:** raport `docs/SECURITY-REVIEW.md` (przegląd ręczny + niezależny agent, ustalenia zweryfikowane).
+  Poprawki: konfiguracja bloku w elemencie JSON zamiast `data-trmz-config` (XSS/przejęcie `restRoot` przez autorów bez
+  `unfiltered_html`), `payment_url` tylko dla dozwolonych hostów, limit IPv6 per /64, nagłówki anty-framing na stronie
+  anulowania, `wp_kses_post` dla wierszy szczegółów, ochrona `ABSPATH` we wszystkich plikach `src/`. readme.txt: sekcja
+  o bezpiecznej konfiguracji. Testy: Jest (`config.test.js`), integracyjne (blok, limit, płatność), E2E (nagłówki, edytor).
+- **Decyzje:** ADR-048.
+- **Ryzyka / nowe issues:** #112 spam rezerwacji (`needs-human`), #113 wykrywanie proxy, #114 limit `GET /availability`.
+

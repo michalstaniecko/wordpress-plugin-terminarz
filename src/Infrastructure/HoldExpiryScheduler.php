@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Terminarz\Infrastructure;
 
+defined( 'ABSPATH' ) || exit; // No direct access.
+
 /**
  * Runs `BookingService::expire_holds()` every 5 minutes: bookings awaiting payment whose hold ran out become `expired`
  * (each fires `trmz_booking_status_changed`, which the WooCommerce integration uses to cancel the unpaid order).

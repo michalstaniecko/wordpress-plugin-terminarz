@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Terminarz\Blocks;
 
+defined( 'ABSPATH' ) || exit; // No direct access.
+
 use DateInterval;
 use DateTimeImmutable;
 use Terminarz\Admin\Money;
@@ -21,13 +23,21 @@ use WP_Block_Type;
 /**
  * Registers the dynamic booking block from `build/booking/block.json` and renders its container.
  *
- * The server renders only an empty container with the configuration in `data-trmz-config` (JSON) and a fallback
- * message for browsers without JavaScript; the booking application (view.js) mounts itself in the container and
- * talks to the public REST API (`terminarz/v1`). See docs/ARCHITECTURE.md, ADR-031.
+ * The server renders only an empty container with the configuration in a child `<script type="application/json">`
+ * and a fallback message for browsers without JavaScript; the booking application (view.js) mounts itself in the
+ * container and talks to the public REST API (`terminarz/v1`). See docs/ARCHITECTURE.md, ADR-031.
+ *
+ * The configuration is deliberately not a `data-*` attribute: authors without `unfiltered_html` may write any `data-*`
+ * attribute into post content, but never a `<script>` element, so only a script element is trusted (ADR-048).
  */
 final class BookingBlock implements Module {
 
 	public const NAME = 'terminarz/booking';
+
+	/**
+	 * Class of the script element holding the configuration of a block instance.
+	 */
+	public const CONFIG_CLASS = 'trmz-booking__config';
 
 	/**
 	 * Directory with the built block (block.json + assets).
@@ -93,15 +103,14 @@ final class BookingBlock implements Module {
 	public function render( array $attributes ): string {
 		$config = $this->config( $attributes );
 
-		$wrapper = get_block_wrapper_attributes(
-			array(
-				'data-trmz-config' => (string) wp_json_encode( $config ),
-			)
-		);
+		// JSON_HEX_TAG/AMP: "<", ">" and "&" become \u escapes, so the JSON can never close the script element.
+		$json = (string) wp_json_encode( $config, JSON_HEX_TAG | JSON_HEX_AMP );
 
 		return sprintf(
-			'<div %1$s><noscript><p class="trmz-booking__noscript">%2$s</p></noscript></div>',
-			$wrapper, // Escaped by get_block_wrapper_attributes().
+			'<div %1$s><script type="application/json" class="%2$s">%3$s</script><noscript><p class="trmz-booking__noscript">%4$s</p></noscript></div>',
+			get_block_wrapper_attributes(), // Escaped by WordPress.
+			esc_attr( self::CONFIG_CLASS ),
+			$json, // JSON with <, > and & escaped (see above).
 			esc_html__( 'Please enable JavaScript in your browser to book an appointment.', 'terminarz' )
 		);
 	}
@@ -145,7 +154,7 @@ final class BookingBlock implements Module {
 		);
 
 		/**
-		 * Filters the front-end configuration of a booking block instance (JSON-encoded into the block markup).
+		 * Filters the front-end configuration of a booking block instance (JSON in a script element of the block markup).
 		 *
 		 * @param array<string, mixed> $config     Configuration.
 		 * @param array<string, mixed> $attributes Sanitized block attributes.

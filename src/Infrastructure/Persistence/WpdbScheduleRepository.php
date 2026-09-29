@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Terminarz\Infrastructure\Persistence;
 
+defined( 'ABSPATH' ) || exit; // No direct access.
+
 use Terminarz\Domain\Model\LocalTime;
 use Terminarz\Domain\Model\TimeWindow;
 use Terminarz\Domain\Model\WeeklySchedule;

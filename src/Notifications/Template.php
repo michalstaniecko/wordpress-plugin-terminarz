@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Terminarz\Notifications;
 
+defined( 'ABSPATH' ) || exit; // No direct access.
+
 /**
  * Subject (plain text) and body (HTML allowed by `wp_kses_post`) with `{placeholders}`, plus the on/off switch.
  */

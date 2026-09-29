@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Terminarz\Rest;
 
+defined( 'ABSPATH' ) || exit; // No direct access.
+
 use DateTimeImmutable;
 use Terminarz\Domain\Exception\DomainError;
 use Terminarz\Domain\Exception\InvalidStatusTransition;

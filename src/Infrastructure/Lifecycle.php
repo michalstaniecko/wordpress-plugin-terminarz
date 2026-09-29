@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Terminarz\Infrastructure;
 
+defined( 'ABSPATH' ) || exit; // No direct access.
+
 use Terminarz\Infrastructure\Database\Migrator;
 
 /**

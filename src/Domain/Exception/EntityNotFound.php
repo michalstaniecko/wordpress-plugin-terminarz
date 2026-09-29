@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Terminarz\Domain\Exception;
 
+defined( 'ABSPATH' ) || exit; // No direct access.
+
 /**
  * E.g. updating a resource that was deleted in the meantime.
  */

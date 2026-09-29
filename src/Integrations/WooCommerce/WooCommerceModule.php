@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Terminarz\Integrations\WooCommerce;
 
+defined( 'ABSPATH' ) || exit; // No direct access.
+
 use Automattic\WooCommerce\Utilities\FeaturesUtil;
 use Terminarz\Infrastructure\Module;
 

@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Terminarz\Rest;
 
+defined( 'ABSPATH' ) || exit; // No direct access.
+
 use Terminarz\Infrastructure\Capabilities;
 use Terminarz\Infrastructure\Services;
 use WP_Error;
@@ -65,7 +67,7 @@ final class RequestLimit {
 		$config = apply_filters( 'trmz_rate_limit', $defaults, $bucket, $request );
 		$config = is_array( $config ) ? array_merge( $defaults, $config ) : $defaults;
 
-		$result = Services::instance()->rate_limiter()->hit( $bucket, self::client_ip( $request ), (int) $config['limit'], (int) $config['window'] );
+		$result = Services::instance()->rate_limiter()->hit( $bucket, self::client_key( self::client_ip( $request ) ), (int) $config['limit'], (int) $config['window'] );
 		if ( $result['allowed'] ) {
 			return true;
 		}
@@ -78,6 +80,24 @@ final class RequestLimit {
 				'retry_after' => $result['retry_after'],
 			)
 		);
+	}
+
+	/**
+	 * Key of a client for the limiter: the IPv4 address, or the /64 network of an IPv6 address (one subscriber usually
+	 * controls a whole /64, so counting single IPv6 addresses would let one client rotate around the limit).
+	 *
+	 * @param string $ip IP address (or "unknown").
+	 */
+	public static function client_key( string $ip ): string {
+		if ( ! str_contains( $ip, ':' ) ) {
+			return $ip;
+		}
+		$packed = inet_pton( $ip );
+		if ( false === $packed || 16 !== strlen( $packed ) ) {
+			return $ip;
+		}
+		$network = inet_ntop( substr( $packed, 0, 8 ) . str_repeat( "\0", 8 ) );
+		return false === $network ? $ip : $network . '/64';
 	}
 
 	/**

@@ -223,6 +223,19 @@ final class OrderPaymentsTest extends WooCommerceTestCase {
 		$this->assertSame( 'trmz_payment_unavailable', self::error_code( $response ) );
 	}
 
+	public function test_off_site_payment_url_needs_an_allowed_redirect_host(): void {
+		add_filter( 'woocommerce_get_checkout_payment_url', static fn(): string => 'https://198.51.100.7/checkout?id=1' );
+
+		$refused = $this->book();
+		$this->assertSame( 500, $refused->get_status(), 'An arbitrary host is refused.' );
+		$this->assertSame( 'trmz_payment_unavailable', self::error_code( $refused ) );
+
+		add_filter( 'allowed_redirect_hosts', static fn( array $hosts ): array => array_merge( $hosts, array( '198.51.100.7' ) ) );
+		$allowed = $this->book( '2030-01-07T12:00:00+01:00' );
+		$this->assertSame( 201, $allowed->get_status(), (string) wp_json_encode( $allowed->get_data() ) );
+		$this->assertSame( 'https://198.51.100.7/checkout?id=1', $allowed->get_data()['payment_url'] );
+	}
+
 	public function test_booking_details_link_to_the_order(): void {
 		$booking = $this->book_paid();
 		$order   = self::order( $booking->order_id );

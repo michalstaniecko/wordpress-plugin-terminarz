@@ -41,13 +41,27 @@ final class BookingBlockTest extends WP_UnitTestCase {
 	 * @return array<string, mixed>
 	 */
 	private static function config_of( string $html ): array {
-		$processor = new \WP_HTML_Tag_Processor( $html );
-		self::assertTrue( $processor->next_tag( array( 'class_name' => 'wp-block-terminarz-booking' ) ) );
-		$json = $processor->get_attribute( 'data-trmz-config' );
-		self::assertIsString( $json );
-		$config = json_decode( $json, true );
+		self::assertMatchesRegularExpression( '#^<div [^>]*class="[^"]*wp-block-terminarz-booking#', $html );
+		self::assertStringNotContainsString( 'data-trmz-config', $html );
+		self::assertSame( 1, preg_match( '#<script type="application/json" class="trmz-booking__config">(.*?)</script>#s', $html, $m ) );
+		$config = json_decode( $m[1], true );
 		self::assertIsArray( $config );
 		return $config;
+	}
+
+	public function test_configuration_json_cannot_break_out_of_the_script_element(): void {
+		add_filter(
+			'trmz_booking_block_config',
+			static function ( array $config ): array {
+				$config['extra'] = '</script><script>alert(1)</script> & "quotes"';
+				return $config;
+			}
+		);
+
+		$html = do_blocks( '<!-- wp:terminarz/booking /-->' );
+
+		$this->assertSame( 1, substr_count( $html, '</script>' ), 'Only the closing tag of the configuration element.' );
+		$this->assertSame( '</script><script>alert(1)</script> & "quotes"', self::config_of( $html )['extra'] );
 	}
 
 	public function test_block_is_registered_from_build_with_scripts_and_translations(): void {
@@ -156,8 +170,8 @@ final class BookingBlockTest extends WP_UnitTestCase {
 		$html   = do_blocks( '<!-- wp:terminarz/booking /-->' );
 		$config = self::config_of( $html );
 
-		$this->assertStringNotContainsString( '<script', $html );
-		$this->assertStringNotContainsString( '<a href', $html, 'HTML inside the attribute must be escaped.' );
+		$this->assertSame( 1, substr_count( $html, '<script' ), 'Only the configuration element.' );
+		$this->assertStringNotContainsString( '<a href', $html, 'HTML inside the JSON must be escaped.' );
 		$this->assertStringContainsString( '<a href="https://example.org/terms">terms</a>', $config['consentHtml'] );
 		$this->assertStringContainsString( '"quoted"', $config['consentHtml'] );
 		$this->assertStringNotContainsString( 'onclick', $config['consentHtml'] );

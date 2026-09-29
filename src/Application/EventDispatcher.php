@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Terminarz\Application;
 
+defined( 'ABSPATH' ) || exit; // No direct access.
+
 /**
  * Publishes application events. The WordPress implementation maps them 1:1 to actions (do_action).
  */

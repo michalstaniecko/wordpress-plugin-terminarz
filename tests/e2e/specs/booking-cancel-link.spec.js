@@ -90,6 +90,10 @@ async function cancelWithLink( page, link ) {
 	expect( response.status() ).toBe( 200 );
 	expect( response.headers()[ 'x-robots-tag' ] ).toContain( 'noindex' );
 	expect( response.headers()[ 'referrer-policy' ] ).toBe( 'no-referrer' );
+	expect( response.headers()[ 'x-frame-options' ] ).toBe( 'DENY' );
+	expect( response.headers()[ 'content-security-policy' ] ).toBe(
+		"frame-ancestors 'none'"
+	);
 	await expect(
 		page.getByRole( 'heading', { name: 'Cancel your booking' } )
 	).toBeVisible();

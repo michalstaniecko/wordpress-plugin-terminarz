@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Terminarz\Rest;
 
+defined( 'ABSPATH' ) || exit; // No direct access.
+
 use Terminarz\Domain\Model\BookableResource;
 use WP_Error;
 use WP_REST_Request;

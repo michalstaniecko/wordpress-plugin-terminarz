@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Terminarz\Admin;
 
+defined( 'ABSPATH' ) || exit; // No direct access.
+
 use DateInterval;
 use DateTimeImmutable;
 use Terminarz\Domain\Exception\EntityNotFound;
@@ -334,8 +336,8 @@ class BookingsPage extends Screen {
 
 		echo '<table class="form-table trmz-booking-details" role="presentation"><tbody>';
 		foreach ( $rows as $label => $html ) {
-			// Values are escaped above.
-			echo '<tr><th scope="row">' . esc_html( $label ) . '</th><td>' . $html . '</td></tr>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			// Values are escaped above; wp_kses_post() also covers rows added through the filter.
+			echo '<tr><th scope="row">' . esc_html( (string) $label ) . '</th><td>' . wp_kses_post( (string) $html ) . '</td></tr>';
 		}
 		echo '</tbody></table>';
 

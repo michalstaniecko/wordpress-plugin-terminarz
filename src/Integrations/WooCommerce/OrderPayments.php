@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Terminarz\Integrations\WooCommerce;
 
+defined( 'ABSPATH' ) || exit; // No direct access.
+
 use Terminarz\Admin\Labels;
 use Terminarz\Admin\Money;
 use Terminarz\Application\PaymentAmount;

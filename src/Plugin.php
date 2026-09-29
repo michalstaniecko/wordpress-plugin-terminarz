@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Terminarz;
 
+defined( 'ABSPATH' ) || exit; // No direct access.
+
 use Terminarz\Admin\BookingsPage;
 use Terminarz\Admin\EmailsPage;
 use Terminarz\Admin\ExceptionsPage;

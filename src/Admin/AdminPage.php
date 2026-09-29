@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Terminarz\Admin;
 
+defined( 'ABSPATH' ) || exit; // No direct access.
+
 /**
  * A screen under the "Terminarz" admin menu. Registered in `Admin\Menu`.
  */

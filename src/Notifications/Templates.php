@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Terminarz\Notifications;
 
+defined( 'ABSPATH' ) || exit; // No direct access.
+
 /**
  * Templates edited in "Terminarz → E-mails", falling back to translatable defaults.
  *

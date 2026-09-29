@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Terminarz\Admin;
 
+defined( 'ABSPATH' ) || exit; // No direct access.
+
 use Terminarz\Notifications\MessageType;
 use Terminarz\Notifications\Placeholders;
 use Terminarz\Notifications\Renderer;

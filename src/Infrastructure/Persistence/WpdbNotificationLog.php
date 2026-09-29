@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Terminarz\Infrastructure\Persistence;
 
+defined( 'ABSPATH' ) || exit; // No direct access.
+
 use DateTimeImmutable;
 use DateTimeZone;
 use Terminarz\Infrastructure\Database\DatabaseError;

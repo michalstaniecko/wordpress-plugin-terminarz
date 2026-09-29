@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Terminarz\Admin;
 
+defined( 'ABSPATH' ) || exit; // No direct access.
+
 /**
  * Prices are stored as integers in minor units (ADR-015). The currency and the number of decimals come from WooCommerce
  * when it is active; without WooCommerce there are no payments, the price is informational and the currency is taken

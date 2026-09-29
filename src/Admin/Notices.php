@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Terminarz\Admin;
 
+defined( 'ABSPATH' ) || exit; // No direct access.
+
 /**
  * Messages and submitted form values survive the redirect after a POST in a short-lived, per-user transient.
  * Messages are translated plain text; they are escaped when printed.
