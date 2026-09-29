@@ -475,3 +475,13 @@ Jeden wpis na zamknięte issue: data, numer issue, co zrobione, decyzje, znane r
 - **Zrobione:** helper `bookThroughBlock` nie usuwa trasy przechwytującej odpowiedź rezerwacji (unroute potrafił zawisnąć
   przy natychmiastowym przekierowaniu na płatność); kolejne żądania przechodzą bez zmian.
 - **Ryzyka:** brak.
+
+## 2026-09-29 — #61 multisite: witryny tworzone po aktywacji sieciowej
+
+- **Zrobione:** moduł `Infrastructure\Multisite` (`wp_initialize_site` → schemat + capability, gdy plugin aktywny
+  sieciowo; `wpmu_drop_tables` → usuwanie tabel pluginu razem z witryną), `Lifecycle::activate_site()` publiczne.
+  Testy `MultisiteTest` (aktywacja sieciowa, nowa witryna, witryna bez aktywacji sieciowej, usunięcie witryny, tabele per
+  witryna); skrypt `composer test:integration:multisite` i krok CI — cała suita integracyjna przechodzi na multisite.
+- **Decyzje:** ADR-045.
+- **Ryzyka:** aktywacja sieciowa w dużej sieci (setki witryn) wykonuje migrację każdej witryny w jednym żądaniu.
+
