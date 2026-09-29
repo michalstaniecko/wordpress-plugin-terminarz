@@ -18,6 +18,7 @@ use Terminarz\Domain\Exception\SlotUnavailable;
 use Terminarz\Domain\Model\Booking;
 use Terminarz\Domain\Model\BookingStatus;
 use Terminarz\Domain\Model\Slot;
+use Terminarz\Infrastructure\Capabilities;
 
 /**
  * "Terminarz → Bookings" (`admin.php?page=trmz-bookings`), the first screen of the menu:
@@ -71,6 +72,48 @@ class BookingsPage extends Screen {
 			'cancel_booking'     => 'cancel',
 			'reschedule_booking' => 'reschedule',
 		);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	public function register(): void {
+		parent::register();
+		add_action( 'admin_post_trmz_export_bookings', array( $this, 'export' ) );
+	}
+
+	/**
+	 * `admin_post_trmz_export_bookings`: streams the bookings matching the list filters as a CSV download.
+	 */
+	public function export(): void {
+		$filters  = $this->authorize_export();
+		$exporter = new BookingsCsvExporter( $this->services() );
+
+		nocache_headers();
+		header( 'Content-Type: text/csv; charset=utf-8' );
+		header( 'Content-Disposition: attachment; filename="' . $exporter->filename() . '"' );
+		header( 'X-Content-Type-Options: nosniff' );
+
+		$output = fopen( 'php://output', 'w' ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- Streaming the response.
+		if ( false !== $output ) {
+			$exporter->write( $output, $filters );
+			fclose( $output ); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- Streaming the response.
+		}
+		exit;
+	}
+
+	/**
+	 * Checks capability and nonce of an export request and returns its filters (`wp_die()` on failure).
+	 */
+	public function authorize_export(): BookingFilters {
+		if ( ! current_user_can( Capabilities::MANAGE_BOOKINGS ) ) {
+			wp_die( esc_html__( 'Sorry, you are not allowed to do this.', 'terminarz' ), 403 );
+		}
+		check_admin_referer( 'trmz_export_bookings' );
+
+		// Filters are sanitized by BookingFilters::from_query().
+		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- See above; nonce verified.
+		return BookingFilters::from_query( wp_unslash( $_GET ) );
 	}
 
 	/**

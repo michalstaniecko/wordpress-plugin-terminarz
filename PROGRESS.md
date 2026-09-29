@@ -271,3 +271,13 @@ Jeden wpis na zamknięte issue: data, numer issue, co zrobione, decyzje, znane r
   komunikat, szczegóły, capability/nonce).
 - **Decyzje:** ADR-029. Przeniesienie w panelu podlega tym samym regułom dostępności co rezerwacja klienta.
 - **Ryzyka:** brak akcji zbiorczych i ręcznego „zakończ” (completed) — poza zakresem issue.
+
+## 2026-09-29 — #26 eksport rezerwacji do CSV
+
+- **Zrobione:** `Admin\BookingsCsvExporter` (strumieniowanie partiami po 100, BOM UTF-8, separator z filtra
+  `trmz_csv_separator`, ochrona przed formula injection), akcja `admin_post_trmz_export_bookings` w `BookingsPage`
+  (capability + nonce, nagłówki pobierania), przycisk „Eksportuj CSV” zachowujący filtry listy. Testy integracyjne
+  (BOM/nagłówek/czas lokalny/cudzysłowy i nowe linie, formula injection, filtry, partie > 100 bez duplikatów, separator,
+  capability/nonce, link z filtrami).
+- **Decyzje:** ADR-030.
+- **Ryzyka:** offsetowe partie przy równoległych zmianach mogą pominąć/zdublować wiersz na granicy partii.
