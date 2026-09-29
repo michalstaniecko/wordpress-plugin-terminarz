@@ -8,6 +8,9 @@
 		"node": ">=20"
 	},
 	"devDependencies": {
+		"@playwright/test": "^1.63.0",
+		"@types/node": "^20.19.43",
+		"@wordpress/e2e-test-utils-playwright": "^2.1.0",
 		"@wordpress/env": "^11.16.0",
 		"@wordpress/eslint-plugin": "^27.0.0",
 		"@wordpress/scripts": "^35.0.0",
@@ -26,8 +29,10 @@
 		"lint": "npm run lint:js && npm run lint:css",
 		"lint:js": "wp-scripts lint-js",
 		"lint:css": "wp-scripts lint-style \"blocks/**/*.{css,scss}\" --allow-empty-input",
-		"test:e2e": "wp-scripts test-playwright",
+		"test:e2e": "playwright test",
 		"i18n": "composer run i18n",
-		"lint:fix": "wp-scripts lint-js --fix && wp-scripts lint-style \"blocks/**/*.{css,scss}\" --allow-empty-input --fix"
+		"lint:fix": "wp-scripts lint-js --fix && wp-scripts lint-style \"blocks/**/*.{css,scss}\" --allow-empty-input --fix",
+		"test:e2e:debug": "playwright test --debug",
+		"test:e2e:install": "playwright install --with-deps chromium"
 	}
 }

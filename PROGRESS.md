@@ -43,3 +43,14 @@ Jeden wpis na zamknięte issue: data, numer issue, co zrobione, decyzje, znane r
 - **Ryzyka:** `phpcompatibility-wp` 2.1 opiera się na PHPCompatibility 9.3 (nie zna części składni PHP 8.x —
   wykrywa głównie użycie zbyt nowych funkcji; realną zgodność zapewnia macierz PHP w CI). Testy integracyjne
   nie są analizowane przez PHPStana.
+
+## 2026-09-29 — #6 Playwright E2E
+
+- **Zrobione:** `playwright.config.js` (baseURL :8889, `webServer` → `env:start:tests`), global setup (logowanie admina,
+  storage state, stan bazowy pluginów, offset `debug.log`), helpery `debug-log.js` i `woocommerce.js`,
+  smoke testy: plugin aktywny na liście pluginów, działa po deaktywacji WooCommerce, brak PHP notice/warning w `debug.log`.
+  Skrypty `test:e2e`, `test:e2e:debug`, `test:e2e:install`.
+- **Decyzje:** ADR-010 (środowisko tests :8889, odczyt `debug.log` przez HTTP, seryjne wykonanie).
+- **Ryzyka:** odczyt `debug.log` przez HTTP działa tylko dlatego, że środowisko testowe serwuje `wp-content/`
+  — gdyby wp-env to zmienił, trzeba przejść na `wp-env run cli cat`. Sprawdzone negatywnie (wstrzyknięty
+  `E_USER_WARNING` powoduje porażkę testu).

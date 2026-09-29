@@ -102,3 +102,20 @@ Dzięki temu `.pot` generuje się lokalnie i w CI bez uruchamiania wp-env. Plik 
 - JS/CSS: ESLint 9 (flat config `eslint.config.cjs` rozszerzający domyślny z `@wordpress/scripts`, reguła
   `@wordpress/i18n-text-domain` = `terminarz`, reguły Playwright dla `tests/e2e`) i stylelint
   (`@wordpress/stylelint-config/scss-stylistic`, klasy CSS muszą zaczynać się od `trmz-` lub `wp-block-terminarz-`).
+
+## ADR-010: Testy E2E (Playwright)
+
+**Decyzja.**
+- `@playwright/test` + `@wordpress/e2e-test-utils-playwright`, własny `playwright.config.js` (nie domyślny z wp-scripts,
+  żeby kontrolować katalog testów `tests/e2e/specs`, reportery i `webServer`).
+- Cel: środowisko **tests** `http://localhost:8889` (`.wp-env.tests.json`) — izolowane od ręcznej pracy na :8888,
+  więc testy mogą swobodnie zmieniać stan (np. deaktywować WooCommerce). Nadpisywalne przez `WP_BASE_URL`.
+  `webServer` uruchamia `npm run env:start:tests`, jeśli witryna nie odpowiada.
+- Global setup loguje admina przez REST (`RequestUtils.setupRest()`), zapisuje storage state w `artifacts/`,
+  ustawia stan bazowy (Terminarz i WooCommerce aktywne) i zapamiętuje rozmiar `debug.log`.
+- `debug.log` czytany przez HTTP (`/wp-content/debug.log` w środowisku testowym) — bez dostępu do Dockera;
+  smoke test sprawdza tylko wpisy powstałe w trakcie przebiegu. Lista wyjątków dla znanych wpisów zewnętrznych
+  (`IGNORED` w `tests/e2e/utils/debug-log.js`) jest pusta i ma pozostać krótka.
+- Helpery `activateWooCommerce()` / `deactivateWooCommerce()` (`tests/e2e/utils/woocommerce.js`); testy, które
+  wyłączają WooCommerce, przywracają go po sobie.
+- Jeden worker, bez równoległości (wspólna instancja WordPressa); w CI 1 retry, raport HTML jako artefakt.
