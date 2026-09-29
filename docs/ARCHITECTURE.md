@@ -334,3 +334,23 @@ W CI osobny krok joba `integration`. Zmienne: `TRMZ_CONCURRENCY_WORKERS`, `TRMZ_
   dostępny tylko w `Reservation::$cancel_token` zaraz po rezerwacji, weryfikacja `BookingService::verify_cancel_token()`.
 - Hooki: `trmz_booking_created`, `trmz_booking_status_changed`, `trmz_booking_rescheduled`, `trmz_schema_migrated`;
   filtry: `trmz_availability_settings`, `trmz_db_inside_external_transaction`.
+
+## ADR-019: Warstwa REST (`Terminarz\Rest`, `terminarz/v1`)
+
+**Decyzja.**
+- Moduł `Rest\RestModule` (w `Plugin::default_modules()`) rejestruje kontrolery na `rest_api_init`. Kontrolery rozszerzają
+  `Rest\Controller` (← `WP_REST_Controller`): namespace `terminarz/v1`, schemat (`get_item_schema()`), walidacja argumentów
+  przez `args` (JSON Schema WordPressa), zależności z `Infrastructure\Services::instance()` pobierane w czasie żądania
+  (testy podmieniają kontener przez `Services::set_instance()`).
+- Każda trasa ma jawny `permission_callback`: publiczny odczyt → `Controller::public_read_permissions_check()` (nazwana metoda,
+  nie `__return_true`); administracja → `manage_permissions_check()` (`trmz_manage_bookings`, 401 dla anonima / 403 dla
+  zalogowanego bez uprawnienia — `rest_authorization_required_code()`).
+- Odpowiedzi publiczne zawierają wyłącznie pola ze schematu (bez `user_id`, `sort_order`, buforów, danych innych klientów).
+  Nieaktywne usługi/zasoby są publicznie nieodróżnialne od nieistniejących (404 `trmz_service_not_found`).
+- Wyjątki → `Rest\ErrorMapper::to_wp_error()`: stały kod błędu + status HTTP + ogólny, przetłumaczony komunikat
+  (`SlotUnavailable`/`EntityInUse` 409, `EntityNotFound` 404, `InvalidStatusTransition` 422, `InvalidValue` 400,
+  `DatabaseError` 500). Angielskie komunikaty wyjątków (ADR-015) nigdy nie trafiają do klienta.
+- Czasy w odpowiedziach: ISO 8601 z offsetem strefy witryny (`DATE_RFC3339`) + odpowiednik UTC (`…Z`).
+
+**Konsekwencje.** Katalog nie zawiera jeszcze opisu usługi/zasobu ani waluty (kolumny spoza modelu domeny — ADR-013);
+dojdą razem z panelem admina (M4) / WooCommerce (M6) jako nowe pola schematu (zmiana wstecznie kompatybilna).

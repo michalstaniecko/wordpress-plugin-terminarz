@@ -116,6 +116,15 @@ final class Services {
 	}
 
 	/**
+	 * Replaces the shared instance (tests: fixed clock, custom settings).
+	 *
+	 * @param Services $services Instance to share.
+	 */
+	public static function set_instance( Services $services ): void {
+		self::$instance = $services;
+	}
+
+	/**
 	 * Resets the shared instance (tests).
 	 */
 	public static function reset(): void {
