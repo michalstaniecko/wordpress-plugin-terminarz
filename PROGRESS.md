@@ -160,3 +160,13 @@ Jeden wpis na zamknięte issue: data, numer issue, co zrobione, decyzje, znane r
 - **Decyzje:** ADR-019. Nieaktywna usługa = 404 (jak nieistniejąca). `/resources` bez `service` zwraca wszystkie aktywne
   zasoby; z `service` — w kolejności preferencji przypisania. Brak opisu i waluty w katalogu (poza modelem domeny — M4/M6).
 - **Ryzyka:** brak paginacji katalogu (zakładamy niewielką liczbę usług/zasobów).
+
+## 2026-09-29 — #17 endpoint dostępności
+
+- **Zrobione:** `Rest\AvailabilityController` — `GET /terminarz/v1/availability?service=&resource=<id>|any&from=&to=`:
+  walidacja (daty, zakres ≤ 31 dni, usługa aktywna, zasób przypisany i aktywny), odpowiedź zgrupowana po dniach lokalnych
+  (wszystkie dni zakresu), czasy ISO 8601 z offsetem witryny + `start_utc`, `Cache-Control: no-store` (filtr
+  `trmz_availability_cache_max_age`). Testy integracyjne: grupowanie, `any`, zajęte/przeszłe sloty, DST (offset +01:00 → +02:00),
+  walidacja, nagłówki cache, benchmark REST (~11 ms, próg `TRMZ_BENCH_MAX_MS`).
+- **Decyzje:** ADR-020. `from`/`to` wymagane (bez domyślnego „dziś”); dla `any` pole `resource` slotu = `null`.
+- **Ryzyka:** przy włączonym cache (filtr) klient może zobaczyć zajęty już slot — rezerwacja zwróci wtedy 409.
