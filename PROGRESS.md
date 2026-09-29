@@ -114,3 +114,16 @@ Jeden wpis na zamknięte issue: data, numer issue, co zrobione, decyzje, znane r
 - **Decyzje:** ADR-013. Usuwanie zasobu/usługi z rezerwacjami zablokowane (`EntityInUse`).
 - **Ryzyka:** kolumny spoza modelu domeny (opis, kolejność, waluta) jeszcze nieedytowalne — M4. Tryb savepointów
   w testach oznacza, że prawdziwe `START TRANSACTION` jest testowane dopiero testem współbieżności (#14).
+
+## 2026-09-29 — #13 repozytorium rezerwacji i atomowe zajmowanie slotu
+
+- **Zrobione:** `Domain\Repository\BookingRepository` + `WpdbBookingRepository` (atomowe `create()`/`reschedule()`:
+  blokada wiersza zasobu, kontrola nakładania z buforami, wygaszanie przeterminowanych wstrzymań, UNIQUE jako ostatnia linia
+  obrony → `SlotUnavailable`), `change_status()` z walidacją przejść i zwalnianiem slotu, `busy_ranges()`, `in_range()`,
+  `expire_holds()`, `attach_order()`. Warstwa `Application`: `BookingService`, `Reservation`, `Clock`, `EventDispatcher`;
+  `Infrastructure\WpEventDispatcher`, `Infrastructure\Services`. Testy integracyjne repozytorium i serwisu.
+  Autoload-dev: `Terminarz\Tests\Integration\` → `tests/php/integration/`.
+- **Decyzje:** ADR-014 (w tym hooki `trmz_booking_*`). Sniff `FunctionCommentThrowTag.WrongNumber` wyłączony (@throws
+  dokumentuje też wyjątki propagowane).
+- **Ryzyka:** `BookingService::reserve()` bez polityki slotu nie sprawdza godzin pracy — podpina ją #15; REST (M3) musi
+  korzystać z serwisu z polityką. Wygaszenie wstrzymania w `create()` nie emituje zdarzenia.

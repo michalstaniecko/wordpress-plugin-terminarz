@@ -245,3 +245,38 @@ rozwija do obiektów `ScheduleException` per dzień.
   do 3 prób przy deadlocku / lock wait timeout). Zagnieżdżenie → `SAVEPOINT`. Filtr `trmz_db_inside_external_transaction`
   (w bootstrapie testów integracyjnych = `true`) wymusza savepointy także na najwyższym poziomie, bo suita WP otwiera
   transakcję na każdy test, a drugi `START TRANSACTION` zatwierdziłby dane testu.
+
+## ADR-014: Atomowe zajmowanie slotu i warstwa aplikacyjna rezerwacji
+
+**Kontekst.** Dwa równoległe żądania nie mogą zarezerwować nakładających się terminów (z buforami) tego samego zasobu.
+
+**Decyzja.**
+- `Domain\Repository\BookingRepository` (implementacja `Infrastructure\Persistence\WpdbBookingRepository`):
+  `create()` i `reschedule()` w transakcji InnoDB (`Transaction::run()`):
+  1. `SELECT id FROM trmz_resources WHERE id = %d FOR UPDATE` — blokada wiersza zasobu serializuje zapisy per zasób
+     (różne zasoby nie czekają na siebie);
+  2. zwykły odczyt nakładających się aktywnych rezerwacji (`active_start_utc IS NOT NULL`, `start_utc < nowy_koniec_z_buforem`,
+     `buffer_end_utc > nowy_start`) — snapshot REPEATABLE READ powstaje dopiero po uzyskaniu blokady, więc widzi rezerwacje
+     zatwierdzone przez poprzedniego posiadacza blokady; bez odczytów blokujących zakresy (unikamy gap locków i deadlocków);
+  3. `pending_payment` z wygasłym `hold_expires_at` nie blokuje — jest po drodze oznaczana jako `expired` (UPDATE po PK),
+     każda inna kolizja → `Domain\Exception\SlotUnavailable`;
+  4. INSERT/UPDATE; błąd duplikatu indeksu `resource_active_start` → `SlotUnavailable` (nie 500). Błędy są tłumione
+     (`suppress_errors`), żeby oczekiwany konflikt nie trafiał do logu PHP.
+  Kolejność blokad zawsze: wiersz zasobu → wiersze rezerwacji. Deadlock / lock wait timeout → ponowienie całej transakcji.
+- Zmiana statusu (`change_status()`) waliduje przejście maszyną stanów `BookingStatus`; status nieaktywny zeruje
+  `active_start_utc` (zwalnia slot). `busy_ranges()` zwraca zajętość (termin + bufor) wielu zasobów jednym zapytaniem, tą samą
+  regułą co `Booking::blocks_slot_at()`. `expire_holds()` — dla przyszłego crona (M6).
+- Warstwa aplikacyjna `Terminarz\Application` (bez funkcji WordPressa; zależności wstrzykiwane):
+  `BookingService` (`reserve()`, `reschedule()`, `change_status()`, `cancel()`, `expire_holds()`, `verify_cancel_token()`),
+  `Clock` (`SystemClock`, `FixedClock`), `EventDispatcher` (implementacja `Infrastructure\WpEventDispatcher` → `do_action`),
+  `Reservation` (rezerwacja + jednorazowo jawny token anulowania; w bazie tylko SHA-256).
+  `reserve()` sprawdza: usługa istnieje i jest aktywna, zasób aktywny i przypisany do usługi, start w przyszłości,
+  opcjonalna polityka slotu (`set_slot_policy()`, podpinana przez `AvailabilityService` w #15), potem atomowy `create()`.
+  `public_id` = 32 znaki hex (128 bitów losowości).
+- Zdarzenia (akcje WP): `trmz_booking_created` (Booking), `trmz_booking_status_changed` (Booking, BookingStatus poprzedni),
+  `trmz_booking_rescheduled` (Booking, Booking poprzedni). Wygaszenie wstrzymania „po drodze” w `create()` nie emituje
+  zdarzenia (robi to dopiero `expire_holds()`).
+- `Infrastructure\Services` — ręczny composition root (ADR-003): `Services::instance()->booking_service()`, repozytoria itd.
+
+**Konsekwencje.** Wymagane InnoDB (ADR-012). W testach integracyjnych transakcje działają na savepointach (ADR-013),
+więc prawdziwą współbieżność sprawdza osobny test procesowy (#14).
