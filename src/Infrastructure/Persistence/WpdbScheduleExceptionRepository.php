@@ -12,6 +12,7 @@ namespace Terminarz\Infrastructure\Persistence;
 use DateTimeImmutable;
 use Terminarz\Domain\Exception\EntityNotFound;
 use Terminarz\Domain\Model\ScheduleException;
+use Terminarz\Domain\Model\ScheduleExceptionPeriod;
 use Terminarz\Domain\Model\TimeWindow;
 use Terminarz\Domain\Repository\ScheduleExceptionRepository;
 use Terminarz\Infrastructure\Database\DatabaseError;
@@ -29,7 +30,7 @@ final class WpdbScheduleExceptionRepository extends WpdbRepository implements Sc
 	public const KIND_CLOSED       = 'closed';
 	public const KIND_CUSTOM_HOURS = 'custom_hours';
 
-	private const COLUMNS = 'id, resource_id, start_date, end_date, kind, intervals';
+	private const COLUMNS = 'id, resource_id, start_date, end_date, kind, intervals, note';
 
 	/**
 	 * {@inheritDoc}
@@ -59,12 +60,7 @@ final class WpdbScheduleExceptionRepository extends WpdbRepository implements Sc
 			'start_date'  => $exception->date,
 			'end_date'    => $exception->date,
 			'kind'        => $exception->is_closed() ? self::KIND_CLOSED : self::KIND_CUSTOM_HOURS,
-			'intervals'   => $exception->is_closed() ? null : (string) wp_json_encode(
-				array_map(
-					static fn( TimeWindow $w ): array => array( $w->start->to_string(), $w->end->to_string() ),
-					$exception->windows
-				)
-			),
+			'intervals'   => $exception->is_closed() ? null : self::encode_windows( $exception->windows ),
 			'updated_at'  => $this->now(),
 		);
 
@@ -130,6 +126,116 @@ final class WpdbScheduleExceptionRepository extends WpdbRepository implements Sc
 			static fn( ScheduleException $a, ScheduleException $b ): int => array( $a->date, null !== $a->resource_id, $a->resource_id, $a->id ) <=> array( $b->date, null !== $b->resource_id, $b->resource_id, $b->id )
 		);
 		return $result;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @param int $id Exception ID.
+	 */
+	public function get_period( int $id ): ?ScheduleExceptionPeriod {
+		$table = $this->table( Schema::EXCEPTIONS );
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table from Schema.
+		$rows = $this->rows( $this->db->prepare( 'SELECT ' . self::COLUMNS . " FROM {$table} WHERE id = %d", $id ) );
+		return array() === $rows ? null : self::hydrate_period( $rows[0] );
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @param ScheduleExceptionPeriod $period Period.
+	 * @throws EntityNotFound When the period does not exist.
+	 */
+	public function save_period( ScheduleExceptionPeriod $period ): ScheduleExceptionPeriod {
+		$table = $this->table( Schema::EXCEPTIONS );
+		$data  = array(
+			'resource_id' => $period->resource_id,
+			'start_date'  => $period->start_date,
+			'end_date'    => $period->end_date,
+			'kind'        => $period->is_closed() ? self::KIND_CLOSED : self::KIND_CUSTOM_HOURS,
+			'intervals'   => $period->is_closed() ? null : self::encode_windows( $period->windows ),
+			'note'        => mb_substr( $period->note, 0, 191 ),
+			'updated_at'  => $this->now(),
+		);
+
+		if ( null === $period->id ) {
+			$data['created_at'] = $data['updated_at'];
+			return $period->with_id( $this->insert( $table, $data ) );
+		}
+
+		if ( ! $this->exists( $table, $period->id ) ) {
+			throw EntityNotFound::with_id( 'schedule exception', $period->id );
+		}
+		$this->update( $table, $data, array( 'id' => $period->id ) );
+		return $period;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @param string|null $ending_from Only periods ending on or after this date.
+	 * @return ScheduleExceptionPeriod[]
+	 */
+	public function periods( ?string $ending_from = null ): array {
+		$table = $this->table( Schema::EXCEPTIONS );
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table from Schema.
+		$sql = $this->db->prepare( 'SELECT ' . self::COLUMNS . " FROM {$table} WHERE end_date >= %s ORDER BY start_date ASC, resource_id IS NOT NULL, resource_id ASC, id ASC", $ending_from ?? '0000-01-01' );
+
+		return array_map( array( self::class, 'hydrate_period' ), $this->rows( $sql ) );
+	}
+
+	/**
+	 * {@inheritDoc}
+	 *
+	 * @param ScheduleExceptionPeriod $period Period.
+	 * @return ScheduleExceptionPeriod[]
+	 */
+	public function conflicting_periods( ScheduleExceptionPeriod $period ): array {
+		$table = $this->table( Schema::EXCEPTIONS );
+		$where = 'start_date <= %s AND end_date >= %s AND id <> %d';
+		$args  = array( $period->end_date, $period->start_date, $period->id ?? 0 );
+		if ( null === $period->resource_id ) {
+			$where .= ' AND resource_id IS NULL';
+		} else {
+			$where .= ' AND resource_id = %d';
+			$args[] = $period->resource_id;
+		}
+
+		// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table from Schema, fixed conditions.
+		$rows = $this->rows( $this->db->prepare( 'SELECT ' . self::COLUMNS . " FROM {$table} WHERE {$where} ORDER BY start_date ASC", $args ) );
+
+		return array_map( array( self::class, 'hydrate_period' ), $rows );
+	}
+
+	/**
+	 * Row → period.
+	 *
+	 * @param array<string, mixed> $row Row.
+	 */
+	private static function hydrate_period( array $row ): ScheduleExceptionPeriod {
+		$day = self::hydrate( $row, (string) $row['start_date'] );
+		return new ScheduleExceptionPeriod(
+			$day->resource_id,
+			(string) $row['start_date'],
+			(string) $row['end_date'],
+			$day->windows,
+			(string) ( $row['note'] ?? '' ),
+			(int) $row['id']
+		);
+	}
+
+	/**
+	 * Windows → JSON `[["09:00","12:00"], …]`.
+	 *
+	 * @param TimeWindow[] $windows Windows.
+	 */
+	private static function encode_windows( array $windows ): string {
+		return (string) wp_json_encode(
+			array_map(
+				static fn( TimeWindow $w ): array => array( $w->start->to_string(), $w->end->to_string() ),
+				$windows
+			)
+		);
 	}
 
 	/**

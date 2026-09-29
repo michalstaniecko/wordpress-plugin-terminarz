@@ -248,3 +248,15 @@ Jeden wpis na zamknięte issue: data, numer issue, co zrobione, decyzje, znane r
   usługa, aktualizacja przypisań, blokada usuwania, capability/nonce, escaping, parsowanie kwot).
 - **Decyzje:** ADR-027. Bez WooCommerce cena informacyjna, waluta z `trmz_currency` (założenie, `assumption`).
 - **Ryzyka:** zmiana liczby miejsc po przecinku w WooCommerce zmienia interpretację zapisanych cen.
+
+## 2026-09-29 — #24 harmonogram tygodniowy, przerwy i wyjątki
+
+- **Zrobione:** `Admin\SchedulePage` (`trmz-schedule`): godziny pracy i przerwy per dzień (wiele przedziałów, bez JS),
+  informacja o strefie czasowej. `Admin\ScheduleForm` (walidacja nakładania, przerwy w godzinach pracy, format, 00:00 =
+  północ). `Domain\Model\ScheduleExceptionPeriod` + metody repozytorium (`save_period`, `get_period`, `periods`,
+  `conflicting_periods`). `Admin\ExceptionsPage` + `ExceptionsListTable` (`trmz-exceptions`): urlopy, święta globalne,
+  dni z innymi godzinami, walidacja nakładania w tym samym zakresie, ostrzeżenie o rezerwacjach. Linki „Godziny pracy”
+  i „Dni wolne” przy zasobach. Testy: unit (okres), integracyjne (repozytorium, zapis/walidacja harmonogramu, wyjątki
+  i ich wpływ na dostępność, konflikty, capability/nonce, escaping, filtry listy).
+- **Decyzje:** ADR-028 (okres = jeden wiersz, formularz bez JS).
+- **Ryzyka:** przerwa obejmująca styk dwóch przedziałów pracy jest odrzucana (trzeba ją podzielić).

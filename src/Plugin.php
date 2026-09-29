@@ -9,9 +9,11 @@ declare(strict_types=1);
 
 namespace Terminarz;
 
+use Terminarz\Admin\ExceptionsPage;
 use Terminarz\Admin\Menu;
 use Terminarz\Admin\Privacy;
 use Terminarz\Admin\ResourcesPage;
+use Terminarz\Admin\SchedulePage;
 use Terminarz\Admin\ServicesPage;
 use Terminarz\Admin\SettingsPage;
 use Terminarz\Infrastructure\Database\Migrator;
@@ -77,6 +79,8 @@ final class Plugin {
 			new Menu(
 				array(
 					new ResourcesPage(),
+					new SchedulePage(),
+					new ExceptionsPage(),
 					new ServicesPage(),
 					new SettingsPage(),
 				)

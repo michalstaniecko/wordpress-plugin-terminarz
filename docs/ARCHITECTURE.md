@@ -532,3 +532,26 @@ więc test aktualizacji schematu woła `Schema::install()` bez opcji wersji/blok
 
 **Konsekwencje.** Zmiana liczby miejsc po przecinku w WooCommerce po zapisaniu cen zmienia ich interpretację — do
 opisania w dokumentacji M6.
+
+## ADR-028: Harmonogram tygodniowy i wyjątki w panelu
+
+**Decyzja.**
+- `Admin\SchedulePage` (`admin.php?page=trmz-schedule&resource=<id>`, pozycja 24, „Godziny pracy”): tabela 7 dni,
+  w każdym dowolna liczba przedziałów pracy i przerw (pola `type="time"`, czas lokalny witryny — informacja o strefie
+  i bieżącym offsecie UTC na ekranie). **Bez JavaScriptu**: zapisane przedziały + puste wiersze (2 dla pracy, 1 dla przerw);
+  po zapisie z wykorzystaniem wszystkich wierszy pojawiają się kolejne (maks. 10 na dzień). Koniec `00:00` = północ (24:00).
+- Walidacja (`Admin\ScheduleForm`, komunikaty per dzień): niepełny wiersz, zły format, koniec ≤ początek, nakładające się
+  godziny pracy, nakładające się przerwy, przerwa poza godzinami pracy. Zapis atomowo przez `ScheduleRepository::save()`.
+- Wyjątki jako **okresy**: `Domain\Model\ScheduleExceptionPeriod` (zasób lub globalny, `start_date`–`end_date` włącznie,
+  maks. 366 dni, okna zastępcze lub zamknięte, notatka) — jeden wiersz tabeli na okres (tabela od v1 obsługuje zakresy);
+  silnik nadal dostaje dni (`in_range()` rozwija zakres — ADR-013, `ScheduleExceptionPeriod::days()`).
+  Repozytorium: `get_period()`, `save_period()`, `periods(?ending_from)`, `conflicting_periods()`.
+- `Admin\ExceptionsPage` (`admin.php?page=trmz-exceptions`, pozycja 26, „Dni wolne”) + `ExceptionsListTable`: lista
+  nadchodzących (opcjonalnie z przeszłymi, filtr zakresu: wszystkie/globalne/zasób), formularz: dotyczy (wszystkie zasoby
+  lub zasób), pierwszy/ostatni dzień, zamknięte / inne godziny (do 3 przedziałów), notatka. Obsługuje urlop zasobu (zakres
+  dni), święto globalne i dzień z innymi godzinami.
+- Nakładanie się: okresy tego samego zakresu (ten sam zasób albo oba globalne) nie mogą dzielić dnia — błąd z datami
+  kolidującego okresu; wyjątek zasobu może nakładać się na globalny (ma pierwszeństwo, ADR-015).
+- Wyjątek nie zmienia istniejących rezerwacji — ekran ostrzega o liczbie aktywnych rezerwacji w tych dniach.
+
+**Konsekwencje.** Wyjątki zapisane wcześniej przez `save()` (jednodniowe) są widoczne jako okresy jednodniowe.

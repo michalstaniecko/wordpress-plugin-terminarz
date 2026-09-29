@@ -54,6 +54,23 @@ final class ResourcesListTable extends WP_List_Table {
 	public function prepare_items(): void {
 		$this->_column_headers = array( $this->get_columns(), array(), array(), 'name' );
 		$this->items           = Services::instance()->resources()->all();
+		$this->set_pagination_args(
+			array(
+				'total_items' => count( $this->items ),
+				'per_page'    => max( 1, count( $this->items ) ),
+			)
+		);
+	}
+
+	/**
+	 * Row actions are printed by the primary column itself.
+	 *
+	 * @param object|array<mixed> $item        Item.
+	 * @param string              $column_name Column.
+	 * @param string              $primary     Primary column.
+	 */
+	protected function handle_row_actions( $item, $column_name, $primary ): string {
+		return '';
 	}
 
 	/**
@@ -77,7 +94,9 @@ final class ResourcesListTable extends WP_List_Table {
 			)
 		);
 		$actions = array(
-			'edit' => '<a href="' . esc_url( $edit ) . '">' . esc_html__( 'Edit', 'terminarz' ) . '</a>',
+			'edit'     => '<a href="' . esc_url( $edit ) . '">' . esc_html__( 'Edit', 'terminarz' ) . '</a>',
+			'schedule' => '<a href="' . esc_url( ( new SchedulePage() )->url( array( 'resource' => $id ) ) ) . '">' . esc_html__( 'Working hours', 'terminarz' ) . '</a>',
+			'days_off' => '<a href="' . esc_url( ( new ExceptionsPage() )->url( array( 'scope' => $id ) ) ) . '">' . esc_html__( 'Days off', 'terminarz' ) . '</a>',
 		);
 
 		$actions['toggle'] = $item->is_active
