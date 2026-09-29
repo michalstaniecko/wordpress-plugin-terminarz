@@ -103,6 +103,12 @@ The limits themselves can be changed with the `trmz_rate_limit` filter (default:
 * A payment gateway that sends customers to a payment page on another domain must add that host with the core
   `allowed_redirect_hosts` filter; other payment URLs are refused.
 
+= Where is the source code of the block scripts? =
+
+The `build/` directory contains the compiled block scripts. Their source code (React, `@wordpress/scripts`) and the
+build tools are in the public repository: https://github.com/michalstaniecko/wordpress-plugin-terminarz
+(`npm ci && npm run build`).
+
 = Are reminders sent on time? =
 
 With WooCommerce active reminders use Action Scheduler; otherwise WP-Cron, which runs only when someone visits the site.

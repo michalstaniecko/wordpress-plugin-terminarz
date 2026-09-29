@@ -1,6 +1,6 @@
 {
 	"name": "terminarz",
-	"version": "0.1.0",
+	"version": "1.0.0",
 	"private": true,
 	"description": "Online appointment booking plugin for WordPress with optional WooCommerce payments.",
 	"license": "GPL-2.0-or-later",
@@ -45,6 +45,8 @@
 		"lint:fix": "wp-scripts lint-js --fix && wp-scripts lint-style \"blocks/**/*.{css,scss}\" --allow-empty-input --fix",
 		"test:e2e:debug": "playwright test --debug",
 		"test:e2e:install": "playwright install --with-deps chromium",
-		"test:js": "wp-scripts test-unit-js --roots tests/js"
+		"test:js": "wp-scripts test-unit-js --roots tests/js",
+		"plugin-zip": "bin/build-zip.sh",
+		"plugin-zip:test": "bin/check-zip.sh dist/terminarz-$npm_package_version.zip && bin/test-zip-install.sh dist/terminarz-$npm_package_version.zip"
 	}
 }

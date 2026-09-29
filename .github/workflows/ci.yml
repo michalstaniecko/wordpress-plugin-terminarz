@@ -174,3 +174,40 @@ jobs:
       - name: Dump debug.log on failure
         if: ${{ failure() }}
         run: npx wp-env run --config=.wp-env.tests.json cli bash -c 'cat wp-content/debug.log 2>/dev/null | tail -200 || true'
+
+  package:
+    name: Release ZIP (build + clean install)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          coverage: none
+          tools: composer:v2
+      - uses: actions/setup-node@v7
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - name: Build blocks
+        run: npm run build
+      - name: Build ZIP (composer install --no-dev -o, .distignore)
+        id: zip
+        run: |
+          zip_file="$(bin/build-zip.sh)"
+          echo "file=$zip_file" >> "$GITHUB_OUTPUT"
+          echo "name=$(basename "$zip_file" .zip)" >> "$GITHUB_OUTPUT"
+      - name: Check ZIP contents
+        run: bin/check-zip.sh "${{ steps.zip.outputs.file }}"
+      - name: Upload ZIP
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ steps.zip.outputs.name }}
+          path: ${{ steps.zip.outputs.file }}
+          if-no-files-found: error
+          retention-days: 30
+      - name: Install the ZIP on a clean WordPress (wp-env, no WooCommerce)
+        run: bin/test-zip-install.sh "${{ steps.zip.outputs.file }}"
+

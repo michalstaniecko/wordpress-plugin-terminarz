@@ -1060,3 +1060,21 @@ zostać podrobiona przez autorów bez `unfiltered_html` (kses przepuszcza `class
 `trmz_booking_block_config` bez zmian). Pozostałe ryzyka: #112 (spam rezerwacji, `needs-human`), #113 (proxy), #114
 (limit `GET /availability`).
 
+## ADR-049: Paczka wydania (ZIP) budowana w CI
+
+**Decyzja.**
+- `bin/build-zip.sh` (`npm run plugin-zip`): kopia drzewa roboczego bez ścieżek z `.distignore` (rsync), w kopii
+  `composer install --no-dev -o --classmap-authoritative`, usunięcie `composer.json/lock`, ZIP
+  `dist/terminarz-<wersja>.zip` z jednym katalogiem głównym `terminarz/`. Wymaga zbudowanego `build/` i skompilowanych
+  tłumaczeń (commitowane, ADR-047). Źródła JS bloku (`blocks/`) nie trafiają do paczki — readme.txt wskazuje publiczne
+  repozytorium.
+- `bin/check-zip.sh`: jeden katalog główny, obecne pliki uruchomieniowe (autoloader, `build/`, tłumaczenia z JSON-ami),
+  brak plików deweloperskich (`tests/`, mu-pluginy testowe, `node_modules`, `blocks/`, narzędzia dev w `vendor/`,
+  konfiguracje).
+- `bin/test-zip-install.sh`: czysty WordPress w wp-env (`.wp-env.zip.json`, port 8890, bez WooCommerce, katalog
+  `dist/` zamapowany), `wp plugin install <zip> --activate`, kontrola wersji, tabel, REST, bloku na froncie,
+  deinstalacja z usuwaniem danych, brak błędów PHP w `debug.log`.
+- Job CI „Release ZIP” uruchamia wszystkie trzy i publikuje ZIP jako artefakt `terminarz-<wersja>`.
+- Wersja w jednym miejscu logicznym, pilnowana testem `ReleaseVersionTest`: nagłówek i `TRMZ_VERSION` w
+  `terminarz.php`, `Stable tag` i changelog w readme.txt, `package.json`/`package-lock.json`, `block.json`.
+

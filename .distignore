@@ -37,3 +37,12 @@ CLAUDE.md
 EPIC_ISSUE.md
 PROGRESS.md
 README.md
+/bin
+/dist
+/vendor
+/.phpunit.cache
+.nvmrc
+.wp-env.zip.json
+/build/i18n-map.json
+.gitkeep
+.DS_Store

@@ -2,7 +2,7 @@
 /**
  * Plugin Name:       Terminarz
  * Description:       Online appointment booking for service businesses, with optional WooCommerce payments.
- * Version:           0.1.0
+ * Version:           1.0.0
  * Requires at least: 6.5
  * Requires PHP:      8.1
  * Author:            Michał Staniećko
@@ -21,7 +21,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'TRMZ_VERSION', '0.1.0' );
+define( 'TRMZ_VERSION', '1.0.0' );
 define( 'TRMZ_FILE', __FILE__ );
 define( 'TRMZ_MIN_PHP', '8.1' );
 define( 'TRMZ_MIN_WP', '6.5' );

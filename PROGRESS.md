@@ -550,3 +550,12 @@ Jeden wpis na zamknięte issue: data, numer issue, co zrobione, decyzje, znane r
 - **Decyzje:** ADR-048.
 - **Ryzyka / nowe issues:** #112 spam rezerwacji (`needs-human`), #113 wykrywanie proxy, #114 limit `GET /availability`.
 
+## 2026-09-29 — #48 paczka ZIP budowana w CI
+
+- **Zrobione:** wersja 1.0.0 (nagłówek, `TRMZ_VERSION`, readme, `package.json`/lock, `block.json`) + `ReleaseVersionTest`;
+  `bin/build-zip.sh`, `bin/check-zip.sh`, `bin/test-zip-install.sh`, `.wp-env.zip.json`, uzupełniony `.distignore`;
+  job CI „Release ZIP” (budowa, kontrola zawartości, artefakt `terminarz-1.0.0`, instalacja na czystym WP z aktywacją,
+  blokiem na froncie i deinstalacją bez błędów PHP). readme.txt: informacja o źródłach skryptów bloku.
+- **Decyzje:** ADR-049.
+- **Ryzyka:** test instalacji bez WooCommerce (integracja z WC pokryta E2E na środowisku tests).
+
