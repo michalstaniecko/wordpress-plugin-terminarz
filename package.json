@@ -1,0 +1,30 @@
+{
+	"name": "terminarz",
+	"version": "0.1.0",
+	"private": true,
+	"description": "Online appointment booking plugin for WordPress with optional WooCommerce payments.",
+	"license": "GPL-2.0-or-later",
+	"engines": {
+		"node": ">=20"
+	},
+	"devDependencies": {
+		"@wordpress/env": "^11.16.0",
+		"@wordpress/scripts": "^35.0.0"
+	},
+	"scripts": {
+		"env:start": "wp-env start && wp-env start --config=.wp-env.tests.json",
+		"env:start:dev": "wp-env start",
+		"env:start:tests": "wp-env start --config=.wp-env.tests.json",
+		"env:stop": "wp-env stop && wp-env stop --config=.wp-env.tests.json",
+		"env:destroy": "wp-env destroy && wp-env destroy --config=.wp-env.tests.json",
+		"env:cli": "wp-env run cli",
+		"env:tests:cli": "wp-env run --config=.wp-env.tests.json cli",
+		"build": "wp-scripts build --webpack-src-dir=blocks --output-path=build",
+		"start": "wp-scripts start --webpack-src-dir=blocks --output-path=build",
+		"lint": "npm run lint:js && npm run lint:css",
+		"lint:js": "wp-scripts lint-js",
+		"lint:css": "wp-scripts lint-style \"blocks/**/*.{css,scss}\" --allow-empty-input",
+		"test:e2e": "wp-scripts test-playwright",
+		"i18n": "composer run i18n"
+	}
+}

@@ -16,6 +16,8 @@
 .gitattributes
 .wp-env.json
 .wp-env.override.json
+.wp-env.tests.json
+.wp-env.tests.override.json
 .phpcs-cache
 .phpunit.result.cache
 .eslintrc.js

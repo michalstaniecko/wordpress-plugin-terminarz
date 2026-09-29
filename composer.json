@@ -17,5 +17,11 @@
 		},
 		"optimize-autoloader": true,
 		"sort-packages": true
+	},
+	"require-dev": {
+		"wp-cli/i18n-command": "^2.7"
+	},
+	"scripts": {
+		"i18n": "wp i18n make-pot . languages/terminarz.pot --slug=terminarz --domain=terminarz --exclude=node_modules,vendor,build,tests,docs,artifacts"
 	}
 }

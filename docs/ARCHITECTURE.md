@@ -40,3 +40,32 @@ capability zdejmuje dopiero `uninstall.php` (`Capabilities::revoke()`), zgodnie 
 
 **Konsekwencje.** Witryny utworzone w sieci *po* aktywacji sieciowej nie dostaną capability automatycznie —
 do obsłużenia w M8 (testy multisite).
+
+## ADR-005: Środowiska wp-env (dev 8888, tests 8889)
+
+**Kontekst.** `@wordpress/env` 11.x oznaczył wbudowane środowisko testowe (`testsEnvironment`, kontenery `tests-*`)
+jako przestarzałe i zaleca osobny plik konfiguracyjny uruchamiany z `--config`.
+
+**Decyzja.**
+- `.wp-env.json` — środowisko deweloperskie na porcie 8888; `.wp-env.tests.json` — osobne, izolowane środowisko
+  testowe na porcie 8889 (własne kontenery i baza). Oba z `"testsEnvironment": false`.
+- Plugin montowany przez `mappings` jako `wp-content/plugins/terminarz` (stały slug niezależny od nazwy katalogu repo),
+  aktywowany skryptem `lifecycleScripts.afterStart`.
+- WooCommerce montowany przez `mappings` z `woocommerce.latest-stable.zip` jako `wp-content/plugins/woocommerce`
+  (stały slug; `woocommerce.zip` z wordpress.org potrafi wskazywać wersję beta) i aktywowany w `afterStart`.
+  Testy, które wymagają środowiska bez WooCommerce, deaktywują go jawnie (helper E2E w #6).
+- `phpVersion: 8.1` — testy integracyjne i E2E działają na minimalnej wspieranej wersji PHP; `core: null` (najnowszy WP).
+- `WP_DEBUG` + `WP_DEBUG_LOG` włączone, `WP_DEBUG_DISPLAY` wyłączone (notice'y trafiają do `debug.log`,
+  nie psują odpowiedzi REST/HTML; smoke test E2E sprawdza log).
+
+**Konsekwencje.** `npm run env:start` uruchamia dwa środowiska (dłuższy start); CI startuje tylko środowisko testowe.
+
+## ADR-006: Generowanie `.pot` bez Dockera
+
+**Decyzja.** `npm run i18n` → `composer run i18n` → `wp i18n make-pot` z pakietu `wp-cli/i18n-command` (dev-dependency).
+Dzięki temu `.pot` generuje się lokalnie i w CI bez uruchamiania wp-env. Plik `languages/terminarz.pot` jest wersjonowany.
+
+## ADR-007: Build bloków
+
+**Decyzja.** `@wordpress/scripts` z `--webpack-src-dir=blocks --output-path=build`. Do czasu powstania pierwszego bloku (M5)
+`blocks/index.js` jest pustym punktem wejścia, żeby `npm run build` przechodził; wynik nie jest nigdzie ładowany.
