@@ -516,3 +516,15 @@ Jeden wpis na zamknięte issue: data, numer issue, co zrobione, decyzje, znane r
 - **Decyzje:** ADR-046.
 - **Ryzyka:** akcje AS przy nieaktywnym WooCommerce w chwili deinstalacji zostają w tabelach AS (bez skutków).
 
+## 2026-09-29 — #102 link anulowania dla rezerwacji w oknie limitu
+
+- **Zrobione:** placeholder `{cancel_info}` (HTML: termin + link albo prośba o kontakt, gdy anulowanie online jest już
+  niemożliwe); domyślne szablony klienta używają go zamiast stałego akapitu; `{cancel_url}`/`{cancel_deadline}` puste
+  po terminie; zapisane własne szablony z dawnym domyślnym akapitem są podmieniane przy odczycie. Testy integracyjne
+  (rezerwacja w oknie limitu, własny szablon z dawnymi placeholderami, migracja akapitu, filtrowanie HTML z filtra).
+- **Decyzje:** założenie (assumption) — po terminie mail nie zawiera ani linku, ani terminu, tylko zdanie o kontakcie;
+  aktualizacja ADR-042.
+- **Ryzyka:** własne szablony z `{cancel_url}` bez `{cancel_info}` po terminie pokażą pusty link — opisane w pomocy
+  placeholderów.
+  Przy ustawieniach domyślnych (przypomnienie 24 h przed, limit anulowania 24 h) przypomnienie wychodzi dokładnie w chwili
+  terminu, więc nie zawiera linku — tylko prośbę o kontakt.

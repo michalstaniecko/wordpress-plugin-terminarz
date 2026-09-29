@@ -56,7 +56,13 @@ final class Renderer {
 	public static function body( string $body, array $values ): string {
 		$pairs = array();
 		foreach ( $values as $name => $value ) {
-			$pairs[ '{' . $name . '}' ] = in_array( $name, Placeholders::URLS, true ) ? esc_url( $value ) : nl2br( esc_html( $value ), false );
+			if ( in_array( $name, Placeholders::HTML, true ) ) {
+				$pairs[ '{' . $name . '}' ] = Placeholders::kses_html( $value );
+			} elseif ( in_array( $name, Placeholders::URLS, true ) ) {
+				$pairs[ '{' . $name . '}' ] = esc_url( $value );
+			} else {
+				$pairs[ '{' . $name . '}' ] = nl2br( esc_html( $value ), false );
+			}
 		}
 		return wp_kses_post( strtr( $body, $pairs ) );
 	}
