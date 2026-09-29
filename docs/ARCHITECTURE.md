@@ -293,3 +293,44 @@ sprawdza, że nikt nie spóźnił się na barierę i że starty mieszczą się w
 Dane testu są usuwane w `tear_down_after_class`. Kontrola negatywna: po usunięciu blokady wiersza zasobu scenariusz
 „różne starty” kończy się wieloma sukcesami (test to wykrywa).
 W CI osobny krok joba `integration`. Zmienne: `TRMZ_CONCURRENCY_WORKERS`, `TRMZ_CONCURRENCY_BARRIER`, `TRMZ_SKIP_CONCURRENCY=1`.
+
+## ADR-018: AvailabilityService i wybór „dowolnego” zasobu
+
+**Decyzja.**
+- Warstwa aplikacyjna w `src/Application` (namespace `Terminarz\Application`) — orkiestruje repozytoria (interfejsy
+  z `Domain\Repository`) i czysty silnik (`Domain\Availability`), bez funkcji WordPressa; parametry z WP (strefa witryny,
+  opcje) wstrzykuje `Infrastructure\Services` jako `AvailabilitySettings`.
+- `AvailabilityService`:
+  - `slots($service_id, $from, $to, ?$resource_id, ?$exclude_booking_id)` — sloty (UTC) każdego aktywnego zasobu usługi
+    (lub jednego zasobu), posortowane po starcie i id zasobu;
+  - `any_resource_slots($service_id, $from, $to)` — jeden slot na start, zasób wybrany strategią (przypisanie wstępne);
+  - `free_resources_at($service_id, $start, ?$exclude)` — wolne zasoby dla startu w kolejności strategii;
+  - `is_available($service_id, $resource_id, $start, ?$exclude)` — polityka slotu dla `BookingService`.
+  Stała liczba zapytań niezależnie od liczby zasobów i dni (≤ 6: usługa, przypisania, zasoby, harmonogramy, wyjątki,
+  zajętość) — brak N+1. Zakres dat walidowany (maks. 366 dni) przed dostępem do bazy. Zajętość pobierana z marginesem
+  ±1 dzień wokół lokalnego zakresu (strefy/DST).
+- Strategia „dowolny zasób” (`AvailabilitySettings::$strategy`, opcja `trmz_settings[any_resource_strategy]`):
+  `order` (domyślna) — pierwszy wolny zasób wg kolejności preferencji z przypisania usługi (`sort_order` w pivocie);
+  `least_busy` — wolny zasób z najmniejszą liczbą zajętych minut (z buforami) w danym dniu lokalnym, remis → kolejność.
+  Przypisanie w `any_resource_slots()` jest tylko podpowiedzią; ostateczne następuje w `BookingService::reserve_any()`,
+  który próbuje kolejnych kandydatów z `free_resources_at()` i przy przegranym wyścigu (`SlotUnavailable`) bierze następny.
+- `BookingService::use_availability()` (wołane przez `Services::booking_service()`) włącza walidację każdej rezerwacji
+  i przeniesienia względem silnika (godziny, wyjątki, wyprzedzenie, horyzont, siatka); przy przenoszeniu własny termin
+  rezerwacji nie liczy się jako zajęty (`exclude_booking_id`, także w `BookingRepository::busy_ranges()`).
+- Ustawienia: `wp_timezone()` + opcja `trmz_settings` (`min_lead_minutes` = 0, `max_horizon_days` = brak, `slot_step_minutes` = 15,
+  `any_resource_strategy` = `order`); nieprawidłowe wartości → domyślne; filtr `trmz_availability_settings`.
+  Formularz ustawień — M4.
+- Benchmark (test integracyjny `@group benchmark`): 30 dni × 10 zasobów, ~1000 rezerwacji, `slots()` + `any_resource_slots()`:
+  ~21 ms lokalnie; próg `TRMZ_BENCH_MAX_MS` (domyślnie 300 ms, w CI 1000 ms).
+
+## Publiczne API warstwy domeny/aplikacji (dla adapterów REST/admin)
+
+- Wejście: `Terminarz\Infrastructure\Services::instance()` → `availability_service()`, `booking_service()`, `resources()`,
+  `services()`, `schedules()`, `schedule_exceptions()`, `bookings()`, `clock()`, `availability_settings()`.
+- Wyjątki do mapowania na HTTP: `SlotUnavailable` → 409, `EntityNotFound` → 404, `InvalidValue` / `InvalidStatusTransition` → 400/422,
+  `EntityInUse` → 409; `Infrastructure\Database\DatabaseError` → 500. Komunikaty wyjątków są angielskie (dla programisty) —
+  adapter pokazuje własne, przetłumaczone teksty.
+- Identyfikator rezerwacji na zewnątrz: `Booking::$public_id` (`BookingRepository::get_by_public_id()`); token anulowania
+  dostępny tylko w `Reservation::$cancel_token` zaraz po rezerwacji, weryfikacja `BookingService::verify_cancel_token()`.
+- Hooki: `trmz_booking_created`, `trmz_booking_status_changed`, `trmz_booking_rescheduled`, `trmz_schema_migrated`;
+  filtry: `trmz_availability_settings`, `trmz_db_inside_external_transaction`.

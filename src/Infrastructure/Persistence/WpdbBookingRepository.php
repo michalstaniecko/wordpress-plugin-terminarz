@@ -234,9 +234,10 @@ final class WpdbBookingRepository extends WpdbRepository implements BookingRepos
 	 * @param int[]             $resource_ids Resource IDs.
 	 * @param TimeRange         $range        Range of interest.
 	 * @param DateTimeImmutable $now          Current time.
+	 * @param int|null          $exclude_id   Booking to ignore.
 	 * @return array<int, TimeRange[]>
 	 */
-	public function busy_ranges( array $resource_ids, TimeRange $range, DateTimeImmutable $now ): array {
+	public function busy_ranges( array $resource_ids, TimeRange $range, DateTimeImmutable $now, ?int $exclude_id = null ): array {
 		$resource_ids = self::ids( $resource_ids );
 		$result       = array_fill_keys( $resource_ids, array() );
 		if ( array() === $resource_ids ) {
@@ -246,7 +247,7 @@ final class WpdbBookingRepository extends WpdbRepository implements BookingRepos
 		$table = $this->table( Schema::BOOKINGS );
 		$args  = array_merge(
 			$resource_ids,
-			array( self::to_sql( $range->end ), self::to_sql( $range->start ), BookingStatus::PendingPayment->value, self::to_sql( $now ) )
+			array( self::to_sql( $range->end ), self::to_sql( $range->start ), BookingStatus::PendingPayment->value, self::to_sql( $now ), $exclude_id ?? 0 )
 		);
 		// phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare -- table from Schema, placeholders generated.
 		$sql = $this->db->prepare(
@@ -255,6 +256,7 @@ final class WpdbBookingRepository extends WpdbRepository implements BookingRepos
 			AND active_start_utc IS NOT NULL
 			AND start_utc < %s AND buffer_end_utc > %s
 			AND NOT ( status = %s AND hold_expires_at IS NOT NULL AND hold_expires_at <= %s )
+			AND id <> %d
 			ORDER BY resource_id, start_utc',
 			$args
 		);

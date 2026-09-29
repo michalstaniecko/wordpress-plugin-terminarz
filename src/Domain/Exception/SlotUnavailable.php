@@ -23,6 +23,24 @@ final class SlotUnavailable extends \DomainException implements DomainError {
 	 * @param DateTimeImmutable $start       Requested start (UTC).
 	 */
 	public static function at( int $resource_id, DateTimeImmutable $start ): self {
-		return new self( sprintf( 'The slot of resource #%d at %s UTC is not available.', $resource_id, $start->format( 'Y-m-d H:i' ) ) );
+		return new self( sprintf( 'The slot of resource #%d at %s UTC is not available.', $resource_id, self::utc( $start ) ) );
+	}
+
+	/**
+	 * Named constructor for "any resource" requests.
+	 *
+	 * @param DateTimeImmutable $start Requested start.
+	 */
+	public static function for_any_resource( DateTimeImmutable $start ): self {
+		return new self( sprintf( 'No resource is available at %s UTC.', self::utc( $start ) ) );
+	}
+
+	/**
+	 * Formats a time in UTC.
+	 *
+	 * @param DateTimeImmutable $time Time.
+	 */
+	private static function utc( DateTimeImmutable $time ): string {
+		return $time->setTimezone( new \DateTimeZone( 'UTC' ) )->format( 'Y-m-d H:i' );
 	}
 }

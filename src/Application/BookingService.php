@@ -47,6 +47,13 @@ final class BookingService {
 	private $slot_policy = null;
 
 	/**
+	 * Availability service used by reserve_any() (set by use_availability()).
+	 *
+	 * @var AvailabilityService|null
+	 */
+	private ?AvailabilityService $availability = null;
+
+	/**
 	 * Constructor.
 	 *
 	 * @param BookingRepository  $bookings  Bookings.
@@ -72,6 +79,54 @@ final class BookingService {
 	 */
 	public function set_slot_policy( callable $policy ): void {
 		$this->slot_policy = $policy;
+	}
+
+	/**
+	 * Validates every reservation against the availability engine (schedule, exceptions, lead time, horizon, grid)
+	 * and enables reserve_any().
+	 *
+	 * @param AvailabilityService $availability Availability service.
+	 */
+	public function use_availability( AvailabilityService $availability ): void {
+		$this->availability = $availability;
+		$this->set_slot_policy( array( $availability, 'is_available' ) );
+	}
+
+	/**
+	 * Reserves `$start` on "any" resource of the service: tries the free resources in the order of the configured
+	 * strategy and takes the first one that can be booked atomically (another request may win a resource meanwhile).
+	 *
+	 * @param int               $service_id   Service ID.
+	 * @param DateTimeImmutable $start        Appointment start.
+	 * @param Customer          $customer     Customer.
+	 * @param BookingStatus     $status       Initial status.
+	 * @param int               $hold_minutes Payment hold length for pending_payment.
+	 * @throws \LogicException When use_availability() was not called.
+	 * @throws EntityNotFound  When the service does not exist.
+	 * @throws InvalidValue    When the input is inconsistent.
+	 * @throws SlotUnavailable When no resource is free at `$start`.
+	 */
+	public function reserve_any(
+		int $service_id,
+		DateTimeImmutable $start,
+		Customer $customer,
+		BookingStatus $status = BookingStatus::Pending,
+		int $hold_minutes = 15
+	): Reservation {
+		if ( null === $this->availability ) {
+			throw new \LogicException( 'reserve_any() needs an AvailabilityService (use_availability()).' );
+		}
+
+		$candidates = $this->availability->free_resources_at( $service_id, $start );
+		foreach ( $candidates as $resource_id ) {
+			try {
+				return $this->reserve( $service_id, $resource_id, $start, $customer, $status, $hold_minutes );
+			} catch ( SlotUnavailable $e ) {
+				continue; // Lost the race for this resource — try the next one.
+			}
+		}
+
+		throw SlotUnavailable::for_any_resource( $start );
 	}
 
 	/**

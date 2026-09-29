@@ -17,6 +17,7 @@ use Terminarz\Domain\Model\BookingStatus;
 use Terminarz\Domain\Model\Customer;
 use Terminarz\Domain\Model\Service;
 use Terminarz\Infrastructure\Services;
+use Terminarz\Infrastructure\WpEventDispatcher;
 use Terminarz\Tests\Integration\Support\BookingFixtures;
 use WP_UnitTestCase;
 
@@ -55,7 +56,9 @@ final class BookingServiceTest extends WP_UnitTestCase {
 		global $wpdb;
 		$this->clock     = new FixedClock( '2030-01-01 08:00' );
 		$this->container = new Services( $wpdb, $this->clock );
-		$this->service   = $this->container->booking_service();
+		// Without the availability policy: these tests cover collisions, validation and events only
+		// (schedule-aware reservations are covered by AvailabilityServiceTest).
+		$this->service = new BookingService( $this->container->bookings(), $this->container->services(), $this->container->resources(), new WpEventDispatcher(), $this->clock );
 	}
 
 	public function test_reserve_stores_booking_fires_event_and_returns_token_once(): void {

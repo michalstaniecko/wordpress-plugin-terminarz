@@ -93,9 +93,10 @@ interface BookingRepository {
 	 * @param int[]             $resource_ids Resource IDs.
 	 * @param TimeRange         $range        Range of interest.
 	 * @param DateTimeImmutable $now          Current time (decides whether payment holds still block).
+	 * @param int|null          $exclude_id   Booking to ignore (e.g. the one being rescheduled).
 	 * @return array<int, TimeRange[]> Keyed by resource ID (every requested ID present), sorted by start.
 	 */
-	public function busy_ranges( array $resource_ids, TimeRange $range, DateTimeImmutable $now ): array;
+	public function busy_ranges( array $resource_ids, TimeRange $range, DateTimeImmutable $now, ?int $exclude_id = null ): array;
 
 	/**
 	 * Bookings of the given resources overlapping a range (any status), sorted by start. For admin/REST listings.
