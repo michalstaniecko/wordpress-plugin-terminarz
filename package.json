@@ -9,7 +9,9 @@
 	},
 	"devDependencies": {
 		"@wordpress/env": "^11.16.0",
-		"@wordpress/scripts": "^35.0.0"
+		"@wordpress/eslint-plugin": "^27.0.0",
+		"@wordpress/scripts": "^35.0.0",
+		"@wordpress/stylelint-config": "^26.0.0"
 	},
 	"scripts": {
 		"env:start": "wp-env start && wp-env start --config=.wp-env.tests.json",
@@ -25,6 +27,7 @@
 		"lint:js": "wp-scripts lint-js",
 		"lint:css": "wp-scripts lint-style \"blocks/**/*.{css,scss}\" --allow-empty-input",
 		"test:e2e": "wp-scripts test-playwright",
-		"i18n": "composer run i18n"
+		"i18n": "composer run i18n",
+		"lint:fix": "wp-scripts lint-js --fix && wp-scripts lint-style \"blocks/**/*.{css,scss}\" --allow-empty-input --fix"
 	}
 }

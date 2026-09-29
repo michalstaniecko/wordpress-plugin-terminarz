@@ -20,7 +20,7 @@
 .wp-env.tests.override.json
 .phpcs-cache
 .phpunit.result.cache
-.eslintrc.js
+eslint.config.cjs
 .stylelintrc.json
 .prettierrc.js
 composer.json

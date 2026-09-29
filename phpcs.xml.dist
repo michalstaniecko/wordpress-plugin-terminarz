@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="Terminarz" xsi:noNamespaceSchemaLocation="vendor/squizlabs/php_codesniffer/phpcs.xsd">
+	<description>Coding standards for the Terminarz plugin (WordPress Coding Standards 3.x).</description>
+
+	<file>terminarz.php</file>
+	<file>src</file>
+	<file>tests/php</file>
+	<file>tests/phpstan</file>
+
+	<exclude-pattern>/vendor/*</exclude-pattern>
+	<exclude-pattern>/node_modules/*</exclude-pattern>
+	<exclude-pattern>/build/*</exclude-pattern>
+
+	<arg name="extensions" value="php"/>
+	<arg name="basepath" value="."/>
+	<arg name="parallel" value="8"/>
+	<arg name="cache" value=".phpcs-cache"/>
+	<arg name="colors"/>
+	<arg value="sp"/>
+
+	<!-- PHP compatibility: minimum PHP 8.1. -->
+	<config name="testVersion" value="8.1-"/>
+	<rule ref="PHPCompatibilityWP"/>
+
+	<!-- WordPress: minimum supported version. -->
+	<config name="minimum_wp_version" value="6.5"/>
+
+	<rule ref="WordPress"/>
+
+	<rule ref="WordPress.WP.I18n">
+		<properties>
+			<property name="text_domain" type="array">
+				<element value="terminarz"/>
+			</property>
+		</properties>
+	</rule>
+
+	<rule ref="WordPress.NamingConventions.PrefixAllGlobals">
+		<properties>
+			<property name="prefixes" type="array">
+				<element value="trmz"/>
+				<element value="Terminarz"/>
+			</property>
+		</properties>
+	</rule>
+
+	<!-- PSR-4 autoloading: file names follow class names (see docs/ARCHITECTURE.md, ADR-001). -->
+	<rule ref="WordPress.Files.FileName">
+		<exclude-pattern>/src/*</exclude-pattern>
+		<exclude-pattern>/tests/php/*</exclude-pattern>
+	</rule>
+
+	<!-- Tests: test method names are self-documenting; one-off test doubles may share a file. -->
+	<rule ref="Squiz.Commenting.FunctionComment.Missing">
+		<exclude-pattern>/tests/php/*</exclude-pattern>
+	</rule>
+	<rule ref="Generic.Files.OneObjectStructurePerFile">
+		<exclude-pattern>/tests/php/*</exclude-pattern>
+	</rule>
+	<rule ref="Generic.Commenting.DocComment.MissingShort">
+		<exclude-pattern>/tests/php/*</exclude-pattern>
+	</rule>
+
+	<!-- WordPress test suite bootstrap/config: must define WordPress' own (unprefixed) constants. -->
+	<rule ref="WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound">
+		<exclude-pattern>/tests/php/integration/bootstrap\.php$</exclude-pattern>
+		<exclude-pattern>/tests/php/integration/wp-tests-config\.php$</exclude-pattern>
+		<exclude-pattern>/tests/phpstan/*</exclude-pattern>
+	</rule>
+	<rule ref="WordPress.WP.AlternativeFunctions">
+		<exclude-pattern>/tests/php/*</exclude-pattern>
+	</rule>
+</ruleset>

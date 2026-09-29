@@ -87,3 +87,18 @@ Dzięki temu `.pot` generuje się lokalnie i w CI bez uruchamiania wp-env. Plik 
 - Odejście od rekomendacji `wp-phpunit/wp-phpunit`: biblioteka testów z wp-env jest zawsze zgodna z wersją core,
   a pakiet Composera trzeba by synchronizować ręcznie.
 - `composer test` = unit + integration (wymaga uruchomionego `npm run env:start:tests`).
+
+## ADR-009: Standardy kodu i analiza statyczna
+
+**Decyzja.**
+- PHPCS: ruleset `WordPress` (WPCS 3.x: Core + Docs + Extra) + `PHPCompatibilityWP` (`testVersion 8.1-`),
+  `minimum_wp_version 6.5`, prefiksy `trmz`/`Terminarz`, text domain `terminarz`. Wyłączony
+  `WordPress.Files.FileName` dla `src/` i `tests/php/` (nazwy plików PSR-4 zamiast `class-*.php`, ADR-001).
+  W testach złagodzone reguły dokumentacji; bootstrap/config suity WP może definiować stałe WordPressa.
+- PHPStan 2.x, **poziom 6, bez baseline'u**, z `szepeviktor/phpstan-wordpress` (przez `phpstan/extension-installer`)
+  i `php-stubs/woocommerce-stubs` (dla integracji w M6). Analizowane: `terminarz.php`, `src/`, `tests/php/unit`
+  (testy integracyjne zależą od klas biblioteki testów WP, których stubów nie ma). Stałe `TRMZ_*` dla PHPStana
+  w `tests/phpstan/bootstrap.php`. `composer phpstan` podnosi limit pamięci do 1G (stuby WP/WC są duże).
+- JS/CSS: ESLint 9 (flat config `eslint.config.cjs` rozszerzający domyślny z `@wordpress/scripts`, reguła
+  `@wordpress/i18n-text-domain` = `terminarz`, reguły Playwright dla `tests/e2e`) i stylelint
+  (`@wordpress/stylelint-config/scss-stylistic`, klasy CSS muszą zaczynać się od `trmz-` lub `wp-block-terminarz-`).
