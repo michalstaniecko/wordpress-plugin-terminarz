@@ -43,6 +43,7 @@
 		"test:unit": "phpunit -c phpunit.xml.dist",
 		"test:integration": "npx wp-env run --config=.wp-env.tests.json cli --env-cwd=wp-content/plugins/terminarz vendor/bin/phpunit -c phpunit-integration.xml.dist",
 		"test:integration:no-wc": "npx wp-env run --config=.wp-env.tests.json cli --env-cwd=wp-content/plugins/terminarz env TRMZ_TESTS_WOOCOMMERCE=0 vendor/bin/phpunit -c phpunit-integration.xml.dist --exclude-group concurrency,woocommerce",
+		"test:integration:multisite": "npx wp-env run --config=.wp-env.tests.json cli --env-cwd=wp-content/plugins/terminarz env WP_TESTS_MULTISITE=1 vendor/bin/phpunit -c phpunit-integration.xml.dist --exclude-group concurrency",
 		"lint": "phpcs",
 		"lint:fix": "phpcbf",
 		"phpstan": "phpstan analyse --memory-limit=2G --no-progress"
@@ -59,6 +60,7 @@
 		"test:unit": "Runs unit tests (no WordPress, no Docker).",
 		"test:integration": "Runs integration tests inside the wp-env tests environment (with WooCommerce loaded).",
 		"test:integration:no-wc": "Runs integration tests without WooCommerce (TRMZ_TESTS_WOOCOMMERCE=0).",
+		"test:integration:multisite": "Runs integration tests on a multisite network (WP_TESTS_MULTISITE=1).",
 		"i18n": "Generates languages/terminarz.pot.",
 		"lint": "Checks PHP code against WordPress Coding Standards.",
 		"lint:fix": "Fixes auto-fixable coding standard violations.",

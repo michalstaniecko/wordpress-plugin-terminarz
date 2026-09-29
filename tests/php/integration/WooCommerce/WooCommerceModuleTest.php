@@ -116,7 +116,11 @@ final class WooCommerceModuleTest extends WP_UnitTestCase {
 	}
 
 	public function test_outdated_woocommerce_is_reported(): void {
-		wp_set_current_user( self::factory()->user->create( array( 'role' => 'administrator' ) ) );
+		$user_id = self::factory()->user->create( array( 'role' => 'administrator' ) );
+		if ( is_multisite() ) {
+			grant_super_admin( $user_id ); // Only network admins can update plugins on multisite.
+		}
+		wp_set_current_user( $user_id );
 
 		ob_start();
 		( new WooCommerceModule() )->outdated_notice();
