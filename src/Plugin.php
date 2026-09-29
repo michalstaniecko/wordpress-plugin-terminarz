@@ -17,6 +17,7 @@ use Terminarz\Admin\ResourcesPage;
 use Terminarz\Admin\SchedulePage;
 use Terminarz\Admin\ServicesPage;
 use Terminarz\Admin\SettingsPage;
+use Terminarz\Blocks\BookingBlock;
 use Terminarz\Infrastructure\Database\Migrator;
 use Terminarz\Infrastructure\I18n;
 use Terminarz\Infrastructure\Module;
@@ -88,6 +89,7 @@ final class Plugin {
 				)
 			),
 			new RestModule(),
+			new BookingBlock(),
 			new Privacy(),
 		);
 	}

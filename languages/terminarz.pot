@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-29T17:37:50+00:00\n"
+"POT-Creation-Date: 2026-09-29T17:59:52+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: terminarz\n"
@@ -67,6 +67,7 @@ msgstr ""
 #: src/Admin/BookingsListTable.php:178
 #: src/Admin/BookingsPage.php:307
 #: src/Admin/Privacy.php:203
+#: blocks/booking/edit.js:174
 msgid "Service"
 msgstr ""
 
@@ -313,6 +314,7 @@ msgstr ""
 
 #: src/Admin/BookingsPage.php:427
 #: src/Admin/SchedulePage.php:158
+#: blocks/booking/edit.js:178
 msgid "Day"
 msgstr ""
 
@@ -628,6 +630,7 @@ msgstr ""
 #: src/Admin/ServicesPage.php:41
 #: src/Admin/ServicesPage.php:48
 #: src/Admin/ServicesPage.php:204
+#: blocks/booking/edit.js:77
 msgid "Services"
 msgstr ""
 
@@ -1088,6 +1091,14 @@ msgstr ""
 msgid "Sorry, you are not allowed to manage Terminarz settings."
 msgstr ""
 
+#: src/Blocks/BookingBlock.php:104
+msgid "Please enable JavaScript in your browser to book an appointment."
+msgstr ""
+
+#: src/Blocks/BookingBlock.php:160
+msgid "I agree to the processing of my personal data for the purpose of handling this booking."
+msgstr ""
+
 #. translators: 1: field label, 2: minimum value, 3: maximum value.
 #: src/Infrastructure/Settings.php:235
 #, php-format
@@ -1415,4 +1426,108 @@ msgstr ""
 
 #: terminarz.php:59
 msgid "Terminarz is missing its Composer autoloader. Run \"composer install\" in the plugin directory or install a release package."
+msgstr ""
+
+#: blocks/booking/edit.js:81
+msgid "Could not load services."
+msgstr ""
+
+#: blocks/booking/edit.js:86
+msgid "There are no active services yet. Add them under Terminarz → Services."
+msgstr ""
+
+#: blocks/booking/edit.js:95
+msgid "Offer only the selected services (none selected = all services)."
+msgstr ""
+
+#: blocks/booking/edit.js:116
+msgid "Preselected service"
+msgstr ""
+
+#: blocks/booking/edit.js:124
+msgid "None"
+msgstr ""
+
+#: blocks/booking/edit.js:140
+msgid "Booking steps"
+msgstr ""
+
+#: blocks/booking/edit.js:143
+msgid "Let customers choose the person or resource"
+msgstr ""
+
+#: blocks/booking/edit.js:147
+msgid "When off, the first available person or resource is assigned."
+msgstr ""
+
+#: blocks/booking/edit.js:159
+msgid "First day of the week"
+msgstr ""
+
+#: blocks/booking/edit.js:171
+msgid "Book an appointment"
+msgstr ""
+
+#: blocks/booking/edit.js:176
+msgid "Person or resource"
+msgstr ""
+
+#: blocks/booking/edit.js:179
+msgid "Time"
+msgstr ""
+
+#: blocks/booking/edit.js:180
+msgid "Your details"
+msgstr ""
+
+#. translators: %s: comma-separated list of service names.
+#: blocks/booking/edit.js:186
+#, js-format
+msgid "Services: %s"
+msgstr ""
+
+#: blocks/booking/lib/editor.js:28
+msgid "Site default"
+msgstr ""
+
+#: blocks/booking/lib/editor.js:29
+msgid "Monday"
+msgstr ""
+
+#: blocks/booking/lib/editor.js:30
+msgid "Sunday"
+msgstr ""
+
+#: blocks/booking/lib/editor.js:31
+msgid "Saturday"
+msgstr ""
+
+#: blocks/booking/block.json
+msgctxt "block title"
+msgid "Booking"
+msgstr ""
+
+#: blocks/booking/block.json
+msgctxt "block description"
+msgid "Lets visitors book an appointment: service, person or resource, day, time and contact details."
+msgstr ""
+
+#: blocks/booking/block.json
+msgctxt "block keyword"
+msgid "appointment"
+msgstr ""
+
+#: blocks/booking/block.json
+msgctxt "block keyword"
+msgid "reservation"
+msgstr ""
+
+#: blocks/booking/block.json
+msgctxt "block keyword"
+msgid "calendar"
+msgstr ""
+
+#: blocks/booking/block.json
+msgctxt "block keyword"
+msgid "schedule"
 msgstr ""
