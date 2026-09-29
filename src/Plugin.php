@@ -19,6 +19,7 @@ use Terminarz\Admin\SchedulePage;
 use Terminarz\Admin\ServicesPage;
 use Terminarz\Admin\SettingsPage;
 use Terminarz\Blocks\BookingBlock;
+use Terminarz\Frontend\CancellationPage;
 use Terminarz\Infrastructure\Database\Migrator;
 use Terminarz\Infrastructure\HoldExpiryScheduler;
 use Terminarz\Infrastructure\I18n;
@@ -98,6 +99,7 @@ final class Plugin {
 			new Privacy(),
 			new HoldExpiryScheduler(),
 			new BookingNotifier(),
+			new CancellationPage(),
 			new WooCommerceModule(),
 		);
 	}

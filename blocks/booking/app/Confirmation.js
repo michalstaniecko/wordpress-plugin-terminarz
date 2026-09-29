@@ -30,6 +30,7 @@ export function statusMessage( status ) {
 export default function Confirmation( {
 	stepProps,
 	booking,
+	emailNotice = false,
 	serviceName,
 	resourceName,
 	timezone,
@@ -41,6 +42,14 @@ export default function Confirmation( {
 			<p className="trmz-booking__status-message">
 				<strong>{ statusMessage( booking.status ) }</strong>
 			</p>
+			{ emailNotice && booking.status !== 'pending_payment' && (
+				<p className="trmz-booking__email-notice">
+					{ __(
+						'We have sent the details to your e-mail address, together with a link to cancel the booking if you cannot come.',
+						'terminarz'
+					) }
+				</p>
+			) }
 			<Summary
 				serviceName={ serviceName }
 				resourceName={ resourceName }

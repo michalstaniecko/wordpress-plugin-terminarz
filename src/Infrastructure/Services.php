@@ -12,6 +12,7 @@ namespace Terminarz\Infrastructure;
 use Terminarz\Application\AvailabilityService;
 use Terminarz\Application\AvailabilitySettings;
 use Terminarz\Application\BookingService;
+use Terminarz\Application\CancelTokens;
 use Terminarz\Application\PaymentProvider;
 use Terminarz\Application\Clock;
 use Terminarz\Application\SystemClock;
@@ -202,10 +203,17 @@ final class Services {
 	 */
 	public function booking_service(): BookingService {
 		if ( null === $this->booking_service ) {
-			$this->booking_service = new BookingService( $this->bookings(), $this->services(), $this->resources(), new WpEventDispatcher(), $this->clock );
+			$this->booking_service = new BookingService( $this->bookings(), $this->services(), $this->resources(), new WpEventDispatcher(), $this->clock, $this->cancel_tokens() );
 			$this->booking_service->use_availability( $this->availability_service() );
 		}
 		return $this->booking_service;
+	}
+
+	/**
+	 * Cancellation link tokens keyed with `wp_salt( 'auth' )` (a secret kept outside the database, ADR-042).
+	 */
+	public function cancel_tokens(): CancelTokens {
+		return new CancelTokens( wp_salt( 'auth' ) );
 	}
 
 	/**

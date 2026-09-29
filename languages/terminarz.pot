@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-29T19:42:18+00:00\n"
+"POT-Creation-Date: 2026-09-29T19:54:49+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: terminarz\n"
@@ -46,6 +46,7 @@ msgstr ""
 #: src/Admin/ResourcesPage.php:300
 #: src/Admin/ServicesListTable.php:55
 #: src/Admin/ServicesPage.php:300
+#: src/Frontend/CancellationPage.php:265
 msgid "Status"
 msgstr ""
 
@@ -68,6 +69,7 @@ msgstr ""
 #: src/Admin/BookingsListTable.php:178
 #: src/Admin/BookingsPage.php:307
 #: src/Admin/Privacy.php:203
+#: src/Frontend/CancellationPage.php:261
 #: src/Notifications/Placeholders.php:33
 #: blocks/booking/app/Summary.js:21
 #: blocks/booking/edit.js:174
@@ -133,6 +135,7 @@ msgstr ""
 
 #: src/Admin/BookingsListTable.php:62
 #: src/Admin/BookingsPage.php:306
+#: src/Frontend/CancellationPage.php:263
 #: blocks/booking/app/Summary.js:31
 msgid "Date"
 msgstr ""
@@ -298,7 +301,10 @@ msgstr ""
 msgid "Confirm booking"
 msgstr ""
 
+#. translators: Default e-mail text (link label).
 #: src/Admin/BookingsPage.php:372
+#: src/Frontend/CancellationPage.php:160
+#: src/Notifications/Templates.php:241
 msgid "Cancel booking"
 msgstr ""
 
@@ -671,7 +677,7 @@ msgid "Awaiting payment"
 msgstr ""
 
 #: src/Admin/Labels.php:30
-#: src/Notifications/Placeholders.php:92
+#: src/Notifications/Placeholders.php:93
 msgctxt "booking status"
 msgid "Confirmed"
 msgstr ""
@@ -1231,12 +1237,85 @@ msgstr ""
 msgid "Sorry, you are not allowed to manage Terminarz settings."
 msgstr ""
 
-#: src/Blocks/BookingBlock.php:104
+#: src/Blocks/BookingBlock.php:105
 msgid "Please enable JavaScript in your browser to book an appointment."
 msgstr ""
 
-#: src/Blocks/BookingBlock.php:160
+#: src/Blocks/BookingBlock.php:163
 msgid "I agree to the processing of my personal data for the purpose of handling this booking."
+msgstr ""
+
+#: src/Frontend/CancellationPage.php:130
+msgid "Booking cancelled"
+msgstr ""
+
+#: src/Frontend/CancellationPage.php:131
+msgid "Your booking has been cancelled. The time slot is now available to others."
+msgstr ""
+
+#: src/Frontend/CancellationPage.php:134
+msgid "A confirmation has been sent to your e-mail address."
+msgstr ""
+
+#: src/Frontend/CancellationPage.php:165
+msgid "Cancel your booking"
+msgstr ""
+
+#: src/Frontend/CancellationPage.php:166
+msgid "Do you want to cancel this booking?"
+msgstr ""
+
+#. translators: %s: date and time.
+#: src/Frontend/CancellationPage.php:171
+#, php-format
+msgid "You can cancel online until %s."
+msgstr ""
+
+#: src/Frontend/CancellationPage.php:176
+msgid "Keep my booking and go to the website"
+msgstr ""
+
+#: src/Frontend/CancellationPage.php:188
+msgid "Go to the website"
+msgstr ""
+
+#: src/Frontend/CancellationPage.php:194
+msgid "Booking not active"
+msgstr ""
+
+#: src/Frontend/CancellationPage.php:195
+msgid "This booking is already cancelled or no longer active, so there is nothing to cancel."
+msgstr ""
+
+#: src/Frontend/CancellationPage.php:203
+msgid "Too late to cancel online"
+msgstr ""
+
+#: src/Frontend/CancellationPage.php:204
+msgid "The time for cancelling this booking online has passed. Please contact us directly."
+msgstr ""
+
+#: src/Frontend/CancellationPage.php:212
+msgid "Invalid link"
+msgstr ""
+
+#: src/Frontend/CancellationPage.php:213
+msgid "This cancellation link is not valid. Please use the link from your latest e-mail exactly as it was sent, or contact us."
+msgstr ""
+
+#: src/Frontend/CancellationPage.php:226
+msgid "Too many attempts"
+msgstr ""
+
+#: src/Frontend/CancellationPage.php:262
+#: blocks/booking/app/Summary.js:26
+msgid "With"
+msgstr ""
+
+#: src/Frontend/CancellationPage.php:264
+#: blocks/booking/app/Summary.js:35
+#: blocks/booking/edit.js:179
+msgid "Time"
 msgstr ""
 
 #: src/Infrastructure/HoldExpiryScheduler.php:67
@@ -1514,46 +1593,50 @@ msgid "Link the customer can use to cancel the booking"
 msgstr ""
 
 #: src/Notifications/Placeholders.php:42
-msgid "Site name"
+msgid "Last moment the customer can cancel online (see the cancellation limit)"
 msgstr ""
 
 #: src/Notifications/Placeholders.php:43
-msgid "Site address"
+msgid "Site name"
 msgstr ""
 
 #: src/Notifications/Placeholders.php:44
-msgid "Link to the booking in the admin panel (business e-mails)"
+msgid "Site address"
 msgstr ""
 
 #: src/Notifications/Placeholders.php:45
-msgid "WooCommerce order number (payment e-mails)"
+msgid "Link to the booking in the admin panel (business e-mails)"
 msgstr ""
 
 #: src/Notifications/Placeholders.php:46
-msgid "Link to the WooCommerce order (payment e-mails)"
+msgid "WooCommerce order number (payment e-mails)"
 msgstr ""
 
 #: src/Notifications/Placeholders.php:47
+msgid "Link to the WooCommerce order (payment e-mails)"
+msgstr ""
+
+#: src/Notifications/Placeholders.php:48
 msgid "Explanation of what needs attention (payment e-mails)"
 msgstr ""
 
-#: src/Notifications/Placeholders.php:82
+#: src/Notifications/Placeholders.php:83
 msgid "Jane Doe"
 msgstr ""
 
-#: src/Notifications/Placeholders.php:85
+#: src/Notifications/Placeholders.php:86
 msgid "This is an example note."
 msgstr ""
 
-#: src/Notifications/Placeholders.php:86
+#: src/Notifications/Placeholders.php:87
 msgid "Example service"
 msgstr ""
 
-#: src/Notifications/Placeholders.php:87
+#: src/Notifications/Placeholders.php:88
 msgid "Example resource"
 msgstr ""
 
-#: src/Notifications/Placeholders.php:100
+#: src/Notifications/Placeholders.php:102
 msgid "This is an example explanation."
 msgstr ""
 
@@ -1564,9 +1647,9 @@ msgstr ""
 
 #. translators: Default e-mail text. Keep the {placeholders} unchanged.
 #: src/Notifications/Templates.php:140
-#: src/Notifications/Templates.php:150
-#: src/Notifications/Templates.php:160
-#: src/Notifications/Templates.php:170
+#: src/Notifications/Templates.php:151
+#: src/Notifications/Templates.php:162
+#: src/Notifications/Templates.php:172
 msgid "Hello {customer_name},"
 msgstr ""
 
@@ -1576,118 +1659,123 @@ msgid "Thank you for your booking request. We will confirm it by e-mail shortly.
 msgstr ""
 
 #. translators: Default e-mail subject. Keep the {placeholders} unchanged.
-#: src/Notifications/Templates.php:148
+#: src/Notifications/Templates.php:149
 msgid "[{site_name}] Your booking is confirmed: {start_date} {start_time}"
 msgstr ""
 
 #. translators: Default e-mail text. Keep the {placeholders} unchanged.
-#: src/Notifications/Templates.php:152
+#: src/Notifications/Templates.php:153
 msgid "Your booking is confirmed. We look forward to seeing you."
 msgstr ""
 
 #. translators: Default e-mail subject. Keep the {placeholders} unchanged.
-#: src/Notifications/Templates.php:158
+#: src/Notifications/Templates.php:160
 msgid "[{site_name}] Your booking has been cancelled"
 msgstr ""
 
 #. translators: Default e-mail text. Keep the {placeholders} unchanged.
-#: src/Notifications/Templates.php:162
+#: src/Notifications/Templates.php:164
 msgid "Your booking has been cancelled. If this is a mistake, please make a new booking or contact us."
 msgstr ""
 
 #. translators: Default e-mail subject. Keep the {placeholders} unchanged.
-#: src/Notifications/Templates.php:168
+#: src/Notifications/Templates.php:170
 msgid "[{site_name}] Reminder: {service_name} on {start_date} at {start_time}"
 msgstr ""
 
 #. translators: Default e-mail text. Keep the {placeholders} unchanged.
-#: src/Notifications/Templates.php:172
+#: src/Notifications/Templates.php:174
 msgid "This is a reminder of your upcoming appointment."
 msgstr ""
 
 #. translators: Default e-mail subject. Keep the {placeholders} unchanged.
-#: src/Notifications/Templates.php:178
+#: src/Notifications/Templates.php:181
 msgid "[{site_name}] New booking: {service_name}, {start_date} {start_time}"
 msgstr ""
 
 #. translators: Default e-mail text. Keep the {placeholders} unchanged.
-#: src/Notifications/Templates.php:180
+#: src/Notifications/Templates.php:183
 msgid "A new booking has been placed ({status})."
 msgstr ""
 
 #. translators: Default e-mail text. Keep the {placeholders} unchanged.
-#: src/Notifications/Templates.php:184
-#: src/Notifications/Templates.php:195
+#: src/Notifications/Templates.php:187
+#: src/Notifications/Templates.php:198
 msgid "View the booking in the admin panel"
 msgstr ""
 
 #. translators: Default e-mail subject. Keep the {placeholders} unchanged.
-#: src/Notifications/Templates.php:189
+#: src/Notifications/Templates.php:192
 msgid "[{site_name}] Booking cancelled: {service_name}, {start_date} {start_time}"
 msgstr ""
 
 #. translators: Default e-mail text. Keep the {placeholders} unchanged.
-#: src/Notifications/Templates.php:191
+#: src/Notifications/Templates.php:194
 msgid "A booking has been cancelled and its slot is free again."
 msgstr ""
 
 #. translators: Default e-mail subject. Keep the {placeholders} unchanged.
-#: src/Notifications/Templates.php:200
+#: src/Notifications/Templates.php:203
 msgid "[{site_name}] Order #{order_number} needs attention"
 msgstr ""
 
 #. translators: Default e-mail text. Keep the {placeholders} unchanged.
-#: src/Notifications/Templates.php:203
+#: src/Notifications/Templates.php:206
 msgid "Order: #{order_number}"
 msgstr ""
 
 #. translators: Default e-mail text. Keep the {placeholders} unchanged.
-#: src/Notifications/Templates.php:205
+#: src/Notifications/Templates.php:208
 msgid "Booking: {booking_id}"
 msgstr ""
 
 #. translators: Default e-mail text. Keep the {placeholders} unchanged.
-#: src/Notifications/Templates.php:209
+#: src/Notifications/Templates.php:212
 msgid "Open the order"
 msgstr ""
 
 #. translators: Default e-mail text. Keep the {placeholders} unchanged.
-#: src/Notifications/Templates.php:220
+#: src/Notifications/Templates.php:223
 msgid "Service: {service_name}"
 msgstr ""
 
 #. translators: Default e-mail text. Keep the {placeholders} unchanged.
-#: src/Notifications/Templates.php:222
+#: src/Notifications/Templates.php:225
 msgid "With: {resource_name}"
 msgstr ""
 
 #. translators: Default e-mail text. Keep the {placeholders} unchanged.
-#: src/Notifications/Templates.php:224
+#: src/Notifications/Templates.php:227
 msgid "Date: {start_date}, {start_time}–{end_time}"
 msgstr ""
 
 #. translators: Default e-mail text. Keep the {placeholders} unchanged.
-#: src/Notifications/Templates.php:226
+#: src/Notifications/Templates.php:229
 msgid "Booking number: {booking_id}"
 msgstr ""
 
 #. translators: Default e-mail text. Keep the {placeholders} unchanged.
-#: src/Notifications/Templates.php:236
+#: src/Notifications/Templates.php:239
+msgid "If you cannot come, please cancel your booking by {cancel_deadline}:"
+msgstr ""
+
+#. translators: Default e-mail text. Keep the {placeholders} unchanged.
+#: src/Notifications/Templates.php:251
 msgid "Customer: {customer_name}"
 msgstr ""
 
 #. translators: Default e-mail text. Keep the {placeholders} unchanged.
-#: src/Notifications/Templates.php:238
+#: src/Notifications/Templates.php:253
 msgid "E-mail: {customer_email}"
 msgstr ""
 
 #. translators: Default e-mail text. Keep the {placeholders} unchanged.
-#: src/Notifications/Templates.php:240
+#: src/Notifications/Templates.php:255
 msgid "Phone: {customer_phone}"
 msgstr ""
 
 #. translators: Default e-mail text. Keep the {placeholders} unchanged.
-#: src/Notifications/Templates.php:242
+#: src/Notifications/Templates.php:257
 msgid "Note: {customer_note}"
 msgstr ""
 
@@ -1914,7 +2002,7 @@ msgstr ""
 msgid "Something went wrong. Please try again later."
 msgstr ""
 
-#: src/Rest/RequestLimit.php:73
+#: src/Rest/RequestLimit.php:75
 msgid "Too many attempts. Please wait a few minutes and try again."
 msgstr ""
 
@@ -2136,7 +2224,11 @@ msgstr ""
 msgid "Your booking is awaiting confirmation. We will get back to you soon."
 msgstr ""
 
-#: blocks/booking/app/Confirmation.js:59
+#: blocks/booking/app/Confirmation.js:47
+msgid "We have sent the details to your e-mail address, together with a link to cancel the booking if you cannot come."
+msgstr ""
+
+#: blocks/booking/app/Confirmation.js:68
 msgid "Book another appointment"
 msgstr ""
 
@@ -2226,15 +2318,6 @@ msgstr ""
 #: blocks/booking/app/Step.js:32
 #, js-format
 msgid "Step %1$d of %2$d"
-msgstr ""
-
-#: blocks/booking/app/Summary.js:26
-msgid "With"
-msgstr ""
-
-#: blocks/booking/app/Summary.js:35
-#: blocks/booking/edit.js:179
-msgid "Time"
 msgstr ""
 
 #: blocks/booking/edit.js:81

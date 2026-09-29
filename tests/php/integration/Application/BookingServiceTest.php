@@ -58,7 +58,7 @@ final class BookingServiceTest extends WP_UnitTestCase {
 		$this->container = new Services( $wpdb, $this->clock );
 		// Without the availability policy: these tests cover collisions, validation and events only
 		// (schedule-aware reservations are covered by AvailabilityServiceTest).
-		$this->service = new BookingService( $this->container->bookings(), $this->container->services(), $this->container->resources(), new WpEventDispatcher(), $this->clock );
+		$this->service = new BookingService( $this->container->bookings(), $this->container->services(), $this->container->resources(), new WpEventDispatcher(), $this->clock, $this->container->cancel_tokens() );
 	}
 
 	public function test_reserve_stores_booking_fires_event_and_returns_token_once(): void {
@@ -79,9 +79,12 @@ final class BookingServiceTest extends WP_UnitTestCase {
 		$this->assertSame( '2030-01-02 10:45', $booking->range->end->format( 'Y-m-d H:i' ) );
 		$this->assertSame( 15, $booking->buffer_after_minutes );
 		$this->assertMatchesRegularExpression( '/^[0-9a-f]{64}$/', $reservation->cancel_token );
-		$this->assertNotSame( $reservation->cancel_token, $booking->cancel_token_hash );
-		$this->assertTrue( BookingService::verify_cancel_token( $booking, $reservation->cancel_token ) );
-		$this->assertFalse( BookingService::verify_cancel_token( $booking, str_repeat( '0', 64 ) ) );
+		$this->assertMatchesRegularExpression( '/^[0-9a-f]{64}$/', (string) $booking->cancel_secret );
+		$this->assertNotSame( $reservation->cancel_token, $booking->cancel_secret, 'The database holds only the secret.' );
+		$this->assertSame( $reservation->cancel_token, $this->service->cancel_token( $booking ), 'The link can be rebuilt later.' );
+		$this->assertSame( $reservation->cancel_token, $this->service->cancel_token( $this->container->bookings()->get( (int) $booking->id ) ) );
+		$this->assertTrue( $this->service->verify_cancel_token( $booking, $reservation->cancel_token ) );
+		$this->assertFalse( $this->service->verify_cancel_token( $booking, str_repeat( '0', 64 ) ) );
 		$this->assertCount( 1, $events );
 		$this->assertEquals( $booking, $events[0] );
 	}
@@ -213,7 +216,8 @@ final class BookingServiceTest extends WP_UnitTestCase {
 		$this->assertSame( 10, $new->buffer_after_minutes );
 		$this->assertSame( 321, $new->order_id );
 		$this->assertNull( $new->hold_expires_at );
-		$this->assertTrue( BookingService::verify_cancel_token( $new, $reservation->cancel_token ) );
+		$this->assertTrue( $this->service->verify_cancel_token( $new, $reservation->cancel_token ) );
+		$this->assertFalse( $this->service->verify_cancel_token( $expired, $reservation->cancel_token ), 'Each booking has its own link.' );
 		$this->assertSame( BookingStatus::Expired, $this->container->bookings()->get( (int) $expired->id )?->status );
 		$this->assertSame( $created + 1, did_action( BookingService::EVENT_CREATED ) );
 	}

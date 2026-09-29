@@ -278,6 +278,6 @@ final class BookingsControllerTest extends RestTestCase {
 		$stored = $this->container->bookings()->get_by_public_id( $data['public_id'] );
 		$this->assertNotNull( $stored );
 		$this->assertSame( BookingStatus::Pending, $stored->status );
-		$this->assertNotNull( $stored->cancel_token_hash );
+		$this->assertNotNull( $stored->cancel_secret );
 	}
 }

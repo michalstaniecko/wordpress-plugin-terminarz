@@ -15,6 +15,7 @@ use Terminarz\Admin\Money;
 use Terminarz\Infrastructure\I18n;
 use Terminarz\Infrastructure\Module;
 use Terminarz\Infrastructure\Services;
+use Terminarz\Notifications\MessageType;
 use WP_Block_Type;
 
 /**
@@ -138,6 +139,8 @@ final class BookingBlock implements Module {
 			'currency'           => Money::currency(),
 			'priceDecimals'      => Money::decimals(),
 			'consentHtml'        => self::consent_html( $services->settings()->consent_text() ),
+			'emailNotice'        => $services->mailer()->templates()->get( MessageType::CustomerPending )->enabled
+				|| $services->mailer()->templates()->get( MessageType::CustomerConfirmed )->enabled,
 		);
 
 		/**

@@ -165,6 +165,18 @@ final class BookingBlockTest extends WP_UnitTestCase {
 		$this->assertStringNotContainsString( '<div', $config['consentHtml'] );
 	}
 
+	public function test_email_notice_follows_the_customer_templates(): void {
+		delete_option( \Terminarz\Notifications\Templates::OPTION );
+		$this->assertTrue( ( new BookingBlock() )->config( array() )['emailNotice'] );
+
+		$templates = new \Terminarz\Notifications\Templates();
+		$templates->set_enabled( \Terminarz\Notifications\MessageType::CustomerPending, false );
+		$templates->set_enabled( \Terminarz\Notifications\MessageType::CustomerConfirmed, false );
+		Services::reset();
+
+		$this->assertFalse( ( new BookingBlock() )->config( array() )['emailNotice'] );
+	}
+
 	public function test_default_consent_text_when_not_configured(): void {
 		$config = ( new BookingBlock() )->config( array() );
 

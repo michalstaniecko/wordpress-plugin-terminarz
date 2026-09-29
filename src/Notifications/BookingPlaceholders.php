@@ -12,6 +12,8 @@ namespace Terminarz\Notifications;
 use Terminarz\Admin\BookingsPage;
 use Terminarz\Admin\Labels;
 use Terminarz\Admin\Money;
+use Terminarz\Application\BookingService;
+use Terminarz\Frontend\CancellationPage;
 use Terminarz\Domain\Model\Booking;
 use Terminarz\Infrastructure\Services;
 
@@ -44,6 +46,16 @@ final class BookingPlaceholders {
 		$start    = $booking->range->start->getTimestamp();
 		$end      = $booking->range->end->getTimestamp();
 
+		$cancel = array();
+		$token  = $booking->status->is_active() ? $this->services->booking_service()->cancel_token( $booking ) : '';
+		if ( '' !== $token ) {
+			$deadline = BookingService::cancellation_deadline( $booking, $this->services->settings()->customer_cancel_limit_hours() );
+			$cancel   = array(
+				'cancel_url'      => CancellationPage::url( $booking, $token ),
+				'cancel_deadline' => (string) wp_date( trim( $date . ' ' . $time ), $deadline->getTimestamp() ),
+			);
+		}
+
 		$values = array_merge(
 			Placeholders::empty_values(),
 			array(
@@ -70,6 +82,7 @@ final class BookingPlaceholders {
 					admin_url( 'admin.php' )
 				),
 			),
+			$cancel,
 			$extra
 		);
 

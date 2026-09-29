@@ -29,6 +29,8 @@ final class RequestLimit {
 
 	public const BOOKING_CREATE = 'booking_create';
 
+	public const BOOKING_CANCEL = 'booking_cancel';
+
 	public const DEFAULT_LIMIT = 5;
 
 	public const DEFAULT_WINDOW = 600;
@@ -38,12 +40,12 @@ final class RequestLimit {
 	/**
 	 * Registers a hit of the current client; returns an error when over the limit.
 	 *
-	 * @param string          $bucket  Kind of action.
-	 * @param WP_REST_Request $request Request.
-	 * @phpstan-param WP_REST_Request<array<string, mixed>> $request
+	 * @param string               $bucket  Kind of action.
+	 * @param WP_REST_Request|null $request REST request; null outside the REST API (cancellation page).
+	 * @phpstan-param WP_REST_Request<array<string, mixed>>|null $request
 	 * @return true|WP_Error
 	 */
-	public static function check( string $bucket, WP_REST_Request $request ) {
+	public static function check( string $bucket, ?WP_REST_Request $request = null ) {
 		if ( current_user_can( Capabilities::MANAGE_BOOKINGS ) ) {
 			return true;
 		}
@@ -57,8 +59,8 @@ final class RequestLimit {
 		 * Filters the request limit of a public write endpoint.
 		 *
 		 * @param array{limit: int, window: int} $config  Allowed requests per window (seconds); limit <= 0 disables it.
-		 * @param string                         $bucket  Kind of action, e.g. "booking_create".
-		 * @param WP_REST_Request                $request Request.
+		 * @param string                         $bucket  Kind of action: "booking_create" or "booking_cancel".
+		 * @param WP_REST_Request|null           $request REST request (null for the cancellation page).
 		 */
 		$config = apply_filters( 'trmz_rate_limit', $defaults, $bucket, $request );
 		$config = is_array( $config ) ? array_merge( $defaults, $config ) : $defaults;
@@ -81,18 +83,18 @@ final class RequestLimit {
 	/**
 	 * IP address of the client: `REMOTE_ADDR`, filterable with `trmz_client_ip` (trusted proxies). Invalid → "unknown".
 	 *
-	 * @param WP_REST_Request $request Request.
-	 * @phpstan-param WP_REST_Request<array<string, mixed>> $request
+	 * @param WP_REST_Request|null $request REST request; null outside the REST API.
+	 * @phpstan-param WP_REST_Request<array<string, mixed>>|null $request
 	 */
-	public static function client_ip( WP_REST_Request $request ): string {
+	public static function client_ip( ?WP_REST_Request $request = null ): string {
 		$remote = isset( $_SERVER['REMOTE_ADDR'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) : '';
 
 		/**
 		 * Filters the client IP used for request limits. By default only `REMOTE_ADDR` is trusted; a site behind
 		 * a reverse proxy may return the address from a header the proxy sets (and clients cannot spoof).
 		 *
-		 * @param string          $ip      IP address from REMOTE_ADDR.
-		 * @param WP_REST_Request $request Request.
+		 * @param string               $ip      IP address from REMOTE_ADDR.
+		 * @param WP_REST_Request|null $request REST request (null for the cancellation page).
 		 */
 		$ip = apply_filters( 'trmz_client_ip', $remote, $request );
 

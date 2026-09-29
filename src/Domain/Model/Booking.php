@@ -50,7 +50,7 @@ final class Booking {
 	 * @param ?DateTimeImmutable $hold_expires_at      Payment hold end; required for `pending_payment`.
 	 * @param ?int               $id                   Persistence id, null when not stored yet.
 	 * @param ?int               $order_id             WooCommerce order id, if any.
-	 * @param ?string            $cancel_token_hash    Hash of the customer's cancellation token, if any.
+	 * @param ?string            $cancel_secret        Random secret of the customer's cancellation link (ADR-042), if any.
 	 * @param ?DateTimeImmutable $created_at           Creation time.
 	 * @param ?string            $public_id            Random public identifier (used in URLs/REST instead of `id`).
 	 *
@@ -66,7 +66,7 @@ final class Booking {
 		?DateTimeImmutable $hold_expires_at = null,
 		public readonly ?int $id = null,
 		public readonly ?int $order_id = null,
-		public readonly ?string $cancel_token_hash = null,
+		public readonly ?string $cancel_secret = null,
 		?DateTimeImmutable $created_at = null,
 		public readonly ?string $public_id = null
 	) {
@@ -85,8 +85,8 @@ final class Booking {
 		if ( null !== $public_id && '' === $public_id ) {
 			throw new InvalidValue( 'Public id must not be empty.' );
 		}
-		if ( null !== $cancel_token_hash && '' === $cancel_token_hash ) {
-			throw new InvalidValue( 'Cancel token hash must not be empty.' );
+		if ( null !== $cancel_secret && '' === $cancel_secret ) {
+			throw new InvalidValue( 'Cancel secret must not be empty.' );
 		}
 		if ( BookingStatus::PendingPayment === $status && null === $hold_expires_at ) {
 			throw new InvalidValue( 'A booking awaiting payment needs a hold expiry time.' );
@@ -200,7 +200,7 @@ final class Booking {
 			hold_expires_at: $this->hold_expires_at,
 			id: $id ?? $this->id,
 			order_id: $order_id ?? $this->order_id,
-			cancel_token_hash: $this->cancel_token_hash,
+			cancel_secret: $this->cancel_secret,
 			created_at: $this->created_at,
 			public_id: $this->public_id
 		);

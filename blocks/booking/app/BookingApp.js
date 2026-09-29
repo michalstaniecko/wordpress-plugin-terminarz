@@ -811,6 +811,7 @@ export default function BookingApp( { config } ) {
 					index: 0,
 				} }
 				booking={ booking }
+				emailNotice={ !! config.emailNotice }
 				serviceName={ service?.name ?? '' }
 				resourceName={ assigned?.name ?? '' }
 				timezone={ timezone }
