@@ -339,3 +339,14 @@ Jeden wpis na zamknięte issue: data, numer issue, co zrobione, decyzje, znane r
 - **Decyzje:** ADR-034 (natywne radio zamiast `aria-pressed`; zakres i tagi axe).
 - **Ryzyka:** kontrast zależy od motywu (blok dziedziczy kolory); przy zmianie gałęzi git Docker Desktop może zgubić
   bind-mount katalogu `tests/e2e/mu-plugins` — wtedy `wp-env stop` + `npm run env:start:tests`.
+
+## 2026-09-29 — #33 E2E ścieżki klienta bez WooCommerce
+
+- **Zrobione:** `tests/e2e/specs/booking-customer-path.spec.js` (tryb serial, WooCommerce dezaktywowany helperem
+  i przywracany w `afterAll`): admin tworzy zasób, godziny pracy i usługę w panelu, strona z blokiem, anonimowy klient
+  rezerwuje przez blok (ekran potwierdzenia, status „oczekuje na potwierdzenie”), zarezerwowany termin znika z
+  `GET /availability` i z bloku po przeładowaniu, admin widzi rezerwację na liście i w szczegółach, brak PHP notice
+  w `debug.log`. Cała suita E2E (36 testów) zielona lokalnie.
+- **Decyzje:** brak nowych (ADR-010, ADR-033).
+- **Ryzyka:** test zakłada, że w horyzoncie rezerwacji jest wolny termin (godziny 9–17 codziennie) — przy bardzo
+  późnym uruchomieniu kalendarz sam przechodzi do kolejnego miesiąca.
