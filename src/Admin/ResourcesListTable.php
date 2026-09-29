@@ -20,6 +20,20 @@ use WP_List_Table;
 final class ResourcesListTable extends WP_List_Table {
 
 	/**
+	 * Service names by ID (loaded once in prepare_items()).
+	 *
+	 * @var array<int, string>
+	 */
+	private array $service_names = array();
+
+	/**
+	 * Service IDs by resource ID (one query in prepare_items()).
+	 *
+	 * @var array<int, int[]>
+	 */
+	private array $service_ids = array();
+
+	/**
 	 * Constructor.
 	 *
 	 * @param ResourcesPage $page Screen (URLs and actions).
@@ -53,7 +67,13 @@ final class ResourcesListTable extends WP_List_Table {
 	 */
 	public function prepare_items(): void {
 		$this->_column_headers = array( $this->get_columns(), array(), array(), 'name' );
-		$this->items           = Services::instance()->resources()->all();
+		$services              = Services::instance();
+		$this->items           = $services->resources()->all();
+		$this->service_names   = array();
+		foreach ( $services->services()->all() as $service ) {
+			$this->service_names[ (int) $service->id ] = $service->name;
+		}
+		$this->service_ids = $services->services()->service_ids_by_resource();
 		$this->set_pagination_args(
 			array(
 				'total_items' => count( $this->items ),
@@ -148,12 +168,10 @@ final class ResourcesListTable extends WP_List_Table {
 	 * @param BookableResource $item Resource.
 	 */
 	public function column_services( $item ): string {
-		$services = Services::instance();
-		$names    = array();
-		foreach ( $services->services()->service_ids_for_resource( (int) $item->id ) as $service_id ) {
-			$service = $services->services()->get( $service_id );
-			if ( null !== $service ) {
-				$names[] = $service->name;
+		$names = array();
+		foreach ( $this->service_ids[ (int) $item->id ] ?? array() as $service_id ) {
+			if ( isset( $this->service_names[ $service_id ] ) ) {
+				$names[] = $this->service_names[ $service_id ];
 			}
 		}
 		return array() === $names ? '&mdash;' : esc_html( implode( ', ', $names ) );

@@ -485,6 +485,16 @@ Jeden wpis na zamknięte issue: data, numer issue, co zrobione, decyzje, znane r
 - **Decyzje:** ADR-045.
 - **Ryzyka:** aktywacja sieciowa w dużej sieci (setki witryn) wykonuje migrację każdej witryny w jednym żądaniu.
 
+## 2026-09-29 — #84 zapytania listy admina i eksportu CSV
+
+- **Zrobione:** kolumna „Usługi” listy zasobów — jedno zapytanie (`ServiceRepository::service_ids_by_resource()`) zamiast
+  zapytań per wiersz; liczniki statusów listy rezerwacji — jedno `GROUP BY status`
+  (`BookingRepository::count_by_status()`); eksport CSV stronicowany keysetem po `id`
+  (`BookingRepository::search_after_id()`). Testy integracyjne (liczba zapytań niezależna od liczby wierszy,
+  zmiany między stronami keysetu bez pominięć/duplikatów).
+- **Decyzje:** CSV w kolejności ID (utworzenia), niezależnie od sortowania listy — warunek stabilnego keysetu.
+- **Ryzyka:** brak.
+
 ## 2026-09-29 — #45 uninstall.php i readme.txt (+ #46 testy multisite)
 
 - **Zrobione:** `uninstall.php` + `Infrastructure\Uninstaller` (zadania zaplanowane zawsze, dane tylko przy
