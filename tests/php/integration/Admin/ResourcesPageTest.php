@@ -12,6 +12,7 @@ namespace Terminarz\Tests\Integration\Admin;
 use Terminarz\Admin\ResourcesPage;
 use Terminarz\Domain\Model\BookableResource;
 use Terminarz\Domain\Model\BookingStatus;
+use Terminarz\Domain\Model\Service;
 
 /**
  * @covers \Terminarz\Admin\ResourcesPage
@@ -176,6 +177,34 @@ final class ResourcesPageTest extends AdminTestCase {
 		$this->assertStringContainsString( 'Device', $html );
 		$this->assertStringContainsString( 'action=trmz_delete_resource', $html );
 		$this->assertStringContainsString( '_wpnonce=', $html );
+	}
+
+	public function test_services_column_without_a_query_per_row(): void {
+		$anna    = (int) $this->container->resources()->save( new BookableResource( null, 'Anna', true, 'person' ) )->id;
+		$bob     = (int) $this->container->resources()->save( new BookableResource( null, 'Bob', true, 'person' ) )->id;
+		$massage = (int) $this->container->services()->save( new Service( null, 'Massage', 60, 0 ) )->id;
+		$physio  = (int) $this->container->services()->save( new Service( null, 'Physio', 30, 0 ) )->id;
+		$this->container->services()->assign_resources( $massage, array( $anna, $bob ) );
+		$this->container->services()->assign_resources( $physio, array( $anna ) );
+		$this->container->resources()->save( new BookableResource( null, 'Idle', true, 'person' ) );
+
+		global $wpdb;
+		$before = $wpdb->num_queries;
+		$html   = $this->render( $this->page, array( 'page' => ResourcesPage::SLUG ) );
+		$few    = $wpdb->num_queries - $before;
+
+		$this->assertStringContainsString( 'Massage, Physio', $html );
+		$this->assertStringContainsString( '&mdash;', $html, 'Resource without services.' );
+
+		$extra = array( $anna, $bob );
+		for ( $i = 0; $i < 4; $i++ ) {
+			$extra[] = (int) $this->container->resources()->save( new BookableResource( null, 'Extra ' . $i, true, 'person' ) )->id;
+		}
+		$this->container->services()->assign_resources( $massage, $extra );
+
+		$before = $wpdb->num_queries;
+		$this->render( $this->page, array( 'page' => ResourcesPage::SLUG ) );
+		$this->assertLessThanOrEqual( $few, $wpdb->num_queries - $before, 'Query count does not grow with the number of resources.' );
 	}
 
 	public function test_render_requires_the_capability(): void {

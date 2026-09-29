@@ -124,6 +124,25 @@ interface BookingRepository {
 	public function count( BookingCriteria $criteria ): int;
 
 	/**
+	 * Number of bookings per status for the criteria, in one query (paging and the status filter ignored).
+	 *
+	 * @param BookingCriteria $criteria Criteria.
+	 * @return array<string, int> Keyed by status value; every status present (0 when none).
+	 */
+	public function count_by_status( BookingCriteria $criteria ): array;
+
+	/**
+	 * Keyset page for exports: bookings matching the criteria with an ID greater than `$after_id`, ordered by ID
+	 * ascending, at most `$criteria->limit` (ordering and offset of the criteria ignored). Stable under concurrent
+	 * inserts/updates — no skipped or repeated rows as with OFFSET paging.
+	 *
+	 * @param BookingCriteria $criteria Criteria.
+	 * @param int             $after_id Last ID of the previous page (0 = from the start).
+	 * @return Booking[]
+	 */
+	public function search_after_id( BookingCriteria $criteria, int $after_id ): array;
+
+	/**
 	 * Bookings of a customer by exact e-mail address (case-insensitive), oldest first — for personal data export/erasure.
 	 *
 	 * @param string                 $email          E-mail address.

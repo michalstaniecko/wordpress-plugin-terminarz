@@ -112,6 +112,35 @@ final class BookingsPageTest extends AdminTestCase {
 		$this->assertNotNull( $first->id );
 	}
 
+	public function test_status_views_count_with_other_filters_in_one_query(): void {
+		$this->reserve( $this->anna, '2030-01-08 08:00', 'Ewa', 'ewa@example.org' );
+		$this->reserve( $this->anna, '2030-01-08 10:00', 'Ola', 'ola@example.org' );
+		$jan = $this->reserve( $this->anna, '2030-01-09 10:00', 'Jan', 'jan@example.org' );
+		$this->container->booking_service()->change_status( (int) $jan->id, BookingStatus::Confirmed );
+		$this->reserve( $this->bob, '2030-01-09 12:00', 'Bob customer', 'bob@example.org' );
+
+		global $wpdb;
+		$query  = array(
+			'page'     => BookingsPage::SLUG,
+			'status'   => 'confirmed',
+			'resource' => $this->anna,
+		);
+		$before = $wpdb->num_queries;
+		$html   = $this->render( $this->page, $query );
+		$few    = $wpdb->num_queries - $before;
+
+		$this->assertMatchesRegularExpression( '/Pending <span class="count">\(2\)<\/span>/', $html );
+		$this->assertMatchesRegularExpression( '/Confirmed <span class="count">\(1\)<\/span>/', $html );
+		$this->assertStringNotContainsString( 'Cancelled <span class="count">', $html, 'Empty statuses are hidden.' );
+
+		for ( $i = 0; $i < 3; $i++ ) {
+			$this->reserve( $this->anna, sprintf( '2030-01-10 %02d:00', 8 + $i ), 'Extra ' . $i, "x{$i}@example.org" );
+		}
+		$before = $wpdb->num_queries;
+		$this->render( $this->page, $query );
+		$this->assertLessThanOrEqual( $few, $wpdb->num_queries - $before, 'Query count does not grow with the number of bookings.' );
+	}
+
 	public function test_list_is_paged(): void {
 		for ( $i = 0; $i < 25; $i++ ) {
 			$day = 8 + intdiv( $i, 8 );

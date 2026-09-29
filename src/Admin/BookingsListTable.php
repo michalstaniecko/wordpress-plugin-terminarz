@@ -148,9 +148,9 @@ final class BookingsListTable extends WP_List_Table {
 				esc_html__( 'All', 'terminarz' )
 			),
 		);
+		$counts  = $services->bookings()->count_by_status( $this->filters->criteria( $timezone ) );
 		foreach ( BookingStatus::cases() as $status ) {
-			$filters = new BookingFilters( $status, $this->filters->service_id, $this->filters->resource_id, $this->filters->from, $this->filters->to, $this->filters->search );
-			$count   = $services->bookings()->count( $filters->criteria( $timezone ) );
+			$count = $counts[ $status->value ] ?? 0;
 			if ( 0 === $count && $status !== $current ) {
 				continue;
 			}
