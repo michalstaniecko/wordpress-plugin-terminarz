@@ -22,6 +22,8 @@ const {
 } = require( '../utils/booking-setup' );
 const { bookThroughBlock, offeredStarts } = require( '../utils/booking-flow' );
 const { clearMails, waitForMail } = require( '../utils/mails' );
+const { setCancelLimit, setPaymentMode } = require( '../utils/settings' );
+const { cancelLink, cancelWithLink } = require( '../utils/cancellation' );
 
 test.describe.configure( { mode: 'serial' } );
 
@@ -35,83 +37,6 @@ let freeServiceId;
 let paidServiceId;
 let freePageUrl;
 let paidPageUrl;
-
-/**
- * Sets the payment mode on the settings screen.
- *
- * @param {import('@wordpress/e2e-test-utils-playwright').Admin} admin Admin utils.
- * @param {import('@playwright/test').Page}                      page  Page.
- * @param {string}                                               mode  none|deposit|full.
- */
-async function setPaymentMode( admin, page, mode ) {
-	await admin.visitAdminPage( 'admin.php', 'page=trmz-settings' );
-	await page.locator( '#trmz-payment_mode' ).selectOption( mode );
-	await page.getByRole( 'button', { name: 'Save Changes' } ).click();
-	await expect( page.getByText( 'Settings saved.' ) ).toBeVisible();
-}
-
-/**
- * Sets the customer cancellation limit (hours before the start) on the settings screen.
- *
- * @param {import('@wordpress/e2e-test-utils-playwright').Admin} admin Admin utils.
- * @param {import('@playwright/test').Page}                      page  Page.
- * @param {number}                                               hours Hours.
- */
-async function setCancelLimit( admin, page, hours ) {
-	await admin.visitAdminPage( 'admin.php', 'page=trmz-settings' );
-	await page
-		.locator( '#trmz-customer_cancel_limit_hours' )
-		.fill( String( hours ) );
-	await page.getByRole( 'button', { name: 'Save Changes' } ).click();
-	await expect( page.getByText( 'Settings saved.' ) ).toBeVisible();
-}
-
-/**
- * Cancellation link from an e-mail body (HTML entities decoded), as a path relative to the site.
- *
- * @param {string} html E-mail HTML.
- * @return {string} Path with query.
- */
-function cancelLink( html ) {
-	const match = html.match( /href="([^"]*trmz_cancel=[^"]*)"/ );
-	expect( match ).not.toBeNull();
-	const url = new URL( match[ 1 ].replace( /&#038;|&amp;/g, '&' ) );
-	return url.pathname + url.search;
-}
-
-/**
- * Opens the cancellation link, checks the confirmation page and cancels.
- *
- * @param {import('@playwright/test').Page} page Page.
- * @param {string}                          link Link path.
- */
-async function cancelWithLink( page, link ) {
-	const response = await page.goto( link );
-	expect( response.status() ).toBe( 200 );
-	expect( response.headers()[ 'x-robots-tag' ] ).toContain( 'noindex' );
-	expect( response.headers()[ 'referrer-policy' ] ).toBe( 'no-referrer' );
-	expect( response.headers()[ 'x-frame-options' ] ).toBe( 'DENY' );
-	expect( response.headers()[ 'content-security-policy' ] ).toBe(
-		"frame-ancestors 'none'"
-	);
-	await expect(
-		page.getByRole( 'heading', { name: 'Cancel your booking' } )
-	).toBeVisible();
-
-	await page.getByRole( 'button', { name: 'Cancel booking' } ).click();
-	await expect(
-		page.getByRole( 'heading', { name: 'Booking cancelled' } )
-	).toBeVisible();
-	await expect( page.locator( 'main' ) ).toContainText(
-		'Your booking has been cancelled.'
-	);
-
-	// The same link again: nothing left to cancel.
-	await page.goto( link );
-	await expect(
-		page.getByRole( 'heading', { name: 'Booking not active' } )
-	).toBeVisible();
-}
 
 test.describe( 'E-mail with a cancellation link', () => {
 	test.beforeAll( async ( { requestUtils } ) => {
