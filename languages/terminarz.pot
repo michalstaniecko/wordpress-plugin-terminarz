@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-29T16:40:05+00:00\n"
+"POT-Creation-Date: 2026-09-29T16:43:57+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: terminarz\n"
@@ -202,6 +202,68 @@ msgstr ""
 msgid "Delete data on uninstall"
 msgstr ""
 
+#: src/Rest/AvailabilityController.php:117
+msgid "The selected person or resource does not provide this service."
+msgstr ""
+
+#: src/Rest/AvailabilityController.php:132
+msgid "Please provide valid dates."
+msgstr ""
+
+#: src/Rest/AvailabilityController.php:135
+msgid "The end date must not be earlier than the start date."
+msgstr ""
+
+#. translators: %d: maximum number of days.
+#: src/Rest/AvailabilityController.php:141
+#, php-format
+msgid "The date range may cover at most %d days."
+msgstr ""
+
+#: src/Rest/AvailabilityController.php:222
+#: src/Rest/AvailabilityController.php:264
+#: src/Rest/ServicesController.php:59
+#: src/Rest/ServicesController.php:157
+msgid "Service ID."
+msgstr ""
+
+#: src/Rest/AvailabilityController.php:228
+#: src/Rest/AvailabilityController.php:269
+msgid "Resource ID or \"any\"."
+msgstr ""
+
+#: src/Rest/AvailabilityController.php:234
+msgid "First day (site time zone), Y-m-d."
+msgstr ""
+
+#: src/Rest/AvailabilityController.php:240
+msgid "Last day (site time zone, inclusive), Y-m-d. At most 31 days after the first one."
+msgstr ""
+
+#: src/Rest/AvailabilityController.php:274
+msgid "Site time zone."
+msgstr ""
+
+#: src/Rest/AvailabilityController.php:289
+msgid "Every day of the range with its free slots."
+msgstr ""
+
+#: src/Rest/AvailabilityController.php:305
+msgid "Start, ISO 8601 with the site offset."
+msgstr ""
+
+#: src/Rest/AvailabilityController.php:310
+msgid "End, ISO 8601 with the site offset."
+msgstr ""
+
+#: src/Rest/AvailabilityController.php:315
+msgid "Start in UTC, ISO 8601."
+msgstr ""
+
+#: src/Rest/AvailabilityController.php:320
+msgid "Resource ID; null when any resource was requested."
+msgstr ""
+
 #: src/Rest/Controller.php:63
 msgid "Sorry, you are not allowed to manage bookings."
 msgstr ""
@@ -240,11 +302,6 @@ msgstr ""
 
 #: src/Rest/ResourcesController.php:143
 msgid "Resource name."
-msgstr ""
-
-#: src/Rest/ServicesController.php:59
-#: src/Rest/ServicesController.php:157
-msgid "Service ID."
 msgstr ""
 
 #: src/Rest/ServicesController.php:104

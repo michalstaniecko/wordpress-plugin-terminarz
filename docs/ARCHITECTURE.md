@@ -323,7 +323,54 @@ W CI osobny krok joba `integration`. Zmienne: `TRMZ_CONCURRENCY_WORKERS`, `TRMZ_
 - Benchmark (test integracyjny `@group benchmark`): 30 dni × 10 zasobów, ~1000 rezerwacji, `slots()` + `any_resource_slots()`:
   ~21 ms lokalnie; próg `TRMZ_BENCH_MAX_MS` (domyślnie 300 ms, w CI 1000 ms).
 
-## ADR-019: Ustawienia pluginu i menu admina
+## Publiczne API warstwy domeny/aplikacji (dla adapterów REST/admin)
+
+- Wejście: `Terminarz\Infrastructure\Services::instance()` → `availability_service()`, `booking_service()`, `resources()`,
+  `services()`, `schedules()`, `schedule_exceptions()`, `bookings()`, `clock()`, `availability_settings()`.
+- Wyjątki do mapowania na HTTP: `SlotUnavailable` → 409, `EntityNotFound` → 404, `InvalidValue` / `InvalidStatusTransition` → 400/422,
+  `EntityInUse` → 409; `Infrastructure\Database\DatabaseError` → 500. Komunikaty wyjątków są angielskie (dla programisty) —
+  adapter pokazuje własne, przetłumaczone teksty.
+- Identyfikator rezerwacji na zewnątrz: `Booking::$public_id` (`BookingRepository::get_by_public_id()`); token anulowania
+  dostępny tylko w `Reservation::$cancel_token` zaraz po rezerwacji, weryfikacja `BookingService::verify_cancel_token()`.
+- Ustawienia: `Services::instance()->settings()` (`Infrastructure\Settings`, gettery z ADR-021), np. `->auto_confirm()`.
+- Hooki: `trmz_booking_created`, `trmz_booking_status_changed`, `trmz_booking_rescheduled`, `trmz_schema_migrated`;
+  filtry: `trmz_availability_settings`, `trmz_db_inside_external_transaction`.
+
+## ADR-019: Warstwa REST (`Terminarz\Rest`, `terminarz/v1`)
+
+**Decyzja.**
+- Moduł `Rest\RestModule` (w `Plugin::default_modules()`) rejestruje kontrolery na `rest_api_init`. Kontrolery rozszerzają
+  `Rest\Controller` (← `WP_REST_Controller`): namespace `terminarz/v1`, schemat (`get_item_schema()`), walidacja argumentów
+  przez `args` (JSON Schema WordPressa), zależności z `Infrastructure\Services::instance()` pobierane w czasie żądania
+  (testy podmieniają kontener przez `Services::set_instance()`).
+- Każda trasa ma jawny `permission_callback`: publiczny odczyt → `Controller::public_read_permissions_check()` (nazwana metoda,
+  nie `__return_true`); administracja → `manage_permissions_check()` (`trmz_manage_bookings`, 401 dla anonima / 403 dla
+  zalogowanego bez uprawnienia — `rest_authorization_required_code()`).
+- Odpowiedzi publiczne zawierają wyłącznie pola ze schematu (bez `user_id`, `sort_order`, buforów, danych innych klientów).
+  Nieaktywne usługi/zasoby są publicznie nieodróżnialne od nieistniejących (404 `trmz_service_not_found`).
+- Wyjątki → `Rest\ErrorMapper::to_wp_error()`: stały kod błędu + status HTTP + ogólny, przetłumaczony komunikat
+  (`SlotUnavailable`/`EntityInUse` 409, `EntityNotFound` 404, `InvalidStatusTransition` 422, `InvalidValue` 400,
+  `DatabaseError` 500). Angielskie komunikaty wyjątków (ADR-015) nigdy nie trafiają do klienta.
+- Czasy w odpowiedziach: ISO 8601 z offsetem strefy witryny (`DATE_RFC3339`) + odpowiednik UTC (`…Z`).
+
+**Konsekwencje.** Katalog nie zawiera jeszcze opisu usługi/zasobu ani waluty (kolumny spoza modelu domeny — ADR-013);
+dojdą razem z panelem admina (M4) / WooCommerce (M6) jako nowe pola schematu (zmiana wstecznie kompatybilna).
+
+## ADR-020: Endpoint dostępności (`GET /terminarz/v1/availability`)
+
+**Decyzja.**
+- Parametry: `service` (wymagany), `resource` = ID lub `any` (domyślnie), `from`/`to` — **daty lokalne** witryny `Y-m-d`
+  (włącznie, maks. 31 dni; walidacja przed dostępem do bazy). Nieaktywna/nieistniejąca usługa → 404, zasób nieprzypisany,
+  nieaktywny lub nieistniejący → 400 `trmz_invalid_resource`, błędne daty → 400 `trmz_invalid_date` / `trmz_invalid_range`.
+- Odpowiedź: `days[]` zawiera **każdy** dzień zakresu (także bez slotów — UI kalendarza nie musi liczyć dni), sloty
+  `{start, end, start_utc, resource}`; `start`/`end` w ISO 8601 z offsetem strefy witryny (offset zmienia się w dniu DST),
+  `start_utc` jako źródło prawdy do wysłania przy rezerwacji. Dla `any` jeden slot na start i `resource: null` —
+  przydział zasobu jest wstępny (ADR-018), ostateczny wybór następuje w chwili rezerwacji.
+- Cache: domyślnie `Cache-Control: no-store` (dostępność zmienia się z każdą rezerwacją); filtr
+  `trmz_availability_cache_max_age` (sekundy) pozwala na `public, max-age=N` — rezerwacja i tak weryfikuje slot ponownie.
+- Wydajność: benchmark przez REST (30 dni × 10 zasobów, ~1200 rezerwacji) ~11 ms lokalnie; próg `TRMZ_BENCH_MAX_MS`.
+
+## ADR-021: Ustawienia pluginu i menu admina
 
 **Kontekst.** Parametry dostępności (ADR-018), auto-potwierdzanie (M3), płatności (M6), powiadomienia (M5) i deinstalacja
 czytają wspólne ustawienia; potrzebne jest jedno miejsce z domyślnymi wartościami, zakresami i sanitizacją.
@@ -354,36 +401,3 @@ czytają wspólne ustawienia; potrzebne jest jedno miejsce z domyślnymi wartoś
 **Konsekwencje.** Adaptery czytają ustawienia przez gettery, nigdy przez `get_option()` bezpośrednio. Wyprzedzenie
 przechowywane w minutach (spójnie z ADR-018), choć issue mówiło o godzinach. Testy korzystające z
 `Services` bez jawnego `AvailabilitySettings` podlegają domyślnemu horyzontowi 90 dni i wyprzedzeniu 60 min.
-
-## Publiczne API warstwy domeny/aplikacji (dla adapterów REST/admin)
-
-- Wejście: `Terminarz\Infrastructure\Services::instance()` → `availability_service()`, `booking_service()`, `resources()`,
-  `services()`, `schedules()`, `schedule_exceptions()`, `bookings()`, `clock()`, `availability_settings()`.
-- Wyjątki do mapowania na HTTP: `SlotUnavailable` → 409, `EntityNotFound` → 404, `InvalidValue` / `InvalidStatusTransition` → 400/422,
-  `EntityInUse` → 409; `Infrastructure\Database\DatabaseError` → 500. Komunikaty wyjątków są angielskie (dla programisty) —
-  adapter pokazuje własne, przetłumaczone teksty.
-- Identyfikator rezerwacji na zewnątrz: `Booking::$public_id` (`BookingRepository::get_by_public_id()`); token anulowania
-  dostępny tylko w `Reservation::$cancel_token` zaraz po rezerwacji, weryfikacja `BookingService::verify_cancel_token()`.
-- Ustawienia: `Services::instance()->settings()` (`Infrastructure\Settings`, gettery z ADR-019), np. `->auto_confirm()`.
-- Hooki: `trmz_booking_created`, `trmz_booking_status_changed`, `trmz_booking_rescheduled`, `trmz_schema_migrated`;
-  filtry: `trmz_availability_settings`, `trmz_db_inside_external_transaction`.
-
-## ADR-019: Warstwa REST (`Terminarz\Rest`, `terminarz/v1`)
-
-**Decyzja.**
-- Moduł `Rest\RestModule` (w `Plugin::default_modules()`) rejestruje kontrolery na `rest_api_init`. Kontrolery rozszerzają
-  `Rest\Controller` (← `WP_REST_Controller`): namespace `terminarz/v1`, schemat (`get_item_schema()`), walidacja argumentów
-  przez `args` (JSON Schema WordPressa), zależności z `Infrastructure\Services::instance()` pobierane w czasie żądania
-  (testy podmieniają kontener przez `Services::set_instance()`).
-- Każda trasa ma jawny `permission_callback`: publiczny odczyt → `Controller::public_read_permissions_check()` (nazwana metoda,
-  nie `__return_true`); administracja → `manage_permissions_check()` (`trmz_manage_bookings`, 401 dla anonima / 403 dla
-  zalogowanego bez uprawnienia — `rest_authorization_required_code()`).
-- Odpowiedzi publiczne zawierają wyłącznie pola ze schematu (bez `user_id`, `sort_order`, buforów, danych innych klientów).
-  Nieaktywne usługi/zasoby są publicznie nieodróżnialne od nieistniejących (404 `trmz_service_not_found`).
-- Wyjątki → `Rest\ErrorMapper::to_wp_error()`: stały kod błędu + status HTTP + ogólny, przetłumaczony komunikat
-  (`SlotUnavailable`/`EntityInUse` 409, `EntityNotFound` 404, `InvalidStatusTransition` 422, `InvalidValue` 400,
-  `DatabaseError` 500). Angielskie komunikaty wyjątków (ADR-015) nigdy nie trafiają do klienta.
-- Czasy w odpowiedziach: ISO 8601 z offsetem strefy witryny (`DATE_RFC3339`) + odpowiednik UTC (`…Z`).
-
-**Konsekwencje.** Katalog nie zawiera jeszcze opisu usługi/zasobu ani waluty (kolumny spoza modelu domeny — ADR-013);
-dojdą razem z panelem admina (M4) / WooCommerce (M6) jako nowe pola schematu (zmiana wstecznie kompatybilna).

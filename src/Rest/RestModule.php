@@ -42,6 +42,7 @@ final class RestModule implements Module {
 		return array(
 			new ServicesController(),
 			new ResourcesController(),
+			new AvailabilityController(),
 		);
 	}
 }
