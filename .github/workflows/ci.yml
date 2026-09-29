@@ -123,6 +123,8 @@ jobs:
         run: npx wp-env run --config=.wp-env.tests.json cli --env-cwd=wp-content/plugins/terminarz env TRMZ_BENCH_MAX_MS=1000 vendor/bin/phpunit -c phpunit-integration.xml.dist --exclude-group concurrency
       - name: Run integration tests without WooCommerce
         run: npx wp-env run --config=.wp-env.tests.json cli --env-cwd=wp-content/plugins/terminarz env TRMZ_TESTS_WOOCOMMERCE=0 TRMZ_BENCH_MAX_MS=1000 vendor/bin/phpunit -c phpunit-integration.xml.dist --exclude-group concurrency,woocommerce
+      - name: Run integration tests on multisite (WP_TESTS_MULTISITE=1)
+        run: npx wp-env run --config=.wp-env.tests.json cli --env-cwd=wp-content/plugins/terminarz env WP_TESTS_MULTISITE=1 TRMZ_BENCH_MAX_MS=1000 vendor/bin/phpunit -c phpunit-integration.xml.dist --exclude-group concurrency
       - name: Run concurrency test (parallel WP-CLI processes, no double bookings)
         run: composer test:integration -- --group concurrency
 
