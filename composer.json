@@ -48,7 +48,8 @@
 	},
 	"autoload-dev": {
 		"psr-4": {
-			"Terminarz\\Tests\\": "tests/php/"
+			"Terminarz\\Tests\\": "tests/php/",
+			"Terminarz\\Tests\\Unit\\": "tests/php/unit/"
 		}
 	},
 	"scripts-descriptions": {

@@ -90,4 +90,5 @@ Jeden wpis na zamknięte issue: data, numer issue, co zrobione, decyzje, znane r
   pracy, przerwy, bufor (nowej i istniejącej rezerwacji), sąsiadujące rezerwacje, nakładające się zajętości, wyjątki
   (pierwszeństwo zasobu), wyprzedzenie, horyzont w dniach lokalnych, krok siatki, sortowanie, wiele zasobów, wydajność.
 - **Decyzje:** ADR-016 (siatka od początku okna, horyzont w dniach lokalnych, reguły DST, jawne filtrowanie zajętości).
+- **Poprawka:** `autoload-dev` mapuje `Terminarz\Tests\Unit\` na `tests/php/unit/` (katalog małymi literami — na Linuksie PSR-4 nie znajdował klas bazowych testów).
 - **Ryzyka:** test wydajności mierzy czas (< 300 ms przy ~7 ms lokalnie) — na bardzo wolnym runnerze CI mógłby być niestabilny.
