@@ -146,6 +146,43 @@ test.describe( 'Booking block — choosing a time', () => {
 		await expect( block.getByText( 'Morning' ) ).toBeVisible();
 	} );
 
+	test( 'shows times in the 12-hour format of the site', async ( {
+		page,
+		requestUtils,
+	} ) => {
+		await requestUtils.updateSiteSettings( { time_format: 'g:i a' } );
+		try {
+			await page.goto( pageUrl );
+			const block = page.locator( '.wp-block-terminarz-booking' );
+			await block
+				.getByRole( 'radio', { name: new RegExp( SERVICE ) } )
+				.check();
+			await block.getByRole( 'button', { name: 'Continue' } ).click();
+			await block
+				.getByRole( 'radio', { name: new RegExp( BOB ) } )
+				.check();
+			await block.getByRole( 'button', { name: 'Continue' } ).click();
+			await block
+				.locator( '.trmz-calendar__day--available' )
+				.first()
+				.click();
+
+			await expect( block.getByRole( 'radio' ).first() ).toBeVisible();
+			const labels = (
+				await block
+					.locator( '.trmz-choice--slot .trmz-choice__label' )
+					.allTextContents()
+			).map( ( label ) => label.replace( /\s/g, ' ' ).trim() );
+			expect( labels.length ).toBeGreaterThan( 0 );
+			// Bob works 13:00–17:00 in the site time zone: 1:00 PM … 4:30 PM, never "13:00".
+			for ( const label of labels ) {
+				expect( label ).toMatch( /^[1-4]:[0-5]\d PM$/ );
+			}
+		} finally {
+			await requestUtils.updateSiteSettings( { time_format: 'H:i' } );
+		}
+	} );
+
 	test( 'shows an empty state when there are no free times', async ( {
 		page,
 	} ) => {

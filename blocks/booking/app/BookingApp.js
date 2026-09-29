@@ -24,6 +24,7 @@ import {
 	formatLongDate,
 	formatMonth,
 	formatPrice,
+	formatTime,
 	timezoneLabel,
 } from '../lib/format';
 import { EMPTY_FORM } from '../lib/form';
@@ -32,7 +33,6 @@ import {
 	findSlot,
 	groupSlotsByPeriod,
 	slotsByDate,
-	timeOf,
 } from '../lib/slots';
 
 export const STEPS = {
@@ -716,7 +716,11 @@ export default function BookingApp( { config } ) {
 											/>
 											<span className="trmz-choice__body">
 												<span className="trmz-choice__label">
-													{ timeOf( item.start ) }
+													{ formatTime(
+														item.start,
+														config.locale,
+														config.hour12
+													) }
 												</span>
 											</span>
 										</label>
@@ -816,6 +820,7 @@ export default function BookingApp( { config } ) {
 				resourceName={ assigned?.name ?? '' }
 				timezone={ timezone }
 				locale={ config.locale }
+				hour12={ config.hour12 }
 				onRestart={ () => {
 					setBooking( null );
 					setForm( EMPTY_FORM );

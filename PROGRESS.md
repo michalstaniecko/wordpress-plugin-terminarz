@@ -475,3 +475,14 @@ Jeden wpis na zamknięte issue: data, numer issue, co zrobione, decyzje, znane r
 - **Zrobione:** helper `bookThroughBlock` nie usuwa trasy przechwytującej odpowiedź rezerwacji (unroute potrafił zawisnąć
   przy natychmiastowym przekierowaniu na płatność); kolejne żądania przechodzą bez zmian.
 - **Ryzyka:** brak.
+
+## 2026-09-29 — #91 format godzin w bloku wg ustawień witryny
+
+- **Zrobione:** konfiguracja bloku przekazuje `timeFormat` (opcja `time_format`); `parseConfig()` wylicza `hour12`
+  (`uses12HourClock()`: `g`/`h`/`a`/`A` poza znakami poprzedzonymi `\` → 12 h), `formatTime()` formatuje godziny
+  slotów i podsumowania (`Intl.DateTimeFormat`, `hour12: true`, czas odczytany ze stringu z offsetem witryny — bez
+  przesunięcia strefy); przy 24 h tekst bez zmian (`HH:MM`). Testy JS (12:00 / 00:00, escapowanie, niepoprawne
+  wartości), test integracyjny konfiguracji, E2E z `g:i a`; global-setup E2E ustawia bazowo `H:i`.
+- **Decyzje:** założenie (assumption) — z formatu PHP rozpoznawany jest tylko zegar 12/24 h, reszta formatu
+  (np. wiodące zero, wielkość am/pm) wynika z locale przeglądarki/witryny.
+- **Ryzyka:** tekst am/pm zależy od danych ICU przeglądarki (np. „PM” vs „p.m.”).
