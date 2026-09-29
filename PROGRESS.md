@@ -204,6 +204,20 @@ Jeden wpis na zamknięte issue: data, numer issue, co zrobione, decyzje, znane r
 - **Ryzyka:** wyszukiwanie `LIKE '%…%'` po imieniu/e-mailu nie używa indeksu — przy bardzo dużej liczbie rezerwacji może
   wymagać ograniczenia zakresem dat.
 
+## 2026-09-29 — #21 menu admina i strona ustawień
+
+- **Zrobione:** `Infrastructure\Settings` (opcja `trmz_settings`: domyślne, zakresy, sanitizacja, typowane gettery),
+  `Services::settings()` i budowanie `AvailabilitySettings` z ustawień; `Admin\AdminPage`, `Admin\Menu` (rejestr podstron,
+  top-level „Terminarz”, capability `trmz_manage_bookings`), `Admin\SettingsPage` (Settings API, filtr
+  `option_page_capability_trmz_settings`, ostrzeżenie o braku WooCommerce); REST `POST /bookings` bierze domyślne auto-potwierdzanie z ustawień. Testy: jednostkowe `MenuTest`, integracyjne
+  `SettingsTest` (domyślne, sanitizacja, granice, kses, zapis częściowy, uszkodzone wartości, spięcie z dostępnością)
+  i `SettingsPageTest` (menu, capability, rejestracja, render z escapingiem); E2E `settings.spec.js`; `.pot`.
+- **Decyzje:** ADR-024. Założenia (etykieta `assumption`): wyprzedzenie w minutach (domyślnie 60), horyzont 90 dni,
+  nieprawidłowa wartość z formularza zachowuje poprzednią.
+- **Ryzyka:** zmiana domyślnych wyprzedzenia/horyzontu wpływa na testy używające `Services` bez jawnych ustawień dostępności
+  (np. przyszłe testy REST z datami > 90 dni od „teraz”). `consent_text` i `customer_cancel_limit_hours` nie są jeszcze
+  używane (blok rezerwacji / anulowanie przez klienta), `delete_data_on_uninstall` czeka na `uninstall.php` (#45).
+
 ## 2026-09-29 — #27 eksport i usuwanie danych osobowych
 
 - **Zrobione:** `Admin\Privacy` (moduł): exporter i eraser WP dla rezerwacji po e-mailu klienta (strony po 50), sugerowany

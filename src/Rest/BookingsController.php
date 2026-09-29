@@ -147,12 +147,13 @@ final class BookingsController extends Controller {
 	 */
 	private function initial_status( Service $service ): BookingStatus {
 		/**
-		 * Filters whether new bookings are confirmed automatically (default: no — the business confirms them).
+		 * Filters whether new bookings are confirmed automatically (default: the "Automatic confirmation" setting,
+		 * off by default — the business confirms them).
 		 *
 		 * @param bool    $auto_confirm Auto-confirm.
 		 * @param Service $service      Booked service.
 		 */
-		$auto_confirm = (bool) apply_filters( 'trmz_auto_confirm_bookings', false, $service );
+		$auto_confirm = (bool) apply_filters( 'trmz_auto_confirm_bookings', $this->services()->settings()->auto_confirm(), $service );
 
 		return $auto_confirm ? BookingStatus::Confirmed : BookingStatus::Pending;
 	}

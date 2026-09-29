@@ -235,10 +235,17 @@ final class AvailabilityServiceTest extends WP_UnitTestCase {
 		$this->assertSame( 20, $settings->slot_step_minutes );
 		$this->assertSame( AvailabilitySettings::STRATEGY_LEAST_BUSY, $settings->strategy );
 
-		update_option( 'trmz_settings', array( 'any_resource_strategy' => 'bogus' ) );
+		// A corrupted stored value (bypassing the setting's sanitize_callback) falls back to the defaults.
+		$corrupt  = static fn(): array => array(
+			'any_resource_strategy' => 'bogus',
+			'max_horizon_days'      => -3,
+		);
+		add_filter( 'pre_option_trmz_settings', $corrupt );
 		$fallback = ( new Services( $wpdb, $this->clock ) )->availability_settings();
+		remove_filter( 'pre_option_trmz_settings', $corrupt );
 		$this->assertSame( AvailabilitySettings::STRATEGY_ORDER, $fallback->strategy );
-		$this->assertNull( $fallback->max_horizon_days );
+		$this->assertSame( 90, $fallback->max_horizon_days );
+		$this->assertSame( 60, $fallback->min_lead_minutes );
 	}
 
 	/**
