@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-29T17:27:07+00:00\n"
+"POT-Creation-Date: 2026-09-29T17:32:06+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: terminarz\n"
@@ -31,6 +31,274 @@ msgstr ""
 msgid "Michał Staniećko"
 msgstr ""
 
+#: src/Admin/BookingsListTable.php:62
+#: src/Admin/BookingsPage.php:263
+msgid "Date"
+msgstr ""
+
+#: src/Admin/BookingsListTable.php:63
+#: src/Admin/BookingsPage.php:270
+msgid "Customer"
+msgstr ""
+
+#: src/Admin/BookingsListTable.php:64
+#: src/Admin/BookingsListTable.php:178
+#: src/Admin/BookingsPage.php:264
+#: src/Admin/Privacy.php:203
+msgid "Service"
+msgstr ""
+
+#: src/Admin/BookingsListTable.php:65
+#: src/Admin/BookingsListTable.php:184
+#: src/Admin/BookingsPage.php:265
+#: src/Admin/Privacy.php:204
+#: src/Admin/SchedulePage.php:131
+msgid "Resource"
+msgstr ""
+
+#: src/Admin/BookingsListTable.php:66
+#: src/Admin/BookingsPage.php:262
+#: src/Admin/Privacy.php:207
+#: src/Admin/ResourcesListTable.php:47
+#: src/Admin/ResourcesPage.php:300
+#: src/Admin/ServicesListTable.php:55
+#: src/Admin/ServicesPage.php:300
+msgid "Status"
+msgstr ""
+
+#: src/Admin/BookingsListTable.php:67
+#: src/Admin/BookingsPage.php:275
+#: src/Admin/Privacy.php:212
+msgid "Booked on"
+msgstr ""
+
+#: src/Admin/BookingsListTable.php:117
+msgid "No bookings found."
+msgstr ""
+
+#: src/Admin/BookingsListTable.php:148
+#: src/Admin/ExceptionsListTable.php:115
+msgid "All"
+msgstr ""
+
+#: src/Admin/BookingsListTable.php:179
+msgid "All services"
+msgstr ""
+
+#: src/Admin/BookingsListTable.php:185
+#: src/Admin/ExceptionsListTable.php:158
+msgid "All resources"
+msgstr ""
+
+#: src/Admin/BookingsListTable.php:190
+msgid "From"
+msgstr ""
+
+#: src/Admin/BookingsListTable.php:192
+msgid "To"
+msgstr ""
+
+#: src/Admin/BookingsListTable.php:197
+#: src/Admin/ExceptionsListTable.php:122
+msgid "Filter"
+msgstr ""
+
+#: src/Admin/BookingsListTable.php:215
+msgid "Details"
+msgstr ""
+
+#: src/Admin/BookingsListTable.php:218
+msgid "Confirm"
+msgstr ""
+
+#: src/Admin/BookingsListTable.php:228
+#: src/Admin/BookingsPage.php:315
+msgid "Reschedule"
+msgstr ""
+
+#: src/Admin/BookingsListTable.php:234
+#: src/Admin/BookingsPage.php:325
+msgid "Cancel this booking?"
+msgstr ""
+
+#: src/Admin/BookingsListTable.php:235
+msgid "Cancel"
+msgstr ""
+
+#: src/Admin/BookingsPage.php:46
+#: src/Admin/BookingsPage.php:53
+#: src/Admin/BookingsPage.php:215
+#: src/Admin/Privacy.php:93
+msgid "Bookings"
+msgstr ""
+
+#: src/Admin/BookingsPage.php:82
+msgid "Booking confirmed."
+msgstr ""
+
+#: src/Admin/BookingsPage.php:91
+msgid "Booking cancelled."
+msgstr ""
+
+#: src/Admin/BookingsPage.php:103
+#: src/Admin/BookingsPage.php:192
+#: src/Admin/BookingsPage.php:240
+#: src/Rest/AdminBookingsController.php:307
+msgid "The booking does not exist."
+msgstr ""
+
+#: src/Admin/BookingsPage.php:118
+msgid "Choose a new time."
+msgstr ""
+
+#: src/Admin/BookingsPage.php:127
+#: src/Rest/ErrorMapper.php:47
+msgid "The selected time is no longer available. Please choose another one."
+msgstr ""
+
+#: src/Admin/BookingsPage.php:130
+msgid "This booking cannot be moved to the selected time (it is no longer active or the resource does not perform the service)."
+msgstr ""
+
+#. translators: %s: new date and time.
+#: src/Admin/BookingsPage.php:137
+#, php-format
+msgid "Booking moved to %s."
+msgstr ""
+
+#: src/Admin/BookingsPage.php:194
+#: src/Rest/ErrorMapper.php:62
+msgid "This action is not possible for the booking in its current status."
+msgstr ""
+
+#: src/Admin/BookingsPage.php:227
+msgid "Search bookings"
+msgstr ""
+
+#: src/Admin/BookingsPage.php:239
+msgid "Booking"
+msgstr ""
+
+#: src/Admin/BookingsPage.php:240
+msgid "Back to bookings"
+msgstr ""
+
+#: src/Admin/BookingsPage.php:257
+msgid "Booking details"
+msgstr ""
+
+#: src/Admin/BookingsPage.php:258
+msgid "&larr; Back to bookings"
+msgstr ""
+
+#: src/Admin/BookingsPage.php:261
+#: src/Admin/Privacy.php:202
+msgid "Booking ID"
+msgstr ""
+
+#: src/Admin/BookingsPage.php:266
+#: src/Admin/ServicesListTable.php:53
+msgid "Buffer after"
+msgstr ""
+
+#. translators: %d: number of minutes.
+#: src/Admin/BookingsPage.php:268
+#: src/Admin/ServicesListTable.php:141
+#: src/Admin/ServicesListTable.php:163
+#, php-format
+msgid "%d minute"
+msgid_plural "%d minutes"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Admin/BookingsPage.php:271
+#: src/Admin/Privacy.php:209
+msgid "E-mail"
+msgstr ""
+
+#: src/Admin/BookingsPage.php:272
+#: src/Admin/Privacy.php:210
+msgid "Phone"
+msgstr ""
+
+#: src/Admin/BookingsPage.php:273
+#: src/Admin/ExceptionsListTable.php:53
+#: src/Admin/ExceptionsPage.php:302
+#: src/Admin/Privacy.php:211
+msgid "Note"
+msgstr ""
+
+#: src/Admin/BookingsPage.php:274
+msgid "Account"
+msgstr ""
+
+#: src/Admin/BookingsPage.php:278
+#: src/Admin/ResourcesPage.php:295
+#: src/Admin/ServicesPage.php:296
+msgid "Order"
+msgstr ""
+
+#: src/Admin/BookingsPage.php:281
+msgid "Held until"
+msgstr ""
+
+#: src/Admin/BookingsPage.php:304
+msgid "Confirm booking"
+msgstr ""
+
+#: src/Admin/BookingsPage.php:321
+msgid "Cancel booking"
+msgstr ""
+
+#: src/Admin/BookingsPage.php:341
+msgid "Reschedule booking"
+msgstr ""
+
+#: src/Admin/BookingsPage.php:348
+msgid "&larr; Back to the booking"
+msgstr ""
+
+#: src/Admin/BookingsPage.php:351
+msgid "Only active bookings can be moved."
+msgstr ""
+
+#: src/Admin/BookingsPage.php:363
+msgid "Current time:"
+msgstr ""
+
+#: src/Admin/BookingsPage.php:382
+msgid "&larr; Previous day"
+msgstr ""
+
+#: src/Admin/BookingsPage.php:384
+#: src/Admin/SchedulePage.php:158
+msgid "Day"
+msgstr ""
+
+#: src/Admin/BookingsPage.php:386
+msgid "Show free times"
+msgstr ""
+
+#: src/Admin/BookingsPage.php:388
+msgid "Next day &rarr;"
+msgstr ""
+
+#: src/Admin/BookingsPage.php:394
+msgid "No free times on this day."
+msgstr ""
+
+#: src/Admin/BookingsPage.php:406
+msgid "Free times"
+msgstr ""
+
+#: src/Admin/BookingsPage.php:418
+msgid "Move booking"
+msgstr ""
+
+#: src/Admin/BookingsPage.php:429
+msgid "Guest"
+msgstr ""
+
 #: src/Admin/ExceptionsListTable.php:50
 msgid "Dates"
 msgstr ""
@@ -46,18 +314,8 @@ msgstr ""
 msgid "Hours"
 msgstr ""
 
-#: src/Admin/ExceptionsListTable.php:53
-#: src/Admin/ExceptionsPage.php:302
-#: src/Admin/Privacy.php:211
-msgid "Note"
-msgstr ""
-
 #: src/Admin/ExceptionsListTable.php:99
 msgid "No exceptions."
-msgstr ""
-
-#: src/Admin/ExceptionsListTable.php:115
-msgid "All"
 msgstr ""
 
 #: src/Admin/ExceptionsListTable.php:116
@@ -66,10 +324,6 @@ msgstr ""
 
 #: src/Admin/ExceptionsListTable.php:121
 msgid "Include past"
-msgstr ""
-
-#: src/Admin/ExceptionsListTable.php:122
-msgid "Filter"
 msgstr ""
 
 #: src/Admin/ExceptionsListTable.php:140
@@ -86,10 +340,6 @@ msgstr ""
 #: src/Admin/ResourcesListTable.php:126
 #: src/Admin/ServicesListTable.php:127
 msgid "Delete"
-msgstr ""
-
-#: src/Admin/ExceptionsListTable.php:158
-msgid "All resources"
 msgstr ""
 
 #: src/Admin/ExceptionsListTable.php:170
@@ -295,10 +545,6 @@ msgstr ""
 msgid "Terminarz bookings"
 msgstr ""
 
-#: src/Admin/Privacy.php:93
-msgid "Bookings"
-msgstr ""
-
 #: src/Admin/Privacy.php:94
 msgid "Appointments booked with this e-mail address."
 msgstr ""
@@ -331,19 +577,6 @@ msgstr ""
 msgid "Booking data is kept for as long as needed to provide the service and for our records. You can request an export or erasure of your personal data. On erasure, your contact details are removed from past bookings; the anonymous booking record (service, date and time) is kept for statistics. Upcoming bookings are retained until they are cancelled."
 msgstr ""
 
-#: src/Admin/Privacy.php:202
-msgid "Booking ID"
-msgstr ""
-
-#: src/Admin/Privacy.php:203
-msgid "Service"
-msgstr ""
-
-#: src/Admin/Privacy.php:204
-#: src/Admin/SchedulePage.php:131
-msgid "Resource"
-msgstr ""
-
 #: src/Admin/Privacy.php:205
 msgid "Start"
 msgstr ""
@@ -352,32 +585,12 @@ msgstr ""
 msgid "End"
 msgstr ""
 
-#: src/Admin/Privacy.php:207
-#: src/Admin/ResourcesListTable.php:47
-#: src/Admin/ResourcesPage.php:300
-#: src/Admin/ServicesListTable.php:55
-#: src/Admin/ServicesPage.php:300
-msgid "Status"
-msgstr ""
-
 #: src/Admin/Privacy.php:208
 #: src/Admin/ResourcesListTable.php:44
 #: src/Admin/ResourcesPage.php:281
 #: src/Admin/ServicesListTable.php:50
 #: src/Admin/ServicesPage.php:252
 msgid "Name"
-msgstr ""
-
-#: src/Admin/Privacy.php:209
-msgid "E-mail"
-msgstr ""
-
-#: src/Admin/Privacy.php:210
-msgid "Phone"
-msgstr ""
-
-#: src/Admin/Privacy.php:212
-msgid "Booked on"
 msgstr ""
 
 #: src/Admin/ResourcesListTable.php:46
@@ -507,11 +720,6 @@ msgstr ""
 msgid "Description"
 msgstr ""
 
-#: src/Admin/ResourcesPage.php:295
-#: src/Admin/ServicesPage.php:296
-msgid "Order"
-msgstr ""
-
 #: src/Admin/ResourcesPage.php:297
 msgid "Lower numbers are listed first."
 msgstr ""
@@ -582,10 +790,6 @@ msgstr ""
 msgid "Show"
 msgstr ""
 
-#: src/Admin/SchedulePage.php:158
-msgid "Day"
-msgstr ""
-
 #: src/Admin/SchedulePage.php:160
 msgid "Breaks"
 msgstr ""
@@ -639,10 +843,6 @@ msgstr ""
 msgid "Price"
 msgstr ""
 
-#: src/Admin/ServicesListTable.php:53
-msgid "Buffer after"
-msgstr ""
-
 #: src/Admin/ServicesListTable.php:92
 msgid "No services yet."
 msgstr ""
@@ -650,15 +850,6 @@ msgstr ""
 #: src/Admin/ServicesListTable.php:126
 msgid "Delete this service permanently?"
 msgstr ""
-
-#. translators: %d: number of minutes.
-#: src/Admin/ServicesListTable.php:141
-#: src/Admin/ServicesListTable.php:163
-#, php-format
-msgid "%d minute"
-msgid_plural "%d minutes"
-msgstr[0] ""
-msgstr[1] ""
 
 #: src/Admin/ServicesListTable.php:179
 msgid "None — cannot be booked"
@@ -966,10 +1157,6 @@ msgstr ""
 msgid "The end date must not be earlier than the start date."
 msgstr ""
 
-#: src/Rest/AdminBookingsController.php:307
-msgid "The booking does not exist."
-msgstr ""
-
 #: src/Rest/AdminBookingsController.php:355
 msgid "Page of the listing."
 msgstr ""
@@ -1135,20 +1322,12 @@ msgstr ""
 msgid "Sorry, you are not allowed to manage bookings."
 msgstr ""
 
-#: src/Rest/ErrorMapper.php:47
-msgid "The selected time is no longer available. Please choose another one."
-msgstr ""
-
 #: src/Rest/ErrorMapper.php:52
 msgid "This item is in use and cannot be changed this way."
 msgstr ""
 
 #: src/Rest/ErrorMapper.php:57
 msgid "The requested item does not exist."
-msgstr ""
-
-#: src/Rest/ErrorMapper.php:62
-msgid "This action is not possible for the booking in its current status."
 msgstr ""
 
 #: src/Rest/ErrorMapper.php:67

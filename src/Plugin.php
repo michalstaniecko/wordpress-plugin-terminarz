@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Terminarz;
 
+use Terminarz\Admin\BookingsPage;
 use Terminarz\Admin\ExceptionsPage;
 use Terminarz\Admin\Menu;
 use Terminarz\Admin\Privacy;
@@ -78,6 +79,7 @@ final class Plugin {
 			new Migrator(),
 			new Menu(
 				array(
+					new BookingsPage(),
 					new ResourcesPage(),
 					new SchedulePage(),
 					new ExceptionsPage(),
