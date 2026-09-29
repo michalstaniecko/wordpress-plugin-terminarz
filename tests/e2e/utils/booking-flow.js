@@ -37,10 +37,11 @@ async function bookThroughBlock(
 	await block.getByLabel( 'Phone' ).fill( '600 700 800' );
 	await block.getByRole( 'checkbox', { name: /personal data/ } ).check();
 
-	// The block may navigate away (payment) right after the response: capture its body on the way.
+	// The block may navigate away (payment) right after the response: capture its body on the way. The route is not
+	// removed afterwards (`unroute` can hang while the page navigates); later requests simply pass through.
 	let booking;
 	await page.route( /terminarz\/v1\/bookings/, async ( route ) => {
-		if ( route.request().method() !== 'POST' ) {
+		if ( route.request().method() !== 'POST' || booking !== undefined ) {
 			return route.continue();
 		}
 		const response = await route.fetch();
@@ -49,7 +50,6 @@ async function bookThroughBlock(
 	} );
 	await block.getByRole( 'button', { name: 'Book appointment' } ).click();
 	await expect.poll( () => booking ).toBeDefined();
-	await page.unroute( /terminarz\/v1\/bookings/ );
 
 	return { booking, startUtc, date };
 }
