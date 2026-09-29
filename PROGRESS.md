@@ -82,3 +82,14 @@ Jeden wpis na zamknięte issue: data, numer issue, co zrobione, decyzje, znane r
   wyjątek „inne godziny” zastępuje też przerwy, przejścia statusów jak w ADR-015, bez `needs_attention`.
 - **Ryzyka:** brak nowych tekstów dla użytkownika (komunikaty wyjątków nietłumaczone — adaptery muszą je mapować).
   Walidacja e-maila przez `filter_var` może różnić się od `is_email()` WordPressa — adapter sanitizuje wcześniej.
+
+## 2026-09-29 — #10 repozytoria zasobów, usług, harmonogramów i wyjątków
+
+- **Zrobione:** interfejsy `Domain\Repository\{Resource,Service,Schedule,ScheduleException}Repository`, wyjątki domeny
+  `EntityNotFound`, `EntityInUse`; implementacje `Infrastructure\Persistence\Wpdb*Repository`, helper
+  `Infrastructure\Database\Transaction` (savepointy, retry deadlocków), `DatabaseError`. Testy integracyjne CRUD,
+  kolejności przypisań, harmonogramu z przerwami (round-trip, 1 zapytanie dla wielu zasobów), wyjątków w zakresie dat
+  (globalne + zasobu, rozwijanie zakresów), transakcji/savepointów.
+- **Decyzje:** ADR-013. Usuwanie zasobu/usługi z rezerwacjami zablokowane (`EntityInUse`).
+- **Ryzyka:** kolumny spoza modelu domeny (opis, kolejność, waluta) jeszcze nieedytowalne — M4. Tryb savepointów
+  w testach oznacza, że prawdziwe `START TRANSACTION` jest testowane dopiero testem współbieżności (#14).
