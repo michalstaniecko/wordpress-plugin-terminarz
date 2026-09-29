@@ -43,6 +43,7 @@ Przydatne komendy:
 | Plik `.pot` | `npm run i18n` (WP-CLI i18n z Composera, bez Dockera) |
 | Tłumaczenia | `npm run i18n:update-po` (nowe stringi do `.po`), `npm run i18n:compile` (`.mo`/`.l10n.php`/JSON, po `npm run build`), `composer i18n:check` (ADR-047) |
 | Testy PHP (unit + integration) | `composer test` (unit bez Dockera: `composer test:unit`; integration: `composer test:integration`, wymaga `npm run env:start:tests`; tylko test współbieżności: `composer test:integration -- --group concurrency`; multisite: `composer test:integration:multisite`) |
+| Paczka ZIP | `npm run plugin-zip` (po `npm run build`; wynik w `dist/`), `npm run plugin-zip:test` (zawartość + instalacja na czystym WP w wp-env :8890) |
 | Testy E2E (Playwright, środowisko tests :8889) | `npm run test:e2e` (pierwszy raz: `npx playwright install chromium`; raport: `playwright-report/`) |
 
 Szczegóły architektury: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md). Dziennik postępu: [`PROGRESS.md`](PROGRESS.md).
