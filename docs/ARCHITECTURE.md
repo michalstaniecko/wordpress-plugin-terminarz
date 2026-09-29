@@ -1078,3 +1078,13 @@ zostać podrobiona przez autorów bez `unfiltered_html` (kses przepuszcza `class
 - Wersja w jednym miejscu logicznym, pilnowana testem `ReleaseVersionTest`: nagłówek i `TRMZ_VERSION` w
   `terminarz.php`, `Stable tag` i changelog w readme.txt, `package.json`/`package-lock.json`, `block.json`.
 
+## ADR-050: Suita akceptacyjna wydania 1.0
+
+**Decyzja.** `tests/e2e/specs/acceptance.spec.js` odwzorowuje kryteria epiku #1 w jednej suicie (seria):
+konfiguracja w panelu (zasób, godziny, płatna usługa, ustawienia) → (a) z WooCommerce: rezerwacja w bloku, płatność
+bramką testową, e-mail potwierdzenia po płatności, rezerwacja „Potwierdzona” z zamówieniem w panelu, anulowanie linkiem
+z e-maila, slot wolny, e-mail do firmy; (b) bez WooCommerce: rezerwacja `pending` bez płatności, e-mail o przyjęciu,
+potwierdzenie przez admina, anulowanie linkiem, slot wolny; (c) pomiar czasu `GET /availability` (30 dni × 10 zasobów,
+`resource=any`, 20 żądań HTTP po rozgrzaniu, mediana w adnotacji testu i logu; luźny limit 2 s dla CI). Wspólne kroki
+w `utils/settings.js` i `utils/cancellation.js` (używane też przez `booking-cancel-link.spec.js`).
+

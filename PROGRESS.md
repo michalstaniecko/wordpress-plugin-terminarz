@@ -559,3 +559,16 @@ Jeden wpis na zamknięte issue: data, numer issue, co zrobione, decyzje, znane r
 - **Decyzje:** ADR-049.
 - **Ryzyka:** test instalacji bez WooCommerce (integracja z WC pokryta E2E na środowisku tests).
 
+## 2026-09-29 — #49 akceptacyjna ścieżka E2E i raport wydajności
+
+- **Zrobione:** `tests/e2e/specs/acceptance.spec.js` — (a) z WooCommerce i (b) bez WooCommerce: konfiguracja w panelu →
+  rezerwacja w bloku (płatność bramką testową w (a)) → e-mail → rezerwacja w panelu → anulowanie linkiem → slot wolny;
+  (c) pomiar `GET /availability`. Helpery `utils/settings.js`, `utils/cancellation.js` (refaktor `booking-cancel-link`).
+- **Wydajność** (`GET /terminarz/v1/availability?resource=any`, 30 dni × 10 zasobów, 08:00–20:00, usługa 30 min,
+  1410 wolnych slotów, 20 żądań HTTP po rozgrzaniu, wp-env lokalnie, PHP 8.1, WordPress 7.1.2 + WooCommerce 11.1.2):
+  **mediana 66 ms, maksimum 106 ms** (cały cykl HTTP z bootstrapem WordPressa). Silnik bez HTTP (benchmark #15 w
+  PHPUnit, 1040 rezerwacji): mediana ~20 ms dla zasobów + „dowolny”, ~12 ms przez REST.
+- **Decyzje:** ADR-050.
+- **Ryzyka:** pomiar bez rezerwacji w danych HTTP (obciążenie rezerwacjami mierzy benchmark PHPUnit); czasy na
+  współdzielonych runnerach CI są wyższe (limit testu 2 s).
+

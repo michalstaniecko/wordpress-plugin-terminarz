@@ -60,7 +60,8 @@ Workflow [`.github/workflows/ci.yml`](.github/workflows/ci.yml) uruchamia się d
 | `PHPUnit unit (PHP 8.1)`, `PHPUnit unit (PHP 8.3)` | `composer test:unit` na minimalnej i nowszej wersji PHP |
 | `Build` | `npm run build`, testy JS, kontrola tłumaczeń (`composer i18n:check`, aktualność plików skompilowanych) |
 | `PHPUnit integration (wp-env)` | `composer test:integration` w środowisku testowym wp-env (PHP 8.1, najnowszy WordPress); osobny krok: test współbieżności `--group concurrency` (równoległe procesy WP-CLI, brak podwójnych rezerwacji) |
-| `E2E (Playwright)` | `npm run test:e2e` na wp-env; raport HTML i ślady jako artefakt `playwright-report` (14 dni) |
+| `E2E (Playwright)` | `npm run test:e2e` na wp-env (w tym suita akceptacyjna `acceptance.spec.js` z pomiarem `GET /availability`); raport HTML i ślady jako artefakt `playwright-report` (14 dni) |
+| `Release ZIP (build + clean install)` | `bin/build-zip.sh`, `bin/check-zip.sh`, instalacja ZIP-a na czystym WordPressie (`bin/test-zip-install.sh`); artefakt `terminarz-<wersja>` (30 dni) |
 
 Zależności Composera i npm są cache'owane (`ramsey/composer-install`, `actions/setup-node` z `cache: npm`).
 Każdy z tych checków musi być zielony przed mergem PR do `develop`.
