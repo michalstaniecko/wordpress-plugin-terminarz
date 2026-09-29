@@ -45,7 +45,7 @@
 		"test:integration:no-wc": "npx wp-env run --config=.wp-env.tests.json cli --env-cwd=wp-content/plugins/terminarz env TRMZ_TESTS_WOOCOMMERCE=0 vendor/bin/phpunit -c phpunit-integration.xml.dist --exclude-group concurrency,woocommerce",
 		"lint": "phpcs",
 		"lint:fix": "phpcbf",
-		"phpstan": "phpstan analyse --memory-limit=1G --no-progress"
+		"phpstan": "phpstan analyse --memory-limit=2G --no-progress"
 	},
 	"autoload-dev": {
 		"psr-4": {

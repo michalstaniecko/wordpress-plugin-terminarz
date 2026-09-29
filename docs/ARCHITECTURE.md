@@ -100,7 +100,7 @@ integration, e2e) i pakowanie wydania (M8). Własny `webpack.config.js` rozszerz
 - PHPStan 2.x, **poziom 6, bez baseline'u**, z `szepeviktor/phpstan-wordpress` (przez `phpstan/extension-installer`)
   i `php-stubs/woocommerce-stubs` (dla integracji w M6). Analizowane: `terminarz.php`, `src/`, `tests/php/unit`
   (testy integracyjne zależą od klas biblioteki testów WP, których stubów nie ma). Stałe `TRMZ_*` dla PHPStana
-  w `tests/phpstan/bootstrap.php`. `composer phpstan` podnosi limit pamięci do 1G (stuby WP/WC są duże).
+  w `tests/phpstan/bootstrap.php`. `composer phpstan` podnosi limit pamięci do 2G (stuby WP/WC są duże; 1G przestał wystarczać w CI w M6).
 - JS/CSS: ESLint 9 (flat config `eslint.config.cjs` rozszerzający domyślny z `@wordpress/scripts`, reguła
   `@wordpress/i18n-text-domain` = `terminarz`, reguły Playwright dla `tests/e2e`) i stylelint
   (`@wordpress/stylelint-config/scss-stylistic`, klasy CSS muszą zaczynać się od `trmz-` lub `wp-block-terminarz-`).
@@ -740,3 +740,36 @@ a porażka przy tworzeniu płatności nie może zostawić zablokowanego terminu.
 (założenie w #35). „Recalculate” w edycji zamówienia może doliczyć podatek, jeśli sklep ma włączone podatki. Goście
 płacący po ponad 10 min od utworzenia zamówienia mogą zostać poproszeni przez WooCommerce o potwierdzenie e-maila
 (domyślny mechanizm WC dla strony „order-pay”). Jawny token anulowania nadal nie trafia do odpowiedzi (M7).
+
+## ADR-037: Wygasanie wstrzymań płatności i płatność po czasie
+
+**Kontekst.** Rezerwacja `pending_payment` blokuje slot do `hold_expires_at`. Silnik dostępności i `create()` traktują
+wygasłe wstrzymanie jako wolne od razu (ADR-014), ale status i zamówienie trzeba uporządkować, a płatność może dotrzeć
+po czasie (bramka potwierdza z opóźnieniem). `expired` jest statusem końcowym (maszyna stanów, ADR-015).
+
+**Decyzja.**
+- `Infrastructure\HoldExpiryScheduler` (moduł rdzenia, działa także bez WooCommerce): akcja `trmz_expire_holds` co 5 min
+  wołająca `BookingService::expire_holds()` partiami (100 × maks. 10). Action Scheduler (`as_schedule_recurring_action`,
+  grupa `terminarz`, `unique`), gdy jest zainicjowany — sprawdzenie harmonogramu tylko w adminie/cronie/CLI/AJAX (jedno
+  zapytanie), zdarzenie WP-Cron jest wtedy usuwane; w przeciwnym razie WP-Cron z interwałem `trmz_five_minutes`.
+  Deaktywacja pluginu usuwa zadanie z obu mechanizmów.
+- `Integrations\WooCommerce\OrderStatusSync`: `trmz_booking_status_changed` → `expired`: zamówienie `pending`/`failed`
+  zostaje anulowane z notatką; inne statusy (np. `on-hold` przelewu) dostają tylko notatkę. Meta zamówienia
+  `_trmz_slot_released` zapamiętuje, że slot zwolnił plugin.
+- Płatność (`woocommerce_order_status_changed` → `processing`/`completed`):
+  - rezerwacja `pending_payment` z ważnym wstrzymaniem → `confirmed`;
+  - wstrzymanie już minęło (zadanie jeszcze nie działało) → najpierw `expired`, dalej jak niżej;
+  - `expired` (lub `cancelled` zwolniona automatycznie — meta `_trmz_slot_released`) → **nowa rezerwacja**
+    `BookingService::rebook()` (atomowo przez `BookingRepository::create()`, tylko kontrola kolizji i przeszłości —
+    grafik/wyprzedzenie nie obowiązują, bo termin był poprawny przy wyborze), ta sama usługa/zasób/czas/bufor/klient/
+    zamówienie; meta zamówienia wskazuje nową rezerwację, notatka. Stara zostaje `expired` (bez nowych przejść w maszynie stanów);
+  - slot zajęty (lub rezerwacja anulowana ręcznie) → zamówienie `on-hold`, notatka, meta `_trmz_needs_attention`,
+    jednorazowy e-mail na `Settings::notification_email()` i akcja `trmz_payment_needs_attention` (WC_Order, Booking,
+    powód). Bez nowego statusu rezerwacji („needs-attention” z issue zastąpione statusem zamówienia) — decyzja o zwrocie
+    należy do człowieka (#36: `assumption`, `needs-human`).
+- Pętle: handlery sprawdzają bieżący stan (idempotencja) i ustawiają flagę `OrderStatusSync::is_syncing()` na czas
+  własnych zmian; błędy domeny/bazy są logowane (`wc_get_logger`, źródło `terminarz`), nigdy nie przerywają płatności.
+
+**Konsekwencje.** Po płatności po czasie klient ma nowy `public_id` (nowy token anulowania — M7 musi wysłać potwierdzenie
+z danymi nowej rezerwacji; zdarzenie `trmz_booking_created` z rezerwacją `confirmed`). Stara rezerwacja pozostaje
+w historii z tym samym `order_id`.

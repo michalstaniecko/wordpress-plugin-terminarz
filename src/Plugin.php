@@ -19,6 +19,7 @@ use Terminarz\Admin\ServicesPage;
 use Terminarz\Admin\SettingsPage;
 use Terminarz\Blocks\BookingBlock;
 use Terminarz\Infrastructure\Database\Migrator;
+use Terminarz\Infrastructure\HoldExpiryScheduler;
 use Terminarz\Infrastructure\I18n;
 use Terminarz\Infrastructure\Module;
 use Terminarz\Integrations\WooCommerce\WooCommerceModule;
@@ -92,6 +93,7 @@ final class Plugin {
 			new RestModule(),
 			new BookingBlock(),
 			new Privacy(),
+			new HoldExpiryScheduler(),
 			new WooCommerceModule(),
 		);
 	}
