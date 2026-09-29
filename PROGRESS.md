@@ -137,3 +137,15 @@ Jeden wpis na zamknięte issue: data, numer issue, co zrobione, decyzje, znane r
   zasobu test wykrywa podwójne rezerwacje).
 - **Ryzyka:** test trwa ~20–30 s (bariera 8 s × 3 scenariusze); na bardzo wolnym runnerze może być potrzebne podniesienie
   `TRMZ_CONCURRENCY_BARRIER`. Test pisze do tabel witryny E2E (sprzątane po sobie).
+
+## 2026-09-29 — #15 AvailabilityService — dostępność dla usługi i „dowolnego” zasobu
+
+- **Zrobione:** `Application\AvailabilityService` (`slots`, `any_resource_slots`, `free_resources_at`, `is_available`),
+  `Application\AvailabilitySettings` (strategie `order` / `least_busy`), `BookingService::use_availability()` i `reserve_any()`,
+  `BookingRepository::busy_ranges()` z `exclude_id`, `SlotUnavailable::for_any_resource()`, wiring w `Services`
+  (ustawienia z `wp_timezone()` + opcja `trmz_settings` + filtr). Testy integracyjne (harmonogram/przerwy/siatka, bufory,
+  wykluczenie przenoszonej rezerwacji, wyjątki, strategie, walidacja rezerwacji, `reserve_any`, liczba zapytań ≤ 6,
+  ustawienia z WP) i benchmark 30 dni × 10 zasobów (~21 ms; próg 300 ms, w CI 1000 ms przez `TRMZ_BENCH_MAX_MS`).
+- **Decyzje:** ADR-018 (+ podsumowanie publicznego API dla M3).
+- **Ryzyka:** domyślne ustawienia bez minimalnego wyprzedzenia i horyzontu — do ustalenia w M4 (ustawienia).
+  Strategia `least_busy` liczy obciążenie tylko z pobranego zakresu zajętości.
