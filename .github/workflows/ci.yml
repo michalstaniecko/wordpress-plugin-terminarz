@@ -121,6 +121,8 @@ jobs:
       - name: Run integration tests
         # Shared CI runners are slower and noisier than a dev machine: looser availability benchmark threshold (#15).
         run: npx wp-env run --config=.wp-env.tests.json cli --env-cwd=wp-content/plugins/terminarz env TRMZ_BENCH_MAX_MS=1000 vendor/bin/phpunit -c phpunit-integration.xml.dist --exclude-group concurrency
+      - name: Run integration tests without WooCommerce
+        run: npx wp-env run --config=.wp-env.tests.json cli --env-cwd=wp-content/plugins/terminarz env TRMZ_TESTS_WOOCOMMERCE=0 TRMZ_BENCH_MAX_MS=1000 vendor/bin/phpunit -c phpunit-integration.xml.dist --exclude-group concurrency,woocommerce
       - name: Run concurrency test (parallel WP-CLI processes, no double bookings)
         run: composer test:integration -- --group concurrency
 

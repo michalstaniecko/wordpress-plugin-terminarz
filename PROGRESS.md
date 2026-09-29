@@ -350,3 +350,15 @@ Jeden wpis na zamknięte issue: data, numer issue, co zrobione, decyzje, znane r
 - **Decyzje:** brak nowych (ADR-010, ADR-033).
 - **Ryzyka:** test zakłada, że w horyzoncie rezerwacji jest wolny termin (godziny 9–17 codziennie) — przy bardzo
   późnym uruchomieniu kalendarz sam przechodzi do kolejnego miesiąca.
+
+## 2026-09-29 — #34 warstwa integracji i wykrywanie WooCommerce
+
+- **Zrobione:** `Integrations\WooCommerce\WooCommerce` (wykrywanie, wersja ≥ 8.0, filtr `trmz_woocommerce_active`),
+  `WooCommerceModule` (deklaracja zgodności HPOS i Cart/Checkout blocks na `before_woocommerce_init`, warunkowa rejestracja
+  komponentów na `plugins_loaded`, notice o zbyt starym WC), `Settings::payments_enabled()` przez detektor, komunikat
+  o wersji WC w ustawieniach. Bootstrap testów integracyjnych ładuje i instaluje WooCommerce (HPOS);
+  `TRMZ_TESTS_WOOCOMMERCE=0` + `composer test:integration:no-wc` i osobny krok CI bez WC. Testy: grupa `woocommerce`
+  (wykrywanie, filtr, deklaracje zgodności, rejestracja komponentów, ustawienia) i `no-woocommerce` (brak integracji,
+  tryb płatności ignorowany, komunikat w ustawieniach, rezerwacja REST bez płatności).
+- **Decyzje:** ADR-035.
+- **Ryzyka:** suita z WooCommerce jest wolniejsza; instalacja WC w bootstrapie przy każdym uruchomieniu PHPUnit.

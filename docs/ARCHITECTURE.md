@@ -683,3 +683,28 @@ skryptów z `build/` (do rozwiązania przy pakowaniu tłumaczeń w M8).
 
 **Konsekwencje.** axe sprawdza motyw testowy (Twenty Twenty-Five); motywy o niskim kontraście mogą obniżyć zgodność —
 opisać w dokumentacji wydania (M8). Kalendarz nie jest dialogiem (osadzony w stronie), więc nie ma pułapki fokusu.
+
+## ADR-035: Warstwa integracji WooCommerce (`Terminarz\Integrations\WooCommerce`)
+
+**Kontekst.** WooCommerce jest zależnością opcjonalną: bez niego plugin musi działać bez błędów i bez płatności.
+WooCommerce ładuje się po Terminarzu (kolejność alfabetyczna), więc przy `boot()` jego klas jeszcze nie ma.
+
+**Decyzja.**
+- `WooCommerce` (statyczny detektor) — jedyne miejsce decydujące o dostępności płatności: `is_loaded()` (klasa
+  `WooCommerce` + `wc_create_order`), `version()` (`WC_VERSION`), `is_active()` (wersja ≥ `MIN_VERSION` = 8.0, filtr
+  `trmz_woocommerce_active`), `is_outdated()`. `Settings::payments_enabled()` = tryb ≠ `none` **i** `WooCommerce::is_active()`.
+- `WooCommerceModule` (moduł w `Plugin::default_modules()`): zawsze podpina `before_woocommerce_init` →
+  `FeaturesUtil::declare_compatibility()` dla `custom_order_tables` (HPOS) i `cart_checkout_blocks`; na `plugins_loaded`
+  (priorytet 20) rejestruje komponenty integracji (`Module[]`, `default_components()`) tylko przy aktywnym, wspieranym
+  WooCommerce i wywołuje akcję `trmz_woocommerce_integration_loaded`. Zbyt stary WooCommerce → notice w adminie
+  i ostrzeżenie w sekcji „Płatności” ustawień; płatności wyłączone.
+- Integracja używa wyłącznie API CRUD WooCommerce (`wc_create_order`, `wc_get_order`, `$order->update_meta_data()`),
+  nigdy postmeta zamówień — działa z HPOS i z magazynem na wpisach.
+- Testy integracyjne: bootstrap ładuje WooCommerce z wp-env (po Terminarzu, jak na witrynie) i instaluje go
+  (`WC_Install::install()` na `init` po Action Scheduler, tabele HPOS włączone). `TRMZ_TESTS_WOOCOMMERCE=0` uruchamia
+  suitę bez WooCommerce (`composer test:integration:no-wc`, osobny krok CI). Grupy: `woocommerce` (pomijane bez WC),
+  `no-woocommerce` (pomijane z WC).
+
+**Konsekwencje.** Komponenty integracji nie mogą być używane przed `plugins_loaded`. Filtr `trmz_woocommerce_active`
+pozwala wyłączyć płatności (np. w testach), ale nie „włączyć” ich bez WooCommerce. Pełna suita z WooCommerce jest
+wolniejsza (hooki WC przy tworzeniu użytkowników/wpisów).
