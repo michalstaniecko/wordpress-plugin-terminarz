@@ -75,4 +75,11 @@ interface ServiceRepository {
 	 * @return int[]
 	 */
 	public function service_ids_for_resource( int $resource_id ): array;
+
+	/**
+	 * Service IDs of every resource at once (one query for listings).
+	 *
+	 * @return array<int, int[]> Keyed by resource ID; resources without services are absent.
+	 */
+	public function service_ids_by_resource(): array;
 }

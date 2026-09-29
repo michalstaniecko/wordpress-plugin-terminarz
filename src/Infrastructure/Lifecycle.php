@@ -64,9 +64,9 @@ final class Lifecycle {
 	}
 
 	/**
-	 * Activation steps for a single site.
+	 * Activation steps for the current site (also used for sites created after network activation).
 	 */
-	private static function activate_site(): void {
+	public static function activate_site(): void {
 		Migrator::migrate();
 		Capabilities::grant();
 	}

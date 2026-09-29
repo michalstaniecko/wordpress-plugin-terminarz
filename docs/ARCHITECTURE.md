@@ -38,8 +38,8 @@ zależności składamy ręcznie w `Plugin::default_modules()`; w razie wzrostu z
 (przy aktywacji sieciowej na multisite — w każdej istniejącej witrynie). Deaktywacja niczego nie usuwa;
 capability zdejmuje dopiero `uninstall.php` (`Capabilities::revoke()`), zgodnie z ustawieniem usuwania danych.
 
-**Konsekwencje.** Witryny utworzone w sieci *po* aktywacji sieciowej nie dostaną capability automatycznie —
-do obsłużenia w M8 (testy multisite).
+**Konsekwencje.** Witryny utworzone w sieci *po* aktywacji sieciowej dostają capability i schemat przez hook
+`wp_initialize_site` (ADR-045, #61).
 
 ## ADR-005: Środowiska wp-env (dev 8888, tests 8889)
 
@@ -978,3 +978,20 @@ bywa jutro) i przywraca 24 h. Wspólne kroki klienta przeniesione do `tests/e2e/
 
 **Konsekwencje.** Klient rezerwujący termin w ciągu `customer_cancel_limit_hours` dostaje link, który od razu prowadzi do
 komunikatu „za późno, skontaktuj się z nami” (świadome: strona tłumaczy sytuację; poprawa w #102).
+
+## ADR-045: Multisite — witryny tworzone i usuwane po aktywacji sieciowej
+
+**Kontekst.** Tabele pluginu są per witryna (prefiks witryny), capability per witryna (role). Aktywacja sieciowa
+instaluje tylko istniejące witryny (#61).
+
+**Decyzja.** Moduł `Infrastructure\Multisite` (rejestrowany tylko na multisite):
+- `wp_initialize_site` (priorytet 200, po utworzeniu tabel i ról core) — gdy plugin jest aktywny sieciowo
+  (`is_plugin_active_for_network()`), `Lifecycle::activate_site()` w nowej witrynie (schemat + capability).
+  Plugin aktywny tylko w pojedynczych witrynach nie instaluje się w nowych.
+- `wpmu_drop_tables` — tabele pluginu usuwanej witryny (`Schema` z `get_blog_prefix()`) dopisywane do listy
+  usuwanych tabel core. Opcje i WP-Cron znikają razem z tabelą opcji witryny.
+- Niezależnie od hooka `Migrator` na `plugins_loaded` instaluje brakujący schemat przy pierwszym żądaniu do witryny
+  (siatka bezpieczeństwa), ale capability nadaje tylko aktywacja/`wp_initialize_site`.
+
+**Testy.** Cała suita integracyjna uruchamiana także z `WP_TESTS_MULTISITE=1` (`composer test:integration:multisite`,
+krok w CI); `tests/php/integration/Multisite/MultisiteTest.php` (grupa `multisite`, pomijana na pojedynczej witrynie).

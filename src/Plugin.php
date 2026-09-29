@@ -24,6 +24,7 @@ use Terminarz\Infrastructure\Database\Migrator;
 use Terminarz\Infrastructure\HoldExpiryScheduler;
 use Terminarz\Infrastructure\I18n;
 use Terminarz\Infrastructure\Module;
+use Terminarz\Infrastructure\Multisite;
 use Terminarz\Integrations\WooCommerce\WooCommerceModule;
 use Terminarz\Notifications\BookingNotifier;
 use Terminarz\Notifications\ReminderScheduler;
@@ -84,6 +85,7 @@ final class Plugin {
 		return array(
 			new I18n(),
 			new Migrator(),
+			new Multisite(),
 			new Menu(
 				array(
 					new BookingsPage(),
