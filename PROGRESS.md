@@ -281,3 +281,13 @@ Jeden wpis na zamknięte issue: data, numer issue, co zrobione, decyzje, znane r
   capability/nonce, link z filtrami).
 - **Decyzje:** ADR-030.
 - **Ryzyka:** offsetowe partie przy równoległych zmianach mogą pominąć/zdublować wiersz na granicy partii.
+
+## 2026-09-29 — #28 E2E konfiguracji w panelu admina
+
+- **Zrobione:** `tests/e2e/specs/admin-configuration.spec.js` (Playwright, tryb serial): admin tworzy zasób i usługę
+  w panelu, ustawia godziny pracy (7 dni + przerwa) i dzień wolny zasobu, dostępność przez REST odzwierciedla harmonogram
+  i wyjątek, rezerwacja tworzona przez REST, na liście: potwierdzenie (akcja wiersza), szczegóły, anulowanie, eksport CSV
+  (BOM, filtr wyszukiwania, dane rezerwacji), brak PHP notice w `debug.log`. Dane z unikalnym sufiksem (powtarzalne
+  przebiegi). Drobna poprawka: komunikat o strefie czasowej dla stref zapisanych jako offset (`UTC+00:00`).
+- **Decyzje:** brak nowych (ADR-010).
+- **Ryzyka:** środowisko testowe gromadzi dane z kolejnych przebiegów (zasoby/usługi E2E) — nie wpływa na asercje.

@@ -95,10 +95,18 @@ final class Labels {
 	public static function timezone_notice(): string {
 		$zone   = wp_timezone();
 		$offset = ( new \DateTimeImmutable( 'now', $zone ) )->format( 'P' );
+		$name   = wp_timezone_string();
+		if ( 1 === preg_match( '/^[+-]/', $name ) ) {
+			return sprintf(
+				/* translators: %s: UTC offset, e.g. +01:00. */
+				__( 'Times are in the site time zone: UTC%s. You can change it in Settings → General.', 'terminarz' ),
+				$offset
+			);
+		}
 		return sprintf(
 			/* translators: 1: time zone name, 2: current UTC offset, e.g. +01:00. */
 			__( 'Times are in the site time zone: %1$s (currently UTC%2$s). You can change it in Settings → General.', 'terminarz' ),
-			wp_timezone_string(),
+			$name,
 			$offset
 		);
 	}
