@@ -190,3 +190,36 @@ w bootstrapie (`plugins_loaded`).
   pending_payment, confirmed. Status `needs_attention` (np. płatność po wygaśnięciu wstrzymania) **nie** jest dodany —
   decyzja należy do M6 (dodanie przypadku enuma i przejść jest wsteczne kompatybilne).
 - PHPCompatibility 9.3 nie rozumie enumów — dla plików z enumami wyłączone są dwie reguły w `phpcs.xml.dist`.
+
+## ADR-016: Silnik dostępności (`Terminarz\Domain\Availability`)
+
+**Kontekst.** Wolne sloty muszą uwzględniać harmonogram lokalny, wyjątki, przerwy, bufory, istniejące rezerwacje,
+minimalne wyprzedzenie, horyzont i zmianę czasu — deterministycznie i bez WordPressa (testy czystym PHPUnit).
+
+**Decyzja.**
+- Wejście: `AvailabilityQuery` — lista `ResourceCalendar` (id zasobu, `WeeklySchedule`, wyjątki zasobu i globalne,
+  zajęte przedziały UTC **już z buforami**), czas trwania i bufor usługi (`for_service()`), strefa witryny (`DateTimeZone`),
+  zakres dat lokalnych `from`–`to` (włącznie, maks. 366 dni), `now`, minimalne wyprzedzenie (min), maksymalny horyzont
+  (dni lokalne, `null` = bez limitu), krok siatki (domyślnie 15 min). `now` i strefa są wstrzykiwane.
+  Wyjście: `AvailabilityEngine::find_slots()` → `list<Slot>` (UTC, `[start, start + czas trwania)`), posortowane
+  po starcie, potem po id zasobu.
+- Zajętość jest jawna: `BusyIntervals::from_bookings($bookings, $now)` bierze tylko rezerwacje, które blokują slot w chwili
+  `now` (`Booking::blocks_slot_at()` — statusy aktywne, `pending_payment` tylko przed `hold_expires_at`) i zwraca
+  `blocked_range()` (termin + bufor). Repozytorium może też zwracać gotowe przedziały, o ile stosuje tę samą regułę.
+- Okna dnia: wyjątek zasobu > wyjątek globalny > harmonogram tygodniowy minus przerwy.
+- Slot w chwili `s` blokuje `[s, s + czas + bufor)`; musi mieścić się w całości (z buforem) w oknie pracy,
+  zaczynać się nie wcześniej niż `now + wyprzedzenie` i nie nakładać się na zajętość (półotwarte — sąsiadujące terminy są OK).
+- Siatka: starty co `krok` liczone od początku każdego okna; po kolizji skok do pierwszego punktu siatki ≥ końca zajętości.
+- Horyzont: ostatni dostępny dzień = lokalna data `now` + N dni (dni liczone w strefie witryny, nie w UTC).
+- **DST** (`WallClock`): granice okien lokalnych przeliczane na UTC regułą monotoniczną — godzina powtórzona
+  (cofnięcie zegara) → **pierwsze** wystąpienie; godzina nieistniejąca (przesunięcie do przodu) → **chwila zmiany czasu**
+  (pierwsza istniejąca godzina po luce). Sloty generowane są na osi czasu rzeczywistego (UTC) wewnątrz tak przeliczonych
+  okien: w dniu zmiany „na letni” okno 00:00–06:00 daje 5 godzin slotów i żadnego o 02:xx, w dniu zmiany „na zimowy” —
+  7 godzin, a powtórzona godzina lokalna pojawia się dwa razy jako różne chwile UTC (bez duplikatów). Własna implementacja,
+  bo `DateTimeImmutable` przesuwa nieistniejące godziny o długość luki, a wybór dla godzin powtórzonych zależy od wersji PHP.
+- Wydajność: zajętość sortowana i scalana raz, przeglądana wskaźnikiem tylko do przodu — koszt liniowy
+  (okna + sloty + rezerwacje). 30 dni × 10 zasobów ≈ kilka ms (test pilnuje < 300 ms).
+
+**Konsekwencje.** Harmonogramy i wyjątki są w czasie lokalnym (ADR-012), więc zmiana strefy witryny przesuwa godziny
+w UTC, ale nie istniejące rezerwacje (te są w UTC). Wyjątki z zakresem dat (`start_date`–`end_date` w bazie) repozytorium
+rozwija do obiektów `ScheduleException` per dzień.
