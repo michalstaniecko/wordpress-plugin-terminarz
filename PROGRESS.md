@@ -469,3 +469,9 @@ Jeden wpis na zamknięte issue: data, numer issue, co zrobione, decyzje, znane r
   Cała suita E2E zielona lokalnie (57 testów).
 - **Decyzje:** ADR-044.
 - **Ryzyka:** przy rezerwacji w oknie limitu anulowania link prowadzi od razu do komunikatu „za późno”.
+
+## 2026-09-29 — #104 niestabilny `page.unroute` w E2E
+
+- **Zrobione:** helper `bookThroughBlock` nie usuwa trasy przechwytującej odpowiedź rezerwacji (unroute potrafił zawisnąć
+  przy natychmiastowym przekierowaniu na płatność); kolejne żądania przechodzą bez zmian.
+- **Ryzyka:** brak.
