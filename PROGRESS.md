@@ -328,3 +328,14 @@ Jeden wpis na zamknięte issue: data, numer issue, co zrobione, decyzje, znane r
 - **Decyzje:** ADR-033.
 - **Ryzyka:** komunikat po sukcesie nie wspomina e-maila (powiadomienia dopiero w M7); mu-plugin wymaga restartu
   `npm run env:start:tests` w istniejących lokalnych środowiskach.
+
+## 2026-09-29 — #32 dostępność WCAG 2.2 AA i responsywność bloku
+
+- **Zrobione:** `@axe-core/playwright`; E2E `booking-block-a11y.spec.js`: axe bez naruszeń na każdym kroku (usługa,
+  błąd wyboru, zasób, dzień, godzina, formularz, formularz z błędami, potwierdzenie, mobile), przejście całej ścieżki
+  wyłącznie klawiaturą (w tym strzałki/Home/End/PageUp/PageDown w kalendarzu i fokus na nagłówkach), viewport 320 px
+  bez przewijania poziomego z celami ≥ 24×24 px. Poprawki dostępności wprowadzone już w #30/#31 (natywne radio,
+  grid z roving tabindex, `aria-live`, `aria-describedby`/`aria-invalid`, widoczny fokus, cele 44 px).
+- **Decyzje:** ADR-034 (natywne radio zamiast `aria-pressed`; zakres i tagi axe).
+- **Ryzyka:** kontrast zależy od motywu (blok dziedziczy kolory); przy zmianie gałęzi git Docker Desktop może zgubić
+  bind-mount katalogu `tests/e2e/mu-plugins` — wtedy `wp-env stop` + `npm run env:start:tests`.

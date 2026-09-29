@@ -666,3 +666,20 @@ skryptów z `build/` (do rozwiązania przy pakowaniu tłumaczeń w M8).
 - E2E: mu-plugin `tests/e2e/mu-plugins/trmz-e2e.php` (mapowany tylko w `.wp-env.tests.json`, nieaktywny w PHPUnit)
   podnosi limit rezerwacji do 1000 / 10 min — wszystkie testy przeglądarkowe mają jedno IP. 429 w bloku testowane
   zamockowaną odpowiedzią, sam limiter — PHPUnit.
+
+## ADR-034: Dostępność bloku rezerwacji (WCAG 2.2 AA) — weryfikacja
+
+**Decyzja.**
+- Wzorce z ADR-032/033 są obowiązujące: natywne radio (usługi, zasoby, godziny) zamiast własnych `role=radio` / przycisków
+  z `aria-pressed` — mniej ARIA, poprawne ogłaszanie stanu i obsługa strzałek przez przeglądarkę; kalendarz `role=grid`
+  z roving tabindex (jeden przystanek Tab); fokus na nagłówku kroku; jeden region `role=status`; błędy `role=alert`
+  i `aria-describedby`; honeypot poza drzewem dostępności.
+- Testy E2E `booking-block-a11y.spec.js`: `@axe-core/playwright` (tagi `wcag2a/aa`, `wcag21a/aa`, `wcag22aa`,
+  zakres: kontener bloku) bez naruszeń na każdym kroku, także ze stanami błędów i na ekranie potwierdzenia; przejście
+  całej ścieżki wyłącznie klawiaturą (Tab/Shift+Tab, Spacja, Enter, strzałki, Home/End, PageUp/PageDown); viewport
+  320×640 bez przewijania poziomego i z celami ≥ 24×24 px.
+- Kolory: blok dziedziczy kolor tekstu motywu, akcenty z `color-mix(currentcolor)`; stały jest tylko czerwony pasek
+  błędu (element dekoracyjny, komunikat jest tekstem w kolorze motywu) — kontrast tekstu zależy od motywu.
+
+**Konsekwencje.** axe sprawdza motyw testowy (Twenty Twenty-Five); motywy o niskim kontraście mogą obniżyć zgodność —
+opisać w dokumentacji wydania (M8). Kalendarz nie jest dialogiem (osadzony w stronie), więc nie ma pułapki fokusu.
