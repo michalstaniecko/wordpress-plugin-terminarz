@@ -391,3 +391,24 @@ dojdą razem z panelem admina (M4) / WooCommerce (M6) jako nowe pola schematu (z
 **Konsekwencje.** Jawny token anulowania istnieje tylko w `Reservation` zwracanym przez `BookingService` — REST go odrzuca,
 więc M7 musi wysłać e-mail w tym samym żądaniu (np. `BookingService` przekaże token do powiadomień) albo wygenerować nowy
 token przy wysyłce.
+
+## ADR-022: Limit zapytań dla publicznych endpointów zapisu
+
+**Decyzja.**
+- `Infrastructure\RateLimiter` — okno stałe per (kubełek, klient) w transientach (object cache, jeśli jest). Klucz
+  `trmz_rl_` + HMAC-SHA256(kubełek|IP, `wp_salt('nonce')`) — adres IP nie jest zapisywany. Czas z `Clock` (testowalny).
+  Inkrementacja nie jest atomowa (odczyt → zapis): przy dużej współbieżności może przepuścić kilka dodatkowych żądań —
+  akceptowalne dla ochrony przed nadużyciami.
+- `Rest\RequestLimit::check($bucket, $request)` — wołane z `permission_callback` endpointów zapisu (po walidacji schematu,
+  więc liczy się każde poprawne składniowo żądanie — także zakończone 409, co utrudnia sondowanie slotów).
+  Kubełki: `booking_create` (M3), w M7 anulowanie (nowa stała, ten sam mechanizm).
+- Limit: filtr `trmz_rate_limit` (`array{limit, window}`, kubełek, żądanie), domyślnie 5 / 600 s; `limit <= 0` wyłącza.
+  Użytkownicy z `trmz_manage_bookings` nie są limitowani.
+- IP: wyłącznie `REMOTE_ADDR`; nagłówki proxy tylko przez filtr `trmz_client_ip` (zaufany reverse proxy). Niepoprawny
+  adres → wspólny klucz `unknown`.
+- Przekroczenie: 429 `trmz_rate_limited` + nagłówek `Retry-After` (sekundy do końca okna). `permission_callback` nie może
+  ustawiać nagłówków, więc filtr `rest_request_after_callbacks` (rejestrowany przez `RestModule`) zamienia ten błąd
+  na odpowiedź z nagłówkiem.
+
+**Konsekwencje.** Za reverse proxy/CDN bez skonfigurowanego filtra wszyscy klienci mają to samo `REMOTE_ADDR` i dzielą
+limit — trzeba to opisać w dokumentacji wydania (M8, readme).

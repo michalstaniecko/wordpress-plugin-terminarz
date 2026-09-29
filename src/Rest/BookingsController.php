@@ -63,7 +63,7 @@ final class BookingsController extends Controller {
 
 	/**
 	 * Anyone may book, but a logged-in user (cookie authentication) must send a valid `wp_rest` nonce, so that
-	 * a third-party page cannot book in the user's name (CSRF). Request limits are added by #19.
+	 * a third-party page cannot book in the user's name (CSRF). Every client is limited by RequestLimit (429).
 	 *
 	 * @param WP_REST_Request $request Request.
 	 * @phpstan-param WP_REST_Request<array<string, mixed>> $request
@@ -77,7 +77,7 @@ final class BookingsController extends Controller {
 			}
 		}
 
-		return true;
+		return RequestLimit::check( RequestLimit::BOOKING_CREATE, $request );
 	}
 
 	/**
