@@ -45,6 +45,7 @@ final class RestModule implements Module {
 			new ResourcesController(),
 			new AvailabilityController(),
 			new BookingsController(),
+			new AdminBookingsController(),
 		);
 	}
 }

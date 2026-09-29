@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-29T16:43:08+00:00\n"
+"POT-Creation-Date: 2026-09-29T16:48:06+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: terminarz\n"
@@ -29,16 +29,93 @@ msgstr ""
 msgid "Michał Staniećko"
 msgstr ""
 
-#: src/Rest/AvailabilityController.php:117
-msgid "The selected person or resource does not provide this service."
+#: src/Rest/AdminBookingsController.php:54
+#: src/Rest/AdminBookingsController.php:435
+msgid "Booking ID."
 msgstr ""
 
+#: src/Rest/AdminBookingsController.php:114
+msgid "New start, ISO 8601 with a time zone offset."
+msgstr ""
+
+#: src/Rest/AdminBookingsController.php:120
+msgid "New resource (must provide the service); omitted = keep."
+msgstr ""
+
+#: src/Rest/AdminBookingsController.php:234
+#: src/Rest/BookingsController.php:101
+msgid "Please provide a valid date and time."
+msgstr ""
+
+#: src/Rest/AdminBookingsController.php:245
+msgid "The booking cannot be moved to this time."
+msgstr ""
+
+#: src/Rest/AdminBookingsController.php:294
 #: src/Rest/AvailabilityController.php:132
 msgid "Please provide valid dates."
 msgstr ""
 
+#: src/Rest/AdminBookingsController.php:298
 #: src/Rest/AvailabilityController.php:135
 msgid "The end date must not be earlier than the start date."
+msgstr ""
+
+#: src/Rest/AdminBookingsController.php:307
+msgid "The booking does not exist."
+msgstr ""
+
+#: src/Rest/AdminBookingsController.php:355
+msgid "Page of the listing."
+msgstr ""
+
+#: src/Rest/AdminBookingsController.php:361
+msgid "Bookings per page."
+msgstr ""
+
+#: src/Rest/AdminBookingsController.php:368
+msgid "Only these statuses."
+msgstr ""
+
+#: src/Rest/AdminBookingsController.php:376
+msgid "Only this service."
+msgstr ""
+
+#: src/Rest/AdminBookingsController.php:381
+msgid "Only this resource."
+msgstr ""
+
+#: src/Rest/AdminBookingsController.php:386
+msgid "Only bookings starting on or after this day (site time zone), Y-m-d."
+msgstr ""
+
+#: src/Rest/AdminBookingsController.php:391
+msgid "Only bookings starting on or before this day (site time zone), Y-m-d."
+msgstr ""
+
+#: src/Rest/AdminBookingsController.php:396
+msgid "Part of the customer name or e-mail, or the public booking ID."
+msgstr ""
+
+#: src/Rest/AdminBookingsController.php:404
+msgid "Sort by start time or creation time."
+msgstr ""
+
+#: src/Rest/AdminBookingsController.php:410
+msgid "Sort direction."
+msgstr ""
+
+#: src/Rest/AdminBookingsController.php:440
+#: src/Rest/BookingsController.php:302
+msgid "Public booking identifier."
+msgstr ""
+
+#: src/Rest/AdminBookingsController.php:450
+msgid "Statuses the booking can be moved to."
+msgstr ""
+
+#: src/Rest/AvailabilityController.php:117
+msgid "The selected person or resource does not provide this service."
 msgstr ""
 
 #. translators: %d: maximum number of days.
@@ -105,10 +182,6 @@ msgstr ""
 msgid "Please accept the terms to book an appointment."
 msgstr ""
 
-#: src/Rest/BookingsController.php:101
-msgid "Please provide a valid date and time."
-msgstr ""
-
 #: src/Rest/BookingsController.php:119
 msgid "Please provide your name and a valid e-mail address."
 msgstr ""
@@ -143,10 +216,6 @@ msgstr ""
 
 #: src/Rest/BookingsController.php:252
 msgid "Leave empty (anti-spam field)."
-msgstr ""
-
-#: src/Rest/BookingsController.php:302
-msgid "Public booking identifier."
 msgstr ""
 
 #: src/Rest/BookingsController.php:307
