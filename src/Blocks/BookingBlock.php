@@ -136,6 +136,7 @@ final class BookingBlock implements Module {
 			'today'              => $today->format( 'Y-m-d' ),
 			'lastDate'           => $last_date,
 			'locale'             => str_replace( '_', '-', determine_locale() ),
+			'timeFormat'         => (string) get_option( 'time_format', 'H:i' ),
 			'currency'           => Money::currency(),
 			'priceDecimals'      => Money::decimals(),
 			'consentHtml'        => self::consent_html( $services->settings()->consent_text() ),

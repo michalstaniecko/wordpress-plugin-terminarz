@@ -1,3 +1,5 @@
+import { uses12HourClock } from './format';
+
 /**
  * Parses and normalises the block configuration from `data-trmz-config` (see BookingBlock::config()).
  *
@@ -50,5 +52,6 @@ export function parseConfig( json ) {
 			: 2,
 		consentHtml: typeof raw.consentHtml === 'string' ? raw.consentHtml : '',
 		emailNotice: raw.emailNotice === true,
+		hour12: uses12HourClock( raw.timeFormat ),
 	};
 }
