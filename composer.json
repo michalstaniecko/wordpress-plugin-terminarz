@@ -16,12 +16,32 @@
 			"php": "8.1.0"
 		},
 		"optimize-autoloader": true,
-		"sort-packages": true
+		"sort-packages": true,
+		"process-timeout": 0
 	},
 	"require-dev": {
-		"wp-cli/i18n-command": "^2.7"
+		"phpunit/phpunit": "^9.6",
+		"wp-cli/i18n-command": "^2.7",
+		"yoast/phpunit-polyfills": "^4.0"
 	},
 	"scripts": {
-		"i18n": "wp i18n make-pot . languages/terminarz.pot --slug=terminarz --domain=terminarz --exclude=node_modules,vendor,build,tests,docs,artifacts"
+		"i18n": "wp i18n make-pot . languages/terminarz.pot --slug=terminarz --domain=terminarz --exclude=node_modules,vendor,build,tests,docs,artifacts",
+		"test": [
+			"@test:unit",
+			"@test:integration"
+		],
+		"test:unit": "phpunit -c phpunit.xml.dist",
+		"test:integration": "npx wp-env run --config=.wp-env.tests.json cli --env-cwd=wp-content/plugins/terminarz vendor/bin/phpunit -c phpunit-integration.xml.dist"
+	},
+	"autoload-dev": {
+		"psr-4": {
+			"Terminarz\\Tests\\": "tests/php/"
+		}
+	},
+	"scripts-descriptions": {
+		"test": "Runs unit and integration test suites (integration needs `npm run env:start:tests`).",
+		"test:unit": "Runs unit tests (no WordPress, no Docker).",
+		"test:integration": "Runs integration tests inside the wp-env tests environment.",
+		"i18n": "Generates languages/terminarz.pot."
 	}
 }

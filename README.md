@@ -39,6 +39,7 @@ Przydatne komendy:
 | Build bloków | `npm run build` (tryb watch: `npm start`) |
 | Lint JS/CSS | `npm run lint` |
 | Plik `.pot` | `npm run i18n` (WP-CLI i18n z Composera, bez Dockera) |
+| Testy PHP (unit + integration) | `composer test` (unit bez Dockera: `composer test:unit`; integration: `composer test:integration`, wymaga `npm run env:start:tests`) |
 | Testy E2E | `npm run test:e2e` |
 
 Szczegóły architektury: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md). Dziennik postępu: [`PROGRESS.md`](PROGRESS.md).

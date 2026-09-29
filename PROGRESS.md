@@ -24,3 +24,12 @@ Jeden wpis na zamknięte issue: data, numer issue, co zrobione, decyzje, znane r
 - **Ryzyka:** WooCommerce „latest-stable” zmienia się w czasie — testy mogą zacząć się sypać po wydaniu WC
   (ew. przypięcie wersji później). WooCommerce 11.x zapisuje w `debug.log` notice `_load_textdomain_just_in_time`
   — smoke test E2E (#6) musi to uwzględnić. Skrypty `lint`/`test:e2e` są konfigurowane w #5/#6.
+
+## 2026-09-29 — #4 PHPUnit: suity unit i integration
+
+- **Zrobione:** PHPUnit 9.6 + polyfills, `phpunit.xml.dist` (unit) i `phpunit-integration.xml.dist` (integration),
+  bootstrapy, własny `wp-tests-config.php` (prefiks `wptests_`), skrypty `composer test`, `test:unit`, `test:integration`,
+  autoload-dev `Terminarz\Tests\`. Testy: `PluginTest` (unit), `LifecycleTest` (integration — capability po aktywacji,
+  deaktywacja jej nie zdejmuje, `revoke()` czyści wszystkie role).
+- **Decyzje:** ADR-008 (biblioteka testów WP z wp-env zamiast `wp-phpunit/wp-phpunit`, osobny prefiks tabel).
+- **Ryzyka:** suita integration wymaga Dockera/wp-env; poza wp-env trzeba ustawić `WP_TESTS_DIR` i `WORDPRESS_DB_*`.
