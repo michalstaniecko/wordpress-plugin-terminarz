@@ -76,6 +76,7 @@ final class EntitiesTest extends TestCase {
 		yield 'service: empty name' => array( static fn () => new Service( null, '', 30 ) );
 		yield 'customer: empty name' => array( static fn () => new Customer( '', 'a@example.com' ) );
 		yield 'customer: bad email' => array( static fn () => new Customer( 'A', 'not-an-email' ) );
+		yield 'customer: zero user id' => array( static fn () => new Customer( 'A', 'a@example.com', '', '', 0 ) );
 		yield 'slot: zero resource' => array( static fn () => new Slot( 0, self::range() ) );
 		yield 'booking: pending_payment without hold' => array( static fn () => self::booking( BookingStatus::PendingPayment ) );
 		yield 'booking: zero resource' => array(

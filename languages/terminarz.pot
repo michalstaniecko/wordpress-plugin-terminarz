@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-29T16:36:21+00:00\n"
+"POT-Creation-Date: 2026-09-29T16:40:27+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: terminarz\n"
@@ -49,6 +49,7 @@ msgstr ""
 
 #: src/Rest/AvailabilityController.php:222
 #: src/Rest/AvailabilityController.php:264
+#: src/Rest/BookingsController.php:210
 #: src/Rest/ServicesController.php:59
 #: src/Rest/ServicesController.php:157
 msgid "Service ID."
@@ -56,6 +57,7 @@ msgstr ""
 
 #: src/Rest/AvailabilityController.php:228
 #: src/Rest/AvailabilityController.php:269
+#: src/Rest/BookingsController.php:216
 msgid "Resource ID or \"any\"."
 msgstr ""
 
@@ -89,6 +91,70 @@ msgstr ""
 
 #: src/Rest/AvailabilityController.php:320
 msgid "Resource ID; null when any resource was requested."
+msgstr ""
+
+#: src/Rest/BookingsController.php:76
+msgid "Your session has expired. Please reload the page and try again."
+msgstr ""
+
+#: src/Rest/BookingsController.php:93
+msgid "The booking could not be processed."
+msgstr ""
+
+#: src/Rest/BookingsController.php:96
+msgid "Please accept the terms to book an appointment."
+msgstr ""
+
+#: src/Rest/BookingsController.php:101
+msgid "Please provide a valid date and time."
+msgstr ""
+
+#: src/Rest/BookingsController.php:119
+msgid "Please provide your name and a valid e-mail address."
+msgstr ""
+
+#: src/Rest/BookingsController.php:129
+msgid "The booking data is not valid."
+msgstr ""
+
+#: src/Rest/BookingsController.php:222
+msgid "Start of the appointment, ISO 8601 with a time zone offset (e.g. the start_utc of a slot)."
+msgstr ""
+
+#: src/Rest/BookingsController.php:227
+msgid "Full name."
+msgstr ""
+
+#: src/Rest/BookingsController.php:229
+msgid "E-mail address."
+msgstr ""
+
+#: src/Rest/BookingsController.php:237
+msgid "Phone number."
+msgstr ""
+
+#: src/Rest/BookingsController.php:239
+msgid "Note for the business."
+msgstr ""
+
+#: src/Rest/BookingsController.php:247
+msgid "Consent to the processing of personal data for the booking; must be true."
+msgstr ""
+
+#: src/Rest/BookingsController.php:252
+msgid "Leave empty (anti-spam field)."
+msgstr ""
+
+#: src/Rest/BookingsController.php:302
+msgid "Public booking identifier."
+msgstr ""
+
+#: src/Rest/BookingsController.php:307
+msgid "Booking status."
+msgstr ""
+
+#: src/Rest/BookingsController.php:317
+msgid "Resource assigned to the booking."
 msgstr ""
 
 #: src/Rest/Controller.php:63
