@@ -4,6 +4,7 @@ parameters:
 	level: 6
 	paths:
 		- terminarz.php
+		- uninstall.php
 		- src
 		- tests/php/unit
 	bootstrapFiles:
