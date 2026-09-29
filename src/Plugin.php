@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Terminarz;
 
+use Terminarz\Infrastructure\Database\Migrator;
 use Terminarz\Infrastructure\I18n;
 use Terminarz\Infrastructure\Module;
 
@@ -66,6 +67,7 @@ final class Plugin {
 	private static function default_modules(): array {
 		return array(
 			new I18n(),
+			new Migrator(),
 		);
 	}
 
