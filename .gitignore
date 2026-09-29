@@ -1,0 +1,27 @@
+# Dependencies
+/vendor/
+/node_modules/
+
+# Build output
+/build/
+/*.zip
+
+# Test artifacts
+/artifacts/
+/test-results/
+/playwright-report/
+/tests/e2e/.auth/
+.phpunit.result.cache
+.phpunit.cache/
+/coverage/
+
+# Tools
+.phpcs-cache
+/.wp-env.override.json
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.log
