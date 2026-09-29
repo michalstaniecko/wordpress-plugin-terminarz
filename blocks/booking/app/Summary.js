@@ -3,8 +3,7 @@
  */
 import { __ } from '@wordpress/i18n';
 
-import { formatLongDate } from '../lib/format';
-import { timeOf } from '../lib/slots';
+import { formatLongDate, formatTime } from '../lib/format';
 
 export default function Summary( {
 	serviceName,
@@ -14,6 +13,7 @@ export default function Summary( {
 	end,
 	timezone,
 	locale,
+	hour12 = false,
 } ) {
 	return (
 		<dl className="trmz-booking__details">
@@ -34,7 +34,8 @@ export default function Summary( {
 			<div className="trmz-booking__detail">
 				<dt>{ __( 'Time', 'terminarz' ) }</dt>
 				<dd>
-					{ timeOf( start ) }–{ timeOf( end ) }
+					{ formatTime( start, locale, hour12 ) }–
+					{ formatTime( end, locale, hour12 ) }
 					{ timezone && (
 						<span className="trmz-booking__zone">
 							{ ' ' }

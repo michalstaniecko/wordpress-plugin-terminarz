@@ -177,6 +177,14 @@ final class BookingBlockTest extends WP_UnitTestCase {
 		$this->assertFalse( ( new BookingBlock() )->config( array() )['emailNotice'] );
 	}
 
+	public function test_time_format_of_the_site_is_passed(): void {
+		update_option( 'time_format', 'g:i a' );
+		$this->assertSame( 'g:i a', ( new BookingBlock() )->config( array() )['timeFormat'] );
+
+		update_option( 'time_format', 'H:i' );
+		$this->assertSame( 'H:i', ( new BookingBlock() )->config( array() )['timeFormat'] );
+	}
+
 	public function test_default_consent_text_when_not_configured(): void {
 		$config = ( new BookingBlock() )->config( array() );
 

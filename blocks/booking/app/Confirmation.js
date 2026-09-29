@@ -35,6 +35,7 @@ export default function Confirmation( {
 	resourceName,
 	timezone,
 	locale,
+	hour12 = false,
 	onRestart,
 } ) {
 	return (
@@ -58,6 +59,7 @@ export default function Confirmation( {
 				end={ booking.end }
 				timezone={ timezone }
 				locale={ locale }
+				hour12={ hour12 }
 			/>
 			<div className="trmz-booking__actions">
 				<button
