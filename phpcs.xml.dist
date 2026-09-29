@@ -96,10 +96,16 @@
 		<exclude-pattern>/src/Infrastructure/Persistence/*</exclude-pattern>
 		<exclude-pattern>/tests/php/*</exclude-pattern>
 	</rule>
-	<!-- Exception messages of the persistence layer are developer-facing and never printed; adapters escape what they output. -->
+	<!-- Exception messages of the persistence and application layers are developer-facing and never printed; adapters escape what they output. -->
 	<rule ref="WordPress.Security.EscapeOutput.ExceptionNotEscaped">
 		<exclude-pattern>/src/Infrastructure/Database/*</exclude-pattern>
 		<exclude-pattern>/src/Infrastructure/Persistence/*</exclude-pattern>
+		<exclude-pattern>/src/Application/*</exclude-pattern>
+	</rule>
+
+	<!-- @throws documents exceptions propagated from callees too (part of the public contract), not only local `throw`s. -->
+	<rule ref="Squiz.Commenting.FunctionCommentThrowTag.WrongNumber">
+		<severity>0</severity>
 	</rule>
 	<rule ref="WordPress.DB.DirectDatabaseQuery.SchemaChange">
 		<exclude-pattern>/src/Infrastructure/Database/*</exclude-pattern>
