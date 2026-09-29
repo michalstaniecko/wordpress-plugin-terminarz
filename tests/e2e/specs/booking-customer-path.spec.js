@@ -174,11 +174,13 @@ test.describe( 'Customer path without WooCommerce', () => {
 		await expect( page.locator( '.trmz-booking-details' ) ).toContainText(
 			'Path Customer'
 		);
-		// The panel uses the site time format (e.g. "9:00 am" for 09:00).
+		// The panel uses the site time format (e.g. "09:00" or "9:00 am" for 09:00).
 		const [ hour, minute ] = booked.time.split( ':' ).map( Number );
 		const minutes = String( minute ).padStart( 2, '0' );
 		await expect( page.locator( '.trmz-booking-details' ) ).toContainText(
-			new RegExp( `\\b(${ hour }|${ hour % 12 || 12 }):${ minutes }\\b` )
+			new RegExp(
+				`\\b0?(${ hour }|${ hour % 12 || 12 }):${ minutes }\\b`
+			)
 		);
 	} );
 

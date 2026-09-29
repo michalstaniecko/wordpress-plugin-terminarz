@@ -6,7 +6,9 @@ import {
 	formatLongDate,
 	formatMonth,
 	formatPrice,
+	formatTime,
 	timezoneLabel,
+	uses12HourClock,
 	weekdayName,
 } from '../../blocks/booking/lib/format';
 
@@ -74,6 +76,20 @@ describe( 'parseConfig', () => {
 		expect( config.nonce ).toBe( '' );
 		expect( config.consentHtml ).toBe( '' );
 		expect( config.emailNotice ).toBe( false );
+		expect( config.hour12 ).toBe( false );
+	} );
+
+	it( 'derives the clock from the site time format', () => {
+		const hour12 = ( timeFormat ) =>
+			parseConfig(
+				JSON.stringify( {
+					restRoot: 'http://example.org/wp-json/',
+					timeFormat,
+				} )
+			).hour12;
+		expect( hour12( 'g:i a' ) ).toBe( true );
+		expect( hour12( 'H:i' ) ).toBe( false );
+		expect( hour12( 42 ) ).toBe( false );
 	} );
 
 	it( 'passes the e-mail notice flag only when it is true', () => {
@@ -86,5 +102,56 @@ describe( 'parseConfig', () => {
 			).emailNotice;
 		expect( parse( true ) ).toBe( true );
 		expect( parse( 'yes' ) ).toBe( false );
+	} );
+} );
+
+describe( 'time format', () => {
+	// ICU may put a narrow no-break space before AM/PM.
+	const plain = ( text ) => text.replace( /\s/g, ' ' );
+
+	it( 'detects a 12-hour clock from the PHP time format', () => {
+		expect( uses12HourClock( 'g:i a' ) ).toBe( true );
+		expect( uses12HourClock( 'h:i A' ) ).toBe( true );
+		expect( uses12HourClock( 'g:i' ) ).toBe( true );
+		expect( uses12HourClock( 'H:i' ) ).toBe( false );
+		expect( uses12HourClock( 'G:i' ) ).toBe( false );
+		expect( uses12HourClock( 'H\\h i' ) ).toBe( false );
+		expect( uses12HourClock( '' ) ).toBe( false );
+		expect( uses12HourClock( undefined ) ).toBe( false );
+	} );
+
+	it( 'keeps 24-hour times unchanged by default', () => {
+		expect( formatTime( '2026-10-01T09:05:00+02:00', 'en-US' ) ).toBe(
+			'09:05'
+		);
+		expect(
+			formatTime( '2026-10-01T00:00:00+02:00', 'en-US', false )
+		).toBe( '00:00' );
+		expect(
+			formatTime( '2026-10-01T12:00:00+02:00', 'en-US', false )
+		).toBe( '12:00' );
+	} );
+
+	it( 'formats a 12-hour clock including noon and midnight', () => {
+		const time = ( iso ) => plain( formatTime( iso, 'en-US', true ) );
+		expect( time( '2026-10-01T09:05:00+02:00' ) ).toBe( '9:05 AM' );
+		expect( time( '2026-10-01T12:00:00+02:00' ) ).toBe( '12:00 PM' );
+		expect( time( '2026-10-01T00:00:00+02:00' ) ).toBe( '12:00 AM' );
+		expect( time( '2026-10-01T23:30:00-05:00' ) ).toBe( '11:30 PM' );
+	} );
+
+	it( 'never shifts the time to the browser time zone', () => {
+		expect(
+			plain( formatTime( '2026-10-25T02:30:00+01:00', 'en-US', true ) )
+		).toBe( '2:30 AM' );
+	} );
+
+	it( 'handles invalid values and locales', () => {
+		expect( formatTime( 'garbage', 'en-US', true ) ).toBe( '' );
+		expect(
+			plain(
+				formatTime( '2026-10-01T13:00:00+02:00', 'not a locale!', true )
+			)
+		).toMatch( /1:00/ );
 	} );
 } );

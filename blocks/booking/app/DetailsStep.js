@@ -252,6 +252,7 @@ export default function DetailsStep( {
 					end={ slot.end }
 					timezone={ timezone }
 					locale={ config.locale }
+					hour12={ config.hour12 }
 				/>
 			) }
 			<form

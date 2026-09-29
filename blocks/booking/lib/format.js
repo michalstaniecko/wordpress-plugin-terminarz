@@ -3,6 +3,7 @@
  * always shows the same calendar day regardless of the visitor's time zone.
  */
 import { parseDate } from './calendar';
+import { timeOf } from './slots';
 
 /**
  * @param {string} date Date "Y-m-d".
@@ -113,4 +114,42 @@ export function timezoneLabel( timezone ) {
 		return `UTC${ timezone }`;
 	}
 	return timezone ?? '';
+}
+
+/**
+ * Whether a PHP date format (the site `time_format` option) shows hours on a 12-hour clock: it contains `g`, `h`
+ * (12-hour hours) or `a`, `A` (am/pm). Backslash-escaped characters are literals and ignored. Anything else — including
+ * an empty or missing format — means 24 hours.
+ *
+ * @param {string} format PHP date format, e.g. "g:i a" or "H:i".
+ * @return {boolean} True for a 12-hour clock.
+ */
+export function uses12HourClock( format ) {
+	if ( typeof format !== 'string' ) {
+		return false;
+	}
+	return /[ghaA]/.test( format.replace( /\\./g, '' ) );
+}
+
+/**
+ * Wall-clock time of an ISO 8601 date-time with the site offset, as the site shows times: "09:00" on a 24-hour clock
+ * (unchanged), or "9:00 AM" (locale dependent) on a 12-hour one. The time is read from the string, never shifted
+ * to the visitor's time zone.
+ *
+ * @param {string}  iso    Date-time with offset.
+ * @param {string}  locale Locale.
+ * @param {boolean} hour12 12-hour clock.
+ * @return {string} Time ('' for an invalid value).
+ */
+export function formatTime( iso, locale, hour12 = false ) {
+	const time = timeOf( iso ?? '' );
+	if ( ! time || ! hour12 ) {
+		return time;
+	}
+	const [ hours, minutes ] = time.split( ':' ).map( Number );
+	return dateFormatter( locale, {
+		hour: 'numeric',
+		minute: '2-digit',
+		hour12: true,
+	} ).format( new Date( Date.UTC( 1970, 0, 1, hours, minutes ) ) );
 }

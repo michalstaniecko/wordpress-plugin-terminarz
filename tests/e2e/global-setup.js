@@ -27,6 +27,8 @@ async function globalSetup( config ) {
 	// Known baseline: both plugins active before every run.
 	await requestUtils.activatePlugin( 'terminarz' );
 	await requestUtils.activatePlugin( 'woocommerce' );
+	// Known baseline: 24-hour times in the block (specs compare "HH:MM" labels); 12 h is covered separately.
+	await requestUtils.updateSiteSettings( { time_format: 'H:i' } );
 
 	const log = await readDebugLog( requestContext );
 	fs.mkdirSync( path.dirname( debugLogOffsetFile ), { recursive: true } );
