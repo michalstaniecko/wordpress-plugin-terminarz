@@ -91,6 +91,13 @@ final class Services {
 	private ?AvailabilityService $availability_service = null;
 
 	/**
+	 * Plugin settings.
+	 *
+	 * @var Settings|null
+	 */
+	private ?Settings $plugin_settings = null;
+
+	/**
 	 * Constructor.
 	 *
 	 * @param wpdb                      $db       Connection.
@@ -192,26 +199,30 @@ final class Services {
 	}
 
 	/**
-	 * Availability settings: site time zone (`wp_timezone()`) plus the `trmz_settings` option
-	 * (`min_lead_minutes`, `max_horizon_days`, `slot_step_minutes`, `any_resource_strategy`), filterable
-	 * with `trmz_availability_settings`. Invalid stored values fall back to the defaults.
+	 * Plugin settings (`trmz_settings` option), read once per container.
+	 */
+	public function settings(): Settings {
+		return $this->plugin_settings ??= Settings::load();
+	}
+
+	/**
+	 * Availability settings: site time zone (`wp_timezone()`) plus `Settings` (`min_lead_minutes`, `max_horizon_days`,
+	 * `slot_step_minutes`, `any_resource_strategy`), filterable with `trmz_availability_settings`.
+	 * Invalid stored values fall back to the defaults (see `Settings::DEFAULTS`).
 	 */
 	public function availability_settings(): AvailabilitySettings {
 		if ( null !== $this->settings ) {
 			return $this->settings;
 		}
 
-		$option  = get_option( 'trmz_settings', array() );
-		$option  = is_array( $option ) ? $option : array();
-		$horizon = $option['max_horizon_days'] ?? null;
-
+		$plugin = $this->settings();
 		try {
 			$settings = new AvailabilitySettings(
 				wp_timezone(),
-				absint( $option['min_lead_minutes'] ?? 0 ),
-				null === $horizon || '' === $horizon ? null : absint( $horizon ),
-				max( 1, absint( $option['slot_step_minutes'] ?? AvailabilitySettings::DEFAULT_STEP_MINUTES ) ),
-				sanitize_key( (string) ( $option['any_resource_strategy'] ?? AvailabilitySettings::STRATEGY_ORDER ) )
+				$plugin->min_lead_minutes(),
+				$plugin->max_horizon_days(),
+				$plugin->slot_step_minutes(),
+				$plugin->any_resource_strategy()
 			);
 		} catch ( InvalidValue $e ) {
 			$settings = new AvailabilitySettings( wp_timezone() );

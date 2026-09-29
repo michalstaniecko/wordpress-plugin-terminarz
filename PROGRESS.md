@@ -149,3 +149,17 @@ Jeden wpis na zamknięte issue: data, numer issue, co zrobione, decyzje, znane r
 - **Decyzje:** ADR-018 (+ podsumowanie publicznego API dla M3).
 - **Ryzyka:** domyślne ustawienia bez minimalnego wyprzedzenia i horyzontu — do ustalenia w M4 (ustawienia).
   Strategia `least_busy` liczy obciążenie tylko z pobranego zakresu zajętości.
+
+## 2026-09-29 — #21 menu admina i strona ustawień
+
+- **Zrobione:** `Infrastructure\Settings` (opcja `trmz_settings`: domyślne, zakresy, sanitizacja, typowane gettery),
+  `Services::settings()` i budowanie `AvailabilitySettings` z ustawień; `Admin\AdminPage`, `Admin\Menu` (rejestr podstron,
+  top-level „Terminarz”, capability `trmz_manage_bookings`), `Admin\SettingsPage` (Settings API, filtr
+  `option_page_capability_trmz_settings`, ostrzeżenie o braku WooCommerce). Testy: jednostkowe `MenuTest`, integracyjne
+  `SettingsTest` (domyślne, sanitizacja, granice, kses, zapis częściowy, uszkodzone wartości, spięcie z dostępnością)
+  i `SettingsPageTest` (menu, capability, rejestracja, render z escapingiem); E2E `settings.spec.js`; `.pot`.
+- **Decyzje:** ADR-019. Założenia (etykieta `assumption`): wyprzedzenie w minutach (domyślnie 60), horyzont 90 dni,
+  nieprawidłowa wartość z formularza zachowuje poprzednią.
+- **Ryzyka:** zmiana domyślnych wyprzedzenia/horyzontu wpływa na testy używające `Services` bez jawnych ustawień dostępności
+  (np. przyszłe testy REST z datami > 90 dni od „teraz”). `consent_text` i `customer_cancel_limit_hours` nie są jeszcze
+  używane (blok rezerwacji / anulowanie przez klienta), `delete_data_on_uninstall` czeka na `uninstall.php` (#45).

@@ -9,13 +9,14 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-29T15:06:36+00:00\n"
+"POT-Creation-Date: 2026-09-29T16:35:24+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: terminarz\n"
 
 #. Plugin Name of the plugin
 #: terminarz.php:3
+#: src/Admin/Menu.php:98
 msgid "Terminarz"
 msgstr ""
 
@@ -27,6 +28,178 @@ msgstr ""
 #. Author of the plugin
 #: terminarz.php:8
 msgid "Michał Staniećko"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:43
+msgid "Settings"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:50
+msgid "Terminarz settings"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:85
+msgid "Terminarz settings."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:98
+msgid "Booking rules"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:99
+msgid "Payments"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:100
+msgid "Notifications"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:101
+msgid "Privacy and data"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:132
+msgid "Start times are offered every N minutes from the beginning of working hours."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:137
+msgid "How long before the start a slot can still be booked (e.g. 60 = one hour, 1440 = one day)."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:142
+msgid "How many days ahead customers can book (0 = today only)."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:147
+msgid "Customers can cancel on their own up to this many hours before the start (0 = until the start)."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:152
+msgid "Confirm new bookings automatically. When off, bookings wait for confirmation by staff."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:157
+msgid "How a resource is chosen when the customer books \"any available\"."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:159
+msgid "First free resource in the service order"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:160
+msgid "Least busy resource that day"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:166
+msgid "Takes effect only while WooCommerce is active."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:168
+msgid "No payment"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:169
+msgid "Deposit (percentage of the price)"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:170
+msgid "Full price"
+msgstr ""
+
+#: src/Admin/SettingsPage.php:176
+msgid "Used when the payment mode is \"Deposit\"."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:181
+msgid "How long a slot is reserved while waiting for payment."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:186
+msgid "Where notifications about new bookings are sent. Leave empty to use the site administration e-mail."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:191
+msgid "Shown next to the consent checkbox in the booking form. Basic HTML (links) is allowed. Leave empty to hide the checkbox."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:196
+msgid "When the plugin is deleted, also delete all bookings, resources, services and settings. This cannot be undone."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:206
+msgid "Payments are processed by WooCommerce."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:209
+msgid "Payments require an active WooCommerce plugin. WooCommerce is not active, so bookings are accepted without payment regardless of the mode below."
+msgstr ""
+
+#: src/Admin/SettingsPage.php:300
+msgid "Sorry, you are not allowed to manage Terminarz settings."
+msgstr ""
+
+#. translators: 1: field label, 2: minimum value, 3: maximum value.
+#: src/Infrastructure/Settings.php:235
+#, php-format
+msgid "%1$s: enter a whole number from %2$d to %3$d. The previous value was kept."
+msgstr ""
+
+#: src/Infrastructure/Settings.php:241
+msgid "Notification e-mail: enter a valid e-mail address. The previous value was kept."
+msgstr ""
+
+#. translators: %s: field label.
+#: src/Infrastructure/Settings.php:245
+#, php-format
+msgid "%s: invalid value. The previous value was kept."
+msgstr ""
+
+#: src/Infrastructure/Settings.php:260
+msgid "Slot grid step (minutes)"
+msgstr ""
+
+#: src/Infrastructure/Settings.php:261
+msgid "Minimum lead time (minutes)"
+msgstr ""
+
+#: src/Infrastructure/Settings.php:262
+msgid "Booking horizon (days)"
+msgstr ""
+
+#: src/Infrastructure/Settings.php:263
+msgid "Customer cancellation limit (hours)"
+msgstr ""
+
+#: src/Infrastructure/Settings.php:264
+msgid "Automatic confirmation"
+msgstr ""
+
+#: src/Infrastructure/Settings.php:265
+msgid "\"Any resource\" selection"
+msgstr ""
+
+#: src/Infrastructure/Settings.php:266
+msgid "Payment mode"
+msgstr ""
+
+#: src/Infrastructure/Settings.php:267
+msgid "Deposit (%)"
+msgstr ""
+
+#: src/Infrastructure/Settings.php:268
+msgid "Slot hold for payment (minutes)"
+msgstr ""
+
+#: src/Infrastructure/Settings.php:269
+msgid "Notification e-mail"
+msgstr ""
+
+#: src/Infrastructure/Settings.php:270
+msgid "Consent text"
+msgstr ""
+
+#: src/Infrastructure/Settings.php:271
+msgid "Delete data on uninstall"
 msgstr ""
 
 #. translators: 1: required PHP version, 2: current PHP version.
