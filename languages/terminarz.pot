@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-29T18:55:55+00:00\n"
+"POT-Creation-Date: 2026-09-29T19:13:28+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: terminarz\n"
@@ -1227,58 +1227,82 @@ msgstr ""
 msgid "Deposit %1$d%% of %2$s"
 msgstr ""
 
+#. translators: 1: public booking ID, 2: order status name.
+#: src/Integrations/WooCommerce/OrderStatusSync.php:158
+#, php-format
+msgid "Booking %1$s was cancelled and its slot released because the order is now \"%2$s\"."
+msgstr ""
+
 #. translators: %s: public booking ID.
-#: src/Integrations/WooCommerce/OrderStatusSync.php:149
+#: src/Integrations/WooCommerce/OrderStatusSync.php:178
+#, php-format
+msgid "Booking %s was cancelled, so this unpaid order was cancelled too."
+msgstr ""
+
+#. translators: %s: public booking ID.
+#: src/Integrations/WooCommerce/OrderStatusSync.php:191
+#, php-format
+msgid "Booking %s was cancelled. The payment was NOT refunded automatically — decide whether to refund it."
+msgstr ""
+
+#. translators: %s: public booking ID.
+#: src/Integrations/WooCommerce/OrderStatusSync.php:207
+#, php-format
+msgid "Booking %s was confirmed in the booking panel although this order is not paid."
+msgstr ""
+
+#. translators: %s: public booking ID.
+#: src/Integrations/WooCommerce/OrderStatusSync.php:238
 #, php-format
 msgid "Payment received: booking %s confirmed."
 msgstr ""
 
-#: src/Integrations/WooCommerce/OrderStatusSync.php:163
+#: src/Integrations/WooCommerce/OrderStatusSync.php:252
 msgid "Payment received for a booking that was cancelled in the booking panel. Contact the customer: refund the payment or arrange another appointment."
 msgstr ""
 
-#: src/Integrations/WooCommerce/OrderStatusSync.php:182
+#: src/Integrations/WooCommerce/OrderStatusSync.php:271
 msgid "Payment received after the slot hold had expired, and the slot is no longer available. Contact the customer: refund the payment or arrange another appointment."
 msgstr ""
 
 #. translators: 1: previous public booking ID, 2: new public booking ID.
-#: src/Integrations/WooCommerce/OrderStatusSync.php:192
+#: src/Integrations/WooCommerce/OrderStatusSync.php:281
 #, php-format
 msgid "Payment received after booking %1$s had been released. The slot was still free, so it was booked again and confirmed as booking %2$s."
 msgstr ""
 
 #. translators: %s: public booking ID.
-#: src/Integrations/WooCommerce/OrderStatusSync.php:209
+#: src/Integrations/WooCommerce/OrderStatusSync.php:298
 #, php-format
 msgid "The payment time of booking %s ran out and its slot was released."
 msgstr ""
 
 #. translators: 1: site name, 2: order number.
-#: src/Integrations/WooCommerce/OrderStatusSync.php:258
+#: src/Integrations/WooCommerce/OrderStatusSync.php:347
 #, php-format
 msgid "[%1$s] Order #%2$s needs attention"
 msgstr ""
 
 #. translators: %s: order number.
-#: src/Integrations/WooCommerce/OrderStatusSync.php:266
+#: src/Integrations/WooCommerce/OrderStatusSync.php:355
 #, php-format
 msgid "Order: #%s"
 msgstr ""
 
 #. translators: %s: public booking ID.
-#: src/Integrations/WooCommerce/OrderStatusSync.php:268
+#: src/Integrations/WooCommerce/OrderStatusSync.php:357
 #, php-format
 msgid "Booking: %s"
 msgstr ""
 
 #. translators: %s: appointment date and time.
-#: src/Integrations/WooCommerce/OrderStatusSync.php:270
+#: src/Integrations/WooCommerce/OrderStatusSync.php:359
 #, php-format
 msgid "Appointment: %s"
 msgstr ""
 
 #. translators: 1: customer name, 2: customer e-mail.
-#: src/Integrations/WooCommerce/OrderStatusSync.php:272
+#: src/Integrations/WooCommerce/OrderStatusSync.php:361
 #, php-format
 msgid "Customer: %1$s <%2$s>"
 msgstr ""

@@ -773,3 +773,31 @@ po czasie (bramka potwierdza z opóźnieniem). `expired` jest statusem końcowym
 **Konsekwencje.** Po płatności po czasie klient ma nowy `public_id` (nowy token anulowania — M7 musi wysłać potwierdzenie
 z danymi nowej rezerwacji; zdarzenie `trmz_booking_created` z rezerwacją `confirmed`). Stara rezerwacja pozostaje
 w historii z tym samym `order_id`.
+
+## ADR-038: Synchronizacja statusów zamówienia i rezerwacji
+
+**Decyzja.** `Integrations\WooCommerce\OrderStatusSync` (rozszerza ADR-037) mapuje:
+
+| Zdarzenie | Skutek |
+|---|---|
+| zamówienie → `processing`/`completed` | rezerwacja `pending_payment`/`pending` → `confirmed` (+ notatka); płatność po czasie — ADR-037 |
+| zamówienie → `cancelled`/`failed`/`refunded` | aktywna rezerwacja → `cancelled` (slot zwolniony), meta `_trmz_slot_released=order_status`, notatka |
+| rezerwacja → `cancelled` (panel, REST admina, klient w M7) | zamówienie `pending`/`failed` → `cancelled`; opłacone → tylko notatka „NIE zwrócono automatycznie” |
+| rezerwacja `pending_payment` → `confirmed` ręcznie | notatka w nieopłaconym zamówieniu |
+| rezerwacja → `expired` | ADR-037 |
+
+- Hooki: `woocommerce_order_status_changed` (priorytet 20; jedno miejsce zamiast osobnych `woocommerce_order_status_*`)
+  i `trmz_booking_status_changed` (priorytet 20). Idempotencja: każdy handler sprawdza bieżący status rezerwacji/zamówienia
+  (powtórzone przejście nie zmienia niczego i nie wysyła zdarzeń). Brak pętli: flaga `OrderStatusSync::is_syncing()` na czas
+  własnych zmian (zmiana zamówienia wywołana przez rezerwację nie wraca do rezerwacji i odwrotnie).
+- Zamówienie jest brane pod uwagę tylko, gdy wskazuje na rezerwację, która wskazuje na nie (`OrderLink::booking()`);
+  inne zamówienia sklepu są ignorowane.
+- `failed` zwalnia slot, ale ponowna udana płatność tego samego zamówienia rezerwuje slot ponownie, jeśli jest wolny
+  (meta `_trmz_slot_released`); płatność za rezerwację anulowaną ręcznie → `on-hold` + powiadomienie (ADR-037).
+- Zwroty nigdy nie są automatyczne (decyzja człowieka).
+- Prywatność: eksporter/eraser WooCommerce obsługują zamówienia same; meta zamówień Terminarza zawiera tylko
+  identyfikatory rezerwacji (bez danych osobowych), a dane klienta w rezerwacjach obsługuje `Admin\Privacy` (ADR-025) —
+  nic nie trzeba dodawać.
+
+**Konsekwencje.** Klient, któremu płatność się nie powiodła, traci wstrzymanie od razu (zgodnie z issue); jeśli zapłaci
+ponownie, a slot jest zajęty, zamówienie trafia do obsługi ręcznej.
