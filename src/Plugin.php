@@ -21,6 +21,7 @@ use Terminarz\Blocks\BookingBlock;
 use Terminarz\Infrastructure\Database\Migrator;
 use Terminarz\Infrastructure\I18n;
 use Terminarz\Infrastructure\Module;
+use Terminarz\Integrations\WooCommerce\WooCommerceModule;
 use Terminarz\Rest\RestModule;
 
 /**
@@ -91,6 +92,7 @@ final class Plugin {
 			new RestModule(),
 			new BookingBlock(),
 			new Privacy(),
+			new WooCommerceModule(),
 		);
 	}
 

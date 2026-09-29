@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Terminarz\Infrastructure;
 
 use Terminarz\Application\AvailabilitySettings;
+use Terminarz\Integrations\WooCommerce\WooCommerce;
 
 /**
  * Typed, validated view of the `trmz_settings` option — the single source of defaults, ranges and sanitization.
@@ -332,10 +333,10 @@ final class Settings {
 	}
 
 	/**
-	 * Whether payments are required: a payment mode is set and WooCommerce is active.
+	 * Whether payments are required: a payment mode is set and a supported WooCommerce (>= 8.0) is active.
 	 */
 	public function payments_enabled(): bool {
-		return self::PAYMENT_NONE !== $this->payment_mode() && class_exists( 'WooCommerce' );
+		return self::PAYMENT_NONE !== $this->payment_mode() && WooCommerce::is_active();
 	}
 
 	/**

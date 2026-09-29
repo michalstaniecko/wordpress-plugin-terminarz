@@ -12,6 +12,7 @@ namespace Terminarz\Admin;
 use Terminarz\Application\AvailabilitySettings;
 use Terminarz\Infrastructure\Capabilities;
 use Terminarz\Infrastructure\Settings;
+use Terminarz\Integrations\WooCommerce\WooCommerce;
 
 /**
  * "Terminarz → Settings": the `trmz_settings` option edited through the Settings API.
@@ -202,9 +203,17 @@ final class SettingsPage implements AdminPage {
 	 * Intro of the payments section: WooCommerce status.
 	 */
 	public function payments_intro(): void {
-		if ( class_exists( 'WooCommerce' ) ) {
+		if ( WooCommerce::is_active() ) {
 			$message = __( 'Payments are processed by WooCommerce.', 'terminarz' );
 			$class   = 'description';
+		} elseif ( WooCommerce::is_outdated() ) {
+			$message = sprintf(
+				/* translators: 1: required WooCommerce version, 2: installed WooCommerce version. */
+				__( 'Payments require WooCommerce %1$s or newer (installed: %2$s), so bookings are accepted without payment regardless of the mode below.', 'terminarz' ),
+				WooCommerce::MIN_VERSION,
+				WooCommerce::version()
+			);
+			$class = 'notice notice-warning inline';
 		} else {
 			$message = __( 'Payments require an active WooCommerce plugin. WooCommerce is not active, so bookings are accepted without payment regardless of the mode below.', 'terminarz' );
 			$class   = 'notice notice-warning inline';
