@@ -25,7 +25,7 @@ final class Schema {
 	/**
 	 * Current schema version. Bump it whenever a CREATE TABLE statement below changes.
 	 */
-	public const VERSION = '2';
+	public const VERSION = '3';
 
 	/**
 	 * Option that stores the installed schema version.
@@ -41,6 +41,7 @@ final class Schema {
 	public const SCHEDULES         = 'trmz_schedules';
 	public const EXCEPTIONS        = 'trmz_schedule_exceptions';
 	public const BOOKINGS          = 'trmz_bookings';
+	public const NOTIFICATIONS     = 'trmz_notification_log';
 
 	/**
 	 * Database connection.
@@ -110,6 +111,7 @@ final class Schema {
 			self::SCHEDULES,
 			self::EXCEPTIONS,
 			self::BOOKINGS,
+			self::NOTIFICATIONS,
 		);
 	}
 
@@ -253,6 +255,14 @@ final class Schema {
   KEY service_id (service_id),
   KEY order_id (order_id),
   KEY customer_email (customer_email)
+) {$options};",
+
+			// One row per e-mail sent about a booking (deduplication; the primary key makes claiming atomic).
+			"CREATE TABLE {$t[self::NOTIFICATIONS]} (
+  booking_id bigint(20) unsigned NOT NULL,
+  message varchar(64) NOT NULL,
+  sent_at datetime NOT NULL,
+  PRIMARY KEY  (booking_id,message)
 ) {$options};",
 		);
 	}

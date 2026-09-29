@@ -24,6 +24,7 @@ use Terminarz\Infrastructure\HoldExpiryScheduler;
 use Terminarz\Infrastructure\I18n;
 use Terminarz\Infrastructure\Module;
 use Terminarz\Integrations\WooCommerce\WooCommerceModule;
+use Terminarz\Notifications\BookingNotifier;
 use Terminarz\Rest\RestModule;
 
 /**
@@ -96,6 +97,7 @@ final class Plugin {
 			new BookingBlock(),
 			new Privacy(),
 			new HoldExpiryScheduler(),
+			new BookingNotifier(),
 			new WooCommerceModule(),
 		);
 	}

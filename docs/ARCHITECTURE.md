@@ -863,3 +863,31 @@ uwagi). Treści muszą być edytowalne, przetłumaczalne i bezpieczne (dane klie
 **Konsekwencje.** Każdy e-mail witryny testowej E2E (także WooCommerce) trafia do opcji zamiast do sieci. Zmiana
 zestawu placeholderów wymaga aktualizacji `Placeholders::descriptions()` (test pilnuje, że domyślne szablony używają
 tylko znanych nazw). Uninstall (M8) powinien usuwać opcję `trmz_email_templates`.
+
+## ADR-041: E-maile potwierdzenia i deduplikacja wysyłki
+
+**Decyzja.**
+- `Notifications\BookingNotifier` (moduł, `trmz_booking_created` i `trmz_booking_status_changed`, priorytet 30 — po
+  synchronizacji WooCommerce):
+
+  | Zdarzenie | Klient | Firma |
+  |---|---|---|
+  | utworzona `pending` | `customer_pending` | `admin_new` |
+  | utworzona `confirmed` (auto-potwierdzenie, ponowna rezerwacja po płatności) | `customer_confirmed` | `admin_new` |
+  | utworzona `pending_payment` | — | — |
+  | `pending_payment` → `pending` | `customer_pending` | `admin_new` |
+  | `pending`/`pending_payment` → `confirmed` | `customer_confirmed` | `admin_new` (jeśli jeszcze nie wysłano) |
+
+  Rezerwacja czekająca na płatność niczego nie wysyła (WooCommerce wysyła własne e-maile zamówienia); firma dowiaduje się
+  o rezerwacji raz — gdy jest złożona (dla usług płatnych: po płatności). Wygaśnięcie wstrzymania nie wysyła nic.
+- Deduplikacja: tabela `{prefix}trmz_notification_log` (schemat v3; `booking_id`, `message` varchar(64), `sent_at` UTC,
+  PK `(booking_id, message)`). Przed wysyłką `INSERT IGNORE` „rezerwuje” klucz (atomowo — równoległe żądania nie wyślą
+  dwa razy); nieudany `wp_mail` zwalnia klucz. Wyłączona wiadomość nie jest ani wysyłana, ani zapisywana. Klucz = typ
+  wiadomości (przypomnienia dodają czas startu, ADR-043). Tabela zamiast kolumny JSON w rezerwacjach: brak
+  read-modify-write i wyścigów, historia wysyłek w jednym miejscu.
+- Błąd bazy przy wysyłce jest logowany (`WP_DEBUG`) i połykany — rezerwacja nigdy nie zawodzi z powodu e-maila.
+- E-maile są wysyłane synchronicznie w żądaniu, które zmieniło rezerwację (REST, panel, webhook płatności).
+
+**Konsekwencje.** Uninstall (M8) usuwa tabelę `trmz_notification_log` razem z pozostałymi (jest w `Schema::tables()`).
+Wolny serwer SMTP wydłuża odpowiedź `POST /bookings`; kolejkowanie (Action Scheduler) można dodać później bez zmiany
+szablonów.
