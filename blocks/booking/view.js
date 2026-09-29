@@ -1,12 +1,31 @@
 /**
- * Front end of the booking block: mounts the booking application in every block container.
+ * Front end of the booking block: mounts the booking application in every block container rendered by
+ * Terminarz\Blocks\BookingBlock (configuration in `data-trmz-config`).
  */
 import domReady from '@wordpress/dom-ready';
+import { createRoot } from '@wordpress/element';
+
+import { configureApi } from './app/api';
+import BookingApp from './app/BookingApp';
+import DetailsStep from './app/DetailsStep';
+import { parseConfig } from './lib/config';
 
 domReady( () => {
 	document
 		.querySelectorAll( '.wp-block-terminarz-booking[data-trmz-config]' )
 		.forEach( ( container ) => {
-			container.classList.add( 'is-ready' );
+			const config = parseConfig(
+				container.getAttribute( 'data-trmz-config' )
+			);
+			if ( ! config ) {
+				return;
+			}
+			configureApi( config );
+			createRoot( container ).render(
+				<BookingApp
+					config={ config }
+					renderDetails={ ( props ) => <DetailsStep { ...props } /> }
+				/>
+			);
 		} );
 } );

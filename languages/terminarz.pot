@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-29T17:59:52+00:00\n"
+"POT-Creation-Date: 2026-09-29T18:11:23+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: terminarz\n"
@@ -67,6 +67,7 @@ msgstr ""
 #: src/Admin/BookingsListTable.php:178
 #: src/Admin/BookingsPage.php:307
 #: src/Admin/Privacy.php:203
+#: blocks/booking/app/Summary.js:21
 #: blocks/booking/edit.js:174
 msgid "Service"
 msgstr ""
@@ -125,6 +126,7 @@ msgstr ""
 
 #: src/Admin/BookingsListTable.php:62
 #: src/Admin/BookingsPage.php:306
+#: blocks/booking/app/Summary.js:31
 msgid "Date"
 msgstr ""
 
@@ -586,6 +588,7 @@ msgid "Times are in the site time zone: %1$s (currently UTC%2$s). You can change
 msgstr ""
 
 #: src/Admin/Money.php:98
+#: blocks/booking/app/BookingApp.js:449
 msgid "Free"
 msgstr ""
 
@@ -1428,6 +1431,175 @@ msgstr ""
 msgid "Terminarz is missing its Composer autoloader. Run \"composer install\" in the plugin directory or install a release package."
 msgstr ""
 
+#: blocks/booking/app/BookingApp.js:113
+msgid "Loading services…"
+msgstr ""
+
+#: blocks/booking/app/BookingApp.js:157
+#: blocks/booking/app/BookingApp.js:417
+#: blocks/booking/app/BookingApp.js:499
+#: blocks/booking/app/BookingApp.js:648
+msgid "Loading…"
+msgstr ""
+
+#: blocks/booking/app/BookingApp.js:227
+msgid "Loading available dates…"
+msgstr ""
+
+#. translators: 1: month and year, 2: number of days.
+#: blocks/booking/app/BookingApp.js:291
+#, js-format
+msgid "%1$s: %2$d day with free times."
+msgid_plural "%1$s: %2$d days with free times."
+msgstr[0] ""
+msgstr[1] ""
+
+#. translators: %s: month and year.
+#: blocks/booking/app/BookingApp.js:302
+#, js-format
+msgid "%s: no free times."
+msgstr ""
+
+#: blocks/booking/app/BookingApp.js:369
+msgid "Back"
+msgstr ""
+
+#. translators: %s: time zone name, e.g. "Europe/Warsaw".
+#: blocks/booking/app/BookingApp.js:377
+#, js-format
+msgid "Times are shown in the %s time zone."
+msgstr ""
+
+#: blocks/booking/app/BookingApp.js:400
+msgid "The booking form could not be loaded."
+msgstr ""
+
+#: blocks/booking/app/BookingApp.js:410
+#: blocks/booking/app/BookingApp.js:610
+msgid "Try again"
+msgstr ""
+
+#: blocks/booking/app/BookingApp.js:423
+msgid "No services are available for booking at the moment."
+msgstr ""
+
+#: blocks/booking/app/BookingApp.js:432
+msgid "Choose a service"
+msgstr ""
+
+#. translators: %d: duration in minutes.
+#: blocks/booking/app/BookingApp.js:445
+#, js-format
+msgid "%d min"
+msgstr ""
+
+#: blocks/booking/app/BookingApp.js:471
+msgid "Something went wrong. Please try again."
+msgstr ""
+
+#: blocks/booking/app/BookingApp.js:488
+msgid "Please choose a service."
+msgstr ""
+
+#: blocks/booking/app/BookingApp.js:500
+#: blocks/booking/app/BookingApp.js:561
+#: blocks/booking/app/BookingApp.js:738
+msgid "Continue"
+msgstr ""
+
+#: blocks/booking/app/BookingApp.js:510
+msgid "Choose a person or resource"
+msgstr ""
+
+#: blocks/booking/app/BookingApp.js:522
+msgid "Any available"
+msgstr ""
+
+#: blocks/booking/app/BookingApp.js:523
+msgid "The first free person or resource is assigned."
+msgstr ""
+
+#: blocks/booking/app/BookingApp.js:551
+msgid "Please choose a person or resource."
+msgstr ""
+
+#: blocks/booking/app/BookingApp.js:569
+msgid "Choose a day"
+msgstr ""
+
+#: blocks/booking/app/BookingApp.js:600
+msgid "Available dates could not be loaded."
+msgstr ""
+
+#: blocks/booking/app/BookingApp.js:616
+msgid "There are no free times in this month. Please choose another month."
+msgstr ""
+
+#: blocks/booking/app/BookingApp.js:632
+msgid "Morning"
+msgstr ""
+
+#: blocks/booking/app/BookingApp.js:633
+msgid "Afternoon"
+msgstr ""
+
+#: blocks/booking/app/BookingApp.js:634
+msgid "Evening"
+msgstr ""
+
+#: blocks/booking/app/BookingApp.js:637
+msgid "Choose a time"
+msgstr ""
+
+#: blocks/booking/app/BookingApp.js:653
+msgid "There are no free times on this day any more. Please choose another day."
+msgstr ""
+
+#: blocks/booking/app/BookingApp.js:728
+#: blocks/booking/app/DetailsStep.js:33
+msgid "Please choose a time."
+msgstr ""
+
+#: blocks/booking/app/BookingApp.js:750
+#: blocks/booking/edit.js:180
+msgid "Your details"
+msgstr ""
+
+#: blocks/booking/app/Calendar.js:107
+msgid "Previous month"
+msgstr ""
+
+#: blocks/booking/app/Calendar.js:119
+msgid "Next month"
+msgstr ""
+
+#. translators: %s: date, e.g. "Thursday, 1 October 2026".
+#: blocks/booking/app/Calendar.js:168
+#, js-format
+msgid "%s, free times available"
+msgstr ""
+
+#. translators: %s: date, e.g. "Thursday, 1 October 2026".
+#: blocks/booking/app/Calendar.js:176
+#, js-format
+msgid "%s, no free times"
+msgstr ""
+
+#. translators: 1: current step number, 2: number of steps.
+#: blocks/booking/app/Step.js:32
+#, js-format
+msgid "Step %1$d of %2$d"
+msgstr ""
+
+#: blocks/booking/app/Summary.js:26
+msgid "With"
+msgstr ""
+
+#: blocks/booking/app/Summary.js:35
+#: blocks/booking/edit.js:179
+msgid "Time"
+msgstr ""
+
 #: blocks/booking/edit.js:81
 msgid "Could not load services."
 msgstr ""
@@ -1470,14 +1642,6 @@ msgstr ""
 
 #: blocks/booking/edit.js:176
 msgid "Person or resource"
-msgstr ""
-
-#: blocks/booking/edit.js:179
-msgid "Time"
-msgstr ""
-
-#: blocks/booking/edit.js:180
-msgid "Your details"
 msgstr ""
 
 #. translators: %s: comma-separated list of service names.
