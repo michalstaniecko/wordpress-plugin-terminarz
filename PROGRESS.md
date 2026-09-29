@@ -459,3 +459,13 @@ Jeden wpis na zamknięte issue: data, numer issue, co zrobione, decyzje, znane r
 - **Decyzje:** ADR-043.
 - **Ryzyka:** WP-Cron bez ruchu na stronie może spóźnić przypomnienie; zmiana ustawienia nie przesuwa już zaplanowanych
   przypomnień na wcześniej.
+
+## 2026-09-29 — #43 E2E: e-mail i anulowanie linkiem
+
+- **Zrobione:** spec `booking-cancel-link.spec.js` (wariant bez WooCommerce z potwierdzeniem przez admina i z WooCommerce
+  z płatnością testową): e-mail przechwycony → link → strona potwierdzenia → anulowanie → slot wolny w `/availability`,
+  e-maile o anulowaniu, brak zwrotu płatności. Helpery `utils/booking-flow.js` (wspólne z `booking-payment.spec.js`).
+  Poprawka: `parseConfig()` bloku przepuszcza `emailNotice` (komunikat o e-mailu nie był widoczny) + test JS.
+  Cała suita E2E zielona lokalnie (57 testów).
+- **Decyzje:** ADR-044.
+- **Ryzyka:** przy rezerwacji w oknie limitu anulowania link prowadzi od razu do komunikatu „za późno”.

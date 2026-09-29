@@ -955,3 +955,18 @@ z firmą). Własne (zmienione) szablony zapisane przed tą zmianą nie dostaną 
 
 **Konsekwencje.** Na WP-Cron punktualność zależy od ruchu na stronie (jak w całym WordPressie); Action Scheduler
 z WooCommerce działa w tle co minutę.
+
+## ADR-044: E2E powiadomień — e-mail i anulowanie linkiem
+
+**Decyzja.** `tests/e2e/specs/booking-cancel-link.spec.js` (serial) przechodzi całą ścieżkę na przechwyconych e-mailach
+(`trmz-mail-catcher.php`, ADR-040): bez WooCommerce — rezerwacja w bloku (`pending`, komunikat o e-mailu z linkiem,
+e-mail „przyjęto zgłoszenie”) → admin potwierdza w panelu → e-mail potwierdzenia → link anulowania z e-maila → strona
+potwierdzenia (`X-Robots-Tag: noindex`, `Referrer-Policy: no-referrer`) → „Cancel booking” → komunikat → slot znów
+w `/availability`, e-maile o anulowaniu do klienta i firmy, ponowne wejście w link → „Booking not active”. Z WooCommerce —
+płatna usługa, brak e-maila potwierdzenia przed płatnością, płatność testową bramką → e-mail → link → anulowanie → slot
+wolny, w zamówieniu notatka „NOT refunded automatically”. Spec ustawia limit anulowania na 0 h (pierwszy wolny termin
+bywa jutro) i przywraca 24 h. Wspólne kroki klienta przeniesione do `tests/e2e/utils/booking-flow.js`
+(`bookThroughBlock`, `offeredStarts`), używane też przez `booking-payment.spec.js`.
+
+**Konsekwencje.** Klient rezerwujący termin w ciągu `customer_cancel_limit_hours` dostaje link, który od razu prowadzi do
+komunikatu „za późno, skontaktuj się z nami” (świadome: strona tłumaczy sytuację; poprawa w #102).

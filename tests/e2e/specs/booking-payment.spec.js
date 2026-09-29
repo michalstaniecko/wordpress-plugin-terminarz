@@ -20,6 +20,10 @@ const {
 	createService,
 	setWorkingHours,
 } = require( '../utils/booking-setup' );
+const {
+	bookThroughBlock: bookInBlock,
+	offeredStarts: offeredOn,
+} = require( '../utils/booking-flow' );
 
 test.describe.configure( { mode: 'serial' } );
 
@@ -46,47 +50,14 @@ async function setPaymentMode( admin, page, mode ) {
 }
 
 /**
- * Books the first free slot through the block and returns the REST response of the booking.
+ * Books the first free slot of the paid service through the block.
  *
  * @param {import('@playwright/test').Page} page  Page.
  * @param {string}                          email Customer e-mail.
  * @return {Promise<{booking: Object, startUtc: string, date: string}>} Booking response, slot and day.
  */
-async function bookThroughBlock( page, email ) {
-	await page.goto( pageUrl );
-	const block = page.locator( '.wp-block-terminarz-booking' );
-	await expect(
-		block.getByRole( 'heading', { name: 'Choose a day' } )
-	).toBeVisible();
-	const day = block.locator( '.trmz-calendar__day--available' ).first();
-	const date = await day.getAttribute( 'data-date' );
-	await day.click();
-
-	const slot = block.getByRole( 'radio' ).first();
-	await slot.check();
-	const startUtc = await slot.getAttribute( 'value' );
-	await block.getByRole( 'button', { name: 'Continue' } ).click();
-
-	await block.getByLabel( 'Full name' ).fill( 'Pay Customer' );
-	await block.getByLabel( 'E-mail' ).fill( email );
-	await block.getByLabel( 'Phone' ).fill( '600 700 800' );
-	await block.getByRole( 'checkbox', { name: /personal data/ } ).check();
-
-	// The block may navigate away (payment) right after the response: capture its body on the way.
-	let booking;
-	await page.route( /terminarz\/v1\/bookings/, async ( route ) => {
-		if ( route.request().method() !== 'POST' ) {
-			return route.continue();
-		}
-		const response = await route.fetch();
-		booking = await response.json();
-		return route.fulfill( { response } );
-	} );
-	await block.getByRole( 'button', { name: 'Book appointment' } ).click();
-	await expect.poll( () => booking ).toBeDefined();
-	await page.unroute( /terminarz\/v1\/bookings/ );
-
-	return { booking, startUtc, date };
+function bookThroughBlock( page, email ) {
+	return bookInBlock( page, pageUrl, { email, name: 'Pay Customer' } );
 }
 
 /**
@@ -96,18 +67,8 @@ async function bookThroughBlock( page, email ) {
  * @param {string}                                       date    Day (Y-m-d).
  * @return {Promise<string[]>} UTC starts.
  */
-async function offeredStarts( request, date ) {
-	const response = await request.get( '/wp-json/terminarz/v1/availability', {
-		params: {
-			service: serviceId,
-			resource: String( resourceId ),
-			from: date,
-			to: date,
-		},
-	} );
-	expect( response.ok() ).toBe( true );
-	const availability = await response.json();
-	return availability.days[ 0 ].slots.map( ( slot ) => slot.start_utc );
+function offeredStarts( request, date ) {
+	return offeredOn( request, serviceId, resourceId, date );
 }
 
 /**
