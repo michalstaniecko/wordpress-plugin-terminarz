@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Terminarz\Tests\Integration\Persistence;
 
 use Terminarz\Domain\Model\ScheduleException;
+use Terminarz\Domain\Model\ScheduleExceptionPeriod;
 use Terminarz\Domain\Model\TimeWindow;
 use Terminarz\Domain\Model\WeeklySchedule;
 use Terminarz\Infrastructure\Database\DatabaseError;
@@ -174,5 +175,27 @@ final class ScheduleRepositoriesTest extends WP_UnitTestCase {
 	 */
 	private function keys( array $exceptions ): array {
 		return array_map( static fn( ScheduleException $e ): string => $e->date . '/' . ( $e->resource_id ?? 'global' ), $exceptions );
+	}
+
+	public function test_period_round_trip_listing_and_conflicts(): void {
+		$global = $this->exceptions->save_period( new ScheduleExceptionPeriod( null, '2030-12-24', '2030-12-26', array(), 'Christmas' ) );
+		$custom = $this->exceptions->save_period( new ScheduleExceptionPeriod( 5, '2030-12-20', '2030-12-20', array( TimeWindow::from_strings( '08:00', '12:00' ) ), 'Short day' ) );
+		$this->exceptions->save_period( new ScheduleExceptionPeriod( 5, '2029-01-01', '2029-01-02' ) );
+
+		$reloaded = $this->exceptions->get_period( (int) $global->id );
+		$this->assertSame( '2030-12-26', $reloaded->end_date );
+		$this->assertSame( 'Christmas', $reloaded->note );
+		$this->assertTrue( $reloaded->is_closed() );
+		$this->assertSame( '08:00-12:00', $this->exceptions->get_period( (int) $custom->id )->windows[0]->to_string() );
+		$this->assertNull( $this->exceptions->get_period( 999999 ) );
+
+		$this->assertCount( 3, $this->exceptions->periods() );
+		$this->assertSame( array( (int) $custom->id, (int) $global->id ), array_map( static fn( $p ) => (int) $p->id, $this->exceptions->periods( '2030-01-01' ) ) );
+
+		$this->assertCount( 1, $this->exceptions->conflicting_periods( new ScheduleExceptionPeriod( null, '2030-12-26', '2030-12-31' ) ) );
+		$this->assertCount( 0, $this->exceptions->conflicting_periods( new ScheduleExceptionPeriod( 5, '2030-12-24', '2030-12-24' ) ), 'Resource vs global: no conflict.' );
+		$this->assertCount( 0, $this->exceptions->conflicting_periods( $reloaded ), 'A period does not conflict with itself.' );
+
+		$this->assertCount( 3, $this->exceptions->in_range( '2030-12-01', '2030-12-31', array() ), 'Global range expanded per day.' );
 	}
 }

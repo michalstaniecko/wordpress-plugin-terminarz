@@ -63,9 +63,26 @@ final class ServicesListTable extends WP_List_Table {
 		$this->_column_headers = array( $this->get_columns(), array(), array(), 'name' );
 		$services              = Services::instance();
 		$this->items           = $services->services()->all();
+		$this->set_pagination_args(
+			array(
+				'total_items' => count( $this->items ),
+				'per_page'    => max( 1, count( $this->items ) ),
+			)
+		);
 		foreach ( $services->resources()->all() as $resource ) {
 			$this->resource_names[ (int) $resource->id ] = $resource->name;
 		}
+	}
+
+	/**
+	 * Row actions are printed by the primary column itself.
+	 *
+	 * @param object|array<mixed> $item        Item.
+	 * @param string              $column_name Column.
+	 * @param string              $primary     Primary column.
+	 */
+	protected function handle_row_actions( $item, $column_name, $primary ): string {
+		return '';
 	}
 
 	/**

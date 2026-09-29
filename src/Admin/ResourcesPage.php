@@ -267,7 +267,12 @@ class ResourcesPage extends Screen {
 		);
 
 		$this->heading( null === $resource ? __( 'Add resource', 'terminarz' ) : __( 'Edit resource', 'terminarz' ) );
-		echo '<p><a href="' . esc_url( $this->url() ) . '">' . esc_html__( '&larr; Back to resources', 'terminarz' ) . '</a></p>';
+		echo '<p><a href="' . esc_url( $this->url() ) . '">' . esc_html__( '&larr; Back to resources', 'terminarz' ) . '</a>';
+		if ( null !== $resource ) {
+			echo ' | <a href="' . esc_url( ( new SchedulePage() )->url( array( 'resource' => (int) $resource->id ) ) ) . '">' . esc_html__( 'Working hours', 'terminarz' ) . '</a>';
+			echo ' | <a href="' . esc_url( ( new ExceptionsPage() )->url( array( 'scope' => (int) $resource->id ) ) ) . '">' . esc_html__( 'Days off', 'terminarz' ) . '</a>';
+		}
+		echo '</p>';
 
 		$this->form_open( 'save_resource', 'trmz-resource-form' );
 		echo '<input type="hidden" name="id" value="' . esc_attr( (string) ( $resource->id ?? 0 ) ) . '" />';

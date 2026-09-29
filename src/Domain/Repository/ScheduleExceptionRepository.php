@@ -11,6 +11,7 @@ namespace Terminarz\Domain\Repository;
 
 use Terminarz\Domain\Exception\EntityNotFound;
 use Terminarz\Domain\Model\ScheduleException;
+use Terminarz\Domain\Model\ScheduleExceptionPeriod;
 
 /**
  * Stores one-day deviations from the weekly schedule (days off, holidays, different hours).
@@ -51,4 +52,37 @@ interface ScheduleExceptionRepository {
 	 * @return ScheduleException[]
 	 */
 	public function in_range( string $from, string $to, ?array $resource_ids = null ): array;
+
+	/**
+	 * Finds a stored exception with its full date range.
+	 *
+	 * @param int $id Exception ID.
+	 */
+	public function get_period( int $id ): ?ScheduleExceptionPeriod;
+
+	/**
+	 * Inserts (no ID) or updates (with ID) an exception covering a date range (one row).
+	 *
+	 * @param ScheduleExceptionPeriod $period Period.
+	 * @return ScheduleExceptionPeriod The stored period (with ID).
+	 * @throws EntityNotFound When updating a period that does not exist.
+	 */
+	public function save_period( ScheduleExceptionPeriod $period ): ScheduleExceptionPeriod;
+
+	/**
+	 * All stored exceptions (global and of every resource) as periods, sorted by start date, global first.
+	 *
+	 * @param string|null $ending_from Only periods ending on or after this local date (Y-m-d); null = all.
+	 * @return ScheduleExceptionPeriod[]
+	 */
+	public function periods( ?string $ending_from = null ): array;
+
+	/**
+	 * Stored periods of the same scope (same resource, or global) sharing at least one day with the given one,
+	 * excluding the period itself.
+	 *
+	 * @param ScheduleExceptionPeriod $period Period.
+	 * @return ScheduleExceptionPeriod[]
+	 */
+	public function conflicting_periods( ScheduleExceptionPeriod $period ): array;
 }

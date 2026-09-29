@@ -87,4 +87,19 @@ final class Labels {
 	public static function time( DateTimeImmutable $time ): string {
 		return (string) wp_date( (string) get_option( 'time_format', 'H:i' ), $time->getTimestamp() );
 	}
+
+	/**
+	 * Sentence telling in which time zone times are entered and shown, e.g.
+	 * "Times are in the site time zone: Europe/Warsaw (currently UTC+01:00)."
+	 */
+	public static function timezone_notice(): string {
+		$zone   = wp_timezone();
+		$offset = ( new \DateTimeImmutable( 'now', $zone ) )->format( 'P' );
+		return sprintf(
+			/* translators: 1: time zone name, 2: current UTC offset, e.g. +01:00. */
+			__( 'Times are in the site time zone: %1$s (currently UTC%2$s). You can change it in Settings → General.', 'terminarz' ),
+			wp_timezone_string(),
+			$offset
+		);
+	}
 }

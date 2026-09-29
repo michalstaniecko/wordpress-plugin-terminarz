@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-09-29T17:25:35+00:00\n"
+"POT-Creation-Date: 2026-09-29T17:27:07+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: terminarz\n"
@@ -29,6 +29,210 @@ msgstr ""
 #. Author of the plugin
 #: terminarz.php:8
 msgid "Michał Staniećko"
+msgstr ""
+
+#: src/Admin/ExceptionsListTable.php:50
+msgid "Dates"
+msgstr ""
+
+#: src/Admin/ExceptionsListTable.php:51
+#: src/Admin/ExceptionsListTable.php:113
+#: src/Admin/ExceptionsPage.php:271
+msgid "Applies to"
+msgstr ""
+
+#: src/Admin/ExceptionsListTable.php:52
+#: src/Admin/ExceptionsPage.php:112
+msgid "Hours"
+msgstr ""
+
+#: src/Admin/ExceptionsListTable.php:53
+#: src/Admin/ExceptionsPage.php:302
+#: src/Admin/Privacy.php:211
+msgid "Note"
+msgstr ""
+
+#: src/Admin/ExceptionsListTable.php:99
+msgid "No exceptions."
+msgstr ""
+
+#: src/Admin/ExceptionsListTable.php:115
+msgid "All"
+msgstr ""
+
+#: src/Admin/ExceptionsListTable.php:116
+msgid "Global only"
+msgstr ""
+
+#: src/Admin/ExceptionsListTable.php:121
+msgid "Include past"
+msgstr ""
+
+#: src/Admin/ExceptionsListTable.php:122
+msgid "Filter"
+msgstr ""
+
+#: src/Admin/ExceptionsListTable.php:140
+#: src/Admin/ResourcesListTable.php:97
+#: src/Admin/ServicesListTable.php:109
+msgid "Edit"
+msgstr ""
+
+#: src/Admin/ExceptionsListTable.php:144
+msgid "Delete this exception?"
+msgstr ""
+
+#: src/Admin/ExceptionsListTable.php:145
+#: src/Admin/ResourcesListTable.php:126
+#: src/Admin/ServicesListTable.php:127
+msgid "Delete"
+msgstr ""
+
+#: src/Admin/ExceptionsListTable.php:158
+msgid "All resources"
+msgstr ""
+
+#: src/Admin/ExceptionsListTable.php:170
+msgid "Closed"
+msgstr ""
+
+#: src/Admin/ExceptionsPage.php:46
+#: src/Admin/ResourcesListTable.php:99
+#: src/Admin/ResourcesPage.php:273
+msgid "Days off"
+msgstr ""
+
+#: src/Admin/ExceptionsPage.php:53
+#: src/Admin/ExceptionsPage.php:229
+msgid "Days off and exceptions"
+msgstr ""
+
+#: src/Admin/ExceptionsPage.php:103
+#: src/Admin/ResourcesPage.php:118
+#: src/Admin/ResourcesPage.php:148
+#: src/Admin/ResourcesPage.php:168
+#: src/Admin/ResourcesPage.php:256
+#: src/Admin/SchedulePage.php:74
+msgid "The resource does not exist."
+msgstr ""
+
+#: src/Admin/ExceptionsPage.php:106
+msgid "Enter the first day."
+msgstr ""
+
+#: src/Admin/ExceptionsPage.php:108
+msgid "The last day must not be before the first day."
+msgstr ""
+
+#: src/Admin/ExceptionsPage.php:114
+msgid "Enter at least one range of hours, or choose \"Closed\"."
+msgstr ""
+
+#: src/Admin/ExceptionsPage.php:123
+msgid "The dates or hours are not valid (overlapping hours or a period longer than a year)."
+msgstr ""
+
+#. translators: %s: date range of an existing exception.
+#: src/Admin/ExceptionsPage.php:130
+#, php-format
+msgid "It overlaps an existing exception (%s) for the same resource. Edit that one instead."
+msgstr ""
+
+#: src/Admin/ExceptionsPage.php:145
+#: src/Admin/ExceptionsPage.php:176
+#: src/Admin/ExceptionsPage.php:248
+msgid "The exception does not exist."
+msgstr ""
+
+#: src/Admin/ExceptionsPage.php:149
+msgid "Exception updated."
+msgstr ""
+
+#: src/Admin/ExceptionsPage.php:149
+msgid "Exception added."
+msgstr ""
+
+#. translators: %d: number of bookings.
+#: src/Admin/ExceptionsPage.php:155
+#, php-format
+msgid "%d active booking falls within these days. It is not changed automatically — move or cancel it if needed."
+msgid_plural "%d active bookings fall within these days. They are not changed automatically — move or cancel them if needed."
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/Admin/ExceptionsPage.php:180
+msgid "Exception deleted."
+msgstr ""
+
+#: src/Admin/ExceptionsPage.php:229
+#: src/Admin/ExceptionsPage.php:263
+#: src/Admin/ExceptionsPage.php:307
+msgid "Add exception"
+msgstr ""
+
+#: src/Admin/ExceptionsPage.php:230
+msgid "Closed days (leave, public holidays) and days with different hours. A global exception applies to all resources; an exception of a single resource takes precedence over it."
+msgstr ""
+
+#: src/Admin/ExceptionsPage.php:247
+#: src/Admin/ExceptionsPage.php:263
+msgid "Edit exception"
+msgstr ""
+
+#: src/Admin/ExceptionsPage.php:264
+msgid "&larr; Back to days off"
+msgstr ""
+
+#: src/Admin/ExceptionsPage.php:272
+msgid "All resources (global)"
+msgstr ""
+
+#: src/Admin/ExceptionsPage.php:278
+msgid "First day"
+msgstr ""
+
+#: src/Admin/ExceptionsPage.php:280
+msgid "Last day"
+msgstr ""
+
+#: src/Admin/ExceptionsPage.php:282
+msgid "The same as the first day for a single day."
+msgstr ""
+
+#: src/Admin/ExceptionsPage.php:284
+#: src/Admin/ResourcesListTable.php:45
+#: src/Admin/ResourcesPage.php:285
+msgid "Type"
+msgstr ""
+
+#: src/Admin/ExceptionsPage.php:285
+msgid "Closed (no bookings)"
+msgstr ""
+
+#: src/Admin/ExceptionsPage.php:286
+msgid "Different hours (replace working hours and breaks):"
+msgstr ""
+
+#. translators: %d: row number.
+#: src/Admin/ExceptionsPage.php:294
+#, php-format
+msgid "Hours %d: start"
+msgstr ""
+
+#. translators: %d: row number.
+#: src/Admin/ExceptionsPage.php:297
+#, php-format
+msgid "Hours %d: end"
+msgstr ""
+
+#: src/Admin/ExceptionsPage.php:304
+msgid "For administrators only, e.g. \"Christmas\" or \"Training\"."
+msgstr ""
+
+#: src/Admin/ExceptionsPage.php:307
+#: src/Admin/ResourcesPage.php:305
+#: src/Admin/ServicesPage.php:305
+msgid "Save changes"
 msgstr ""
 
 #: src/Admin/Labels.php:28
@@ -74,6 +278,12 @@ msgstr ""
 #: src/Admin/Labels.php:59
 msgctxt "resource type"
 msgid "Device"
+msgstr ""
+
+#. translators: 1: time zone name, 2: current UTC offset, e.g. +01:00.
+#: src/Admin/Labels.php:100
+#, php-format
+msgid "Times are in the site time zone: %1$s (currently UTC%2$s). You can change it in Settings → General."
 msgstr ""
 
 #: src/Admin/Money.php:98
@@ -130,6 +340,7 @@ msgid "Service"
 msgstr ""
 
 #: src/Admin/Privacy.php:204
+#: src/Admin/SchedulePage.php:131
 msgid "Resource"
 msgstr ""
 
@@ -143,7 +354,7 @@ msgstr ""
 
 #: src/Admin/Privacy.php:207
 #: src/Admin/ResourcesListTable.php:47
-#: src/Admin/ResourcesPage.php:295
+#: src/Admin/ResourcesPage.php:300
 #: src/Admin/ServicesListTable.php:55
 #: src/Admin/ServicesPage.php:300
 msgid "Status"
@@ -151,7 +362,7 @@ msgstr ""
 
 #: src/Admin/Privacy.php:208
 #: src/Admin/ResourcesListTable.php:44
-#: src/Admin/ResourcesPage.php:276
+#: src/Admin/ResourcesPage.php:281
 #: src/Admin/ServicesListTable.php:50
 #: src/Admin/ServicesPage.php:252
 msgid "Name"
@@ -165,17 +376,8 @@ msgstr ""
 msgid "Phone"
 msgstr ""
 
-#: src/Admin/Privacy.php:211
-msgid "Note"
-msgstr ""
-
 #: src/Admin/Privacy.php:212
 msgid "Booked on"
-msgstr ""
-
-#: src/Admin/ResourcesListTable.php:45
-#: src/Admin/ResourcesPage.php:280
-msgid "Type"
 msgstr ""
 
 #: src/Admin/ResourcesListTable.php:46
@@ -185,41 +387,41 @@ msgstr ""
 msgid "Services"
 msgstr ""
 
-#: src/Admin/ResourcesListTable.php:63
+#: src/Admin/ResourcesListTable.php:80
 msgid "No resources yet. Add the first person, room or device that can be booked."
 msgstr ""
 
-#: src/Admin/ResourcesListTable.php:80
-#: src/Admin/ServicesListTable.php:92
-msgid "Edit"
+#: src/Admin/ResourcesListTable.php:98
+#: src/Admin/ResourcesPage.php:272
+#: src/Admin/SchedulePage.php:40
+#: src/Admin/SchedulePage.php:47
+#: src/Admin/SchedulePage.php:95
+#: src/Admin/SchedulePage.php:159
+#: src/Admin/SchedulePage.php:191
+msgid "Working hours"
 msgstr ""
 
-#: src/Admin/ResourcesListTable.php:92
-#: src/Admin/ServicesListTable.php:104
+#: src/Admin/ResourcesListTable.php:111
+#: src/Admin/ServicesListTable.php:121
 msgid "Deactivate"
 msgstr ""
 
-#: src/Admin/ResourcesListTable.php:101
-#: src/Admin/ServicesListTable.php:104
+#: src/Admin/ResourcesListTable.php:120
+#: src/Admin/ServicesListTable.php:121
 msgid "Activate"
 msgstr ""
 
-#: src/Admin/ResourcesListTable.php:106
+#: src/Admin/ResourcesListTable.php:125
 msgid "Delete this resource permanently?"
 msgstr ""
 
-#: src/Admin/ResourcesListTable.php:107
-#: src/Admin/ServicesListTable.php:110
-msgid "Delete"
-msgstr ""
-
-#: src/Admin/ResourcesListTable.php:150
-#: src/Admin/ServicesListTable.php:172
+#: src/Admin/ResourcesListTable.php:169
+#: src/Admin/ServicesListTable.php:189
 msgid "Active"
 msgstr ""
 
-#: src/Admin/ResourcesListTable.php:151
-#: src/Admin/ServicesListTable.php:172
+#: src/Admin/ResourcesListTable.php:170
+#: src/Admin/ServicesListTable.php:189
 msgid "Inactive"
 msgstr ""
 
@@ -243,13 +445,6 @@ msgstr ""
 
 #: src/Admin/ResourcesPage.php:98
 msgid "Choose a valid resource type."
-msgstr ""
-
-#: src/Admin/ResourcesPage.php:118
-#: src/Admin/ResourcesPage.php:148
-#: src/Admin/ResourcesPage.php:168
-#: src/Admin/ResourcesPage.php:256
-msgid "The resource does not exist."
 msgstr ""
 
 #: src/Admin/ResourcesPage.php:121
@@ -290,7 +485,7 @@ msgstr[1] ""
 
 #: src/Admin/ResourcesPage.php:239
 #: src/Admin/ResourcesPage.php:269
-#: src/Admin/ResourcesPage.php:300
+#: src/Admin/ResourcesPage.php:305
 msgid "Add resource"
 msgstr ""
 
@@ -307,28 +502,116 @@ msgstr ""
 msgid "&larr; Back to resources"
 msgstr ""
 
-#: src/Admin/ResourcesPage.php:286
+#: src/Admin/ResourcesPage.php:291
 #: src/Admin/ServicesPage.php:256
 msgid "Description"
 msgstr ""
 
-#: src/Admin/ResourcesPage.php:290
+#: src/Admin/ResourcesPage.php:295
 #: src/Admin/ServicesPage.php:296
 msgid "Order"
 msgstr ""
 
-#: src/Admin/ResourcesPage.php:292
+#: src/Admin/ResourcesPage.php:297
 msgid "Lower numbers are listed first."
 msgstr ""
 
-#: src/Admin/ResourcesPage.php:297
+#: src/Admin/ResourcesPage.php:302
 #: src/Admin/ServicesPage.php:302
 msgid "Active (offered to customers)"
 msgstr ""
 
-#: src/Admin/ResourcesPage.php:300
-#: src/Admin/ServicesPage.php:305
-msgid "Save changes"
+#. translators: 1: weekday, 2: time range, 3: time range.
+#: src/Admin/ScheduleForm.php:59
+#, php-format
+msgid "%1$s: working hours %2$s and %3$s overlap."
+msgstr ""
+
+#. translators: 1: weekday, 2: time range, 3: time range.
+#: src/Admin/ScheduleForm.php:64
+#, php-format
+msgid "%1$s: breaks %2$s and %3$s overlap."
+msgstr ""
+
+#. translators: 1: weekday, 2: time range.
+#: src/Admin/ScheduleForm.php:69
+#, php-format
+msgid "%1$s: the break %2$s must lie within working hours."
+msgstr ""
+
+#: src/Admin/ScheduleForm.php:86
+msgid "The working hours are not valid."
+msgstr ""
+
+#. translators: %s: weekday or other label.
+#: src/Admin/ScheduleForm.php:115
+#, php-format
+msgid "%s: enter both the start and the end time."
+msgstr ""
+
+#. translators: %s: weekday or other label.
+#: src/Admin/ScheduleForm.php:122
+#, php-format
+msgid "%s: use the HH:MM time format."
+msgstr ""
+
+#. translators: 1: weekday or other label, 2: start time, 3: end time.
+#: src/Admin/ScheduleForm.php:127
+#, php-format
+msgid "%1$s: the end (%3$s) must be later than the start (%2$s)."
+msgstr ""
+
+#: src/Admin/SchedulePage.php:87
+msgid "Working hours saved."
+msgstr ""
+
+#: src/Admin/SchedulePage.php:101
+msgid "There are no resources yet."
+msgstr ""
+
+#: src/Admin/SchedulePage.php:103
+msgid "Add a resource"
+msgstr ""
+
+#: src/Admin/SchedulePage.php:138
+#: src/Admin/ServicesPage.php:290
+msgid "inactive"
+msgstr ""
+
+#: src/Admin/SchedulePage.php:142
+msgid "Show"
+msgstr ""
+
+#: src/Admin/SchedulePage.php:158
+msgid "Day"
+msgstr ""
+
+#: src/Admin/SchedulePage.php:160
+msgid "Breaks"
+msgstr ""
+
+#: src/Admin/SchedulePage.php:175
+msgid "Leave a day empty to close it. An end time of 00:00 means midnight. Breaks must lie within working hours."
+msgstr ""
+
+#: src/Admin/SchedulePage.php:176
+msgid "Save working hours"
+msgstr ""
+
+#: src/Admin/SchedulePage.php:191
+msgid "Break"
+msgstr ""
+
+#. translators: %s: weekday and row, e.g. "Monday, Break 1".
+#: src/Admin/SchedulePage.php:202
+#, php-format
+msgid "%s: start"
+msgstr ""
+
+#. translators: %s: weekday and row, e.g. "Monday, Break 1".
+#: src/Admin/SchedulePage.php:205
+#, php-format
+msgid "%s: end"
 msgstr ""
 
 #: src/Admin/Screen.php:56
@@ -360,24 +643,24 @@ msgstr ""
 msgid "Buffer after"
 msgstr ""
 
-#: src/Admin/ServicesListTable.php:75
+#: src/Admin/ServicesListTable.php:92
 msgid "No services yet."
 msgstr ""
 
-#: src/Admin/ServicesListTable.php:109
+#: src/Admin/ServicesListTable.php:126
 msgid "Delete this service permanently?"
 msgstr ""
 
 #. translators: %d: number of minutes.
-#: src/Admin/ServicesListTable.php:124
-#: src/Admin/ServicesListTable.php:146
+#: src/Admin/ServicesListTable.php:141
+#: src/Admin/ServicesListTable.php:163
 #, php-format
 msgid "%d minute"
 msgid_plural "%d minutes"
 msgstr[0] ""
 msgstr[1] ""
 
-#: src/Admin/ServicesListTable.php:162
+#: src/Admin/ServicesListTable.php:179
 msgid "None — cannot be booked"
 msgstr ""
 
@@ -473,10 +756,6 @@ msgstr ""
 
 #: src/Admin/ServicesPage.php:282
 msgid "Add resources first."
-msgstr ""
-
-#: src/Admin/ServicesPage.php:290
-msgid "inactive"
 msgstr ""
 
 #: src/Admin/ServicesPage.php:293
