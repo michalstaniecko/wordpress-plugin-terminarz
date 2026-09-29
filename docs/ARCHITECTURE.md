@@ -354,3 +354,17 @@ W CI osobny krok joba `integration`. Zmienne: `TRMZ_CONCURRENCY_WORKERS`, `TRMZ_
 
 **Konsekwencje.** Katalog nie zawiera jeszcze opisu usługi/zasobu ani waluty (kolumny spoza modelu domeny — ADR-013);
 dojdą razem z panelem admina (M4) / WooCommerce (M6) jako nowe pola schematu (zmiana wstecznie kompatybilna).
+
+## ADR-020: Endpoint dostępności (`GET /terminarz/v1/availability`)
+
+**Decyzja.**
+- Parametry: `service` (wymagany), `resource` = ID lub `any` (domyślnie), `from`/`to` — **daty lokalne** witryny `Y-m-d`
+  (włącznie, maks. 31 dni; walidacja przed dostępem do bazy). Nieaktywna/nieistniejąca usługa → 404, zasób nieprzypisany,
+  nieaktywny lub nieistniejący → 400 `trmz_invalid_resource`, błędne daty → 400 `trmz_invalid_date` / `trmz_invalid_range`.
+- Odpowiedź: `days[]` zawiera **każdy** dzień zakresu (także bez slotów — UI kalendarza nie musi liczyć dni), sloty
+  `{start, end, start_utc, resource}`; `start`/`end` w ISO 8601 z offsetem strefy witryny (offset zmienia się w dniu DST),
+  `start_utc` jako źródło prawdy do wysłania przy rezerwacji. Dla `any` jeden slot na start i `resource: null` —
+  przydział zasobu jest wstępny (ADR-018), ostateczny wybór następuje w chwili rezerwacji.
+- Cache: domyślnie `Cache-Control: no-store` (dostępność zmienia się z każdą rezerwacją); filtr
+  `trmz_availability_cache_max_age` (sekundy) pozwala na `public, max-age=N` — rezerwacja i tak weryfikuje slot ponownie.
+- Wydajność: benchmark przez REST (30 dni × 10 zasobów, ~1200 rezerwacji) ~11 ms lokalnie; próg `TRMZ_BENCH_MAX_MS`.
