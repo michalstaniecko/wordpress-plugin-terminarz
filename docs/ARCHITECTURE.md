@@ -987,3 +987,23 @@ instaluje tylko istniejące witryny (#61).
 
 **Testy.** Cała suita integracyjna uruchamiana także z `WP_TESTS_MULTISITE=1` (`composer test:integration:multisite`,
 krok w CI); `tests/php/integration/Multisite/MultisiteTest.php` (grupa `multisite`, pomijana na pojedynczej witrynie).
+
+## ADR-046: Deinstalacja (`uninstall.php`) i readme.txt
+
+**Decyzja.**
+- `uninstall.php` sprawdza `WP_UNINSTALL_PLUGIN`, ładuje ręcznie `vendor/autoload.php` (plugin nie jest aktywny,
+  bootstrap nie działa) i woła `Infrastructure\Uninstaller::run()`; bez autoloadera / na PHP < 8.1 nic nie robi.
+- `Uninstaller` działa per witryna (na multisite po wszystkich witrynach, `switch_to_blog`):
+  - **zawsze** usuwa zaplanowane zadania: `HoldExpiryScheduler::unschedule()`, `ReminderScheduler::unschedule_all()`
+    oraz wszystkie akcje Action Scheduler grupy `terminarz` (gdy AS jest załadowany);
+  - dane **tylko** przy `delete_data_on_uninstall` danej witryny: `Schema::drop()`, opcje `trmz_settings`,
+    `trmz_email_templates`, `trmz_db_version`, `trmz_db_migration_lock` i pozostałe `trmz_*`, transienty `trmz_*`
+    (limity zapytań, komunikaty admina) — przez API opcji (spójny object cache), `Capabilities::revoke()`.
+  - Meta zamówień WooCommerce (`_trmz_*`) zostają — należą do zamówień sklepu.
+- `readme.txt` w formacie WordPress.org (opis, instalacja, FAQ z sekcją o proxy/`trmz_client_ip`, prywatność, hooki
+  i filtry dla deweloperów, changelog 1.0.0).
+
+**Konsekwencje.** Przy trwałym object cache transienty limitów nie są wyliczalne — wygasają same (okno 10 min).
+Akcje AS grupy `terminarz` pozostałe w tabelach AS, gdy WooCommerce jest nieaktywny w chwili deinstalacji, nie są
+usuwane (AS nie jest załadowany); po ponownym włączeniu WooCommerce nie mają obsługi i AS oznaczy je jako nieudane.
+

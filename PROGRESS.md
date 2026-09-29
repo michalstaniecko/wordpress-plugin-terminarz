@@ -485,3 +485,13 @@ Jeden wpis na zamknięte issue: data, numer issue, co zrobione, decyzje, znane r
 - **Decyzje:** ADR-045.
 - **Ryzyka:** aktywacja sieciowa w dużej sieci (setki witryn) wykonuje migrację każdej witryny w jednym żądaniu.
 
+## 2026-09-29 — #45 uninstall.php i readme.txt (+ #46 testy multisite)
+
+- **Zrobione:** `uninstall.php` + `Infrastructure\Uninstaller` (zadania zaplanowane zawsze, dane tylko przy
+  `delete_data_on_uninstall`, per witryna na multisite), `readme.txt` (WordPress.org, Tested up to 7.1).
+  Testy integracyjne `UninstallerTest` (domyślnie dane zostają, zadania WP-Cron i AS grupy `terminarz` usunięte, usunięcie
+  tabel/opcji/transientów/capability, deinstalacja per witryna na multisite). Cała suita integracyjna zielona na
+  pojedynczej witrynie i na multisite. Ręcznie: `wp plugin uninstall --skip-delete` na wp-env bez błędów.
+- **Decyzje:** ADR-046.
+- **Ryzyka:** akcje AS przy nieaktywnym WooCommerce w chwili deinstalacji zostają w tabelach AS (bez skutków).
+

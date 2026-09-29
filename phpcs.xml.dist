@@ -3,6 +3,7 @@
 	<description>Coding standards for the Terminarz plugin (WordPress Coding Standards 3.x).</description>
 
 	<file>terminarz.php</file>
+	<file>uninstall.php</file>
 	<file>src</file>
 	<file>tests/php</file>
 	<file>tests/phpstan</file>
